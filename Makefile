@@ -5,7 +5,7 @@ LDFLAGS 		:= -lreadline
 
 
 # Source Files (explicitly listed)
-SRCS    := main.c input/parse.c
+SRCS    := main.c input/parse.c input/utils.c
 	
 OBJ        := $(SRCS:.c=.o)
 
@@ -27,7 +27,7 @@ DEFAULT = \033[0m
 
 $(NAME): $(PRINTF) $(LIBFT) $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) $(PRINTF) -o $(NAME) $(LDFLAGS)
-	@echo "$(GREEN) [minishell] Built is totally complete, Dude!$(DEFAULT)"
+	@echo "$(GREEN) [minishell] Welcome to the minishell - Dude version, Dude!$(DEFAULT)"
 
 $(LIBFT):
 	$(MAKE) -C $(LIBFT_DIR)

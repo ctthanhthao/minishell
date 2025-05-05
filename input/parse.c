@@ -6,28 +6,28 @@
 /*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 14:36:53 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/05 14:50:54 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/05/05 15:50:38 by amarcz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 //IDENTIFY TOKEN
-t_token identify_tok(char *str) //STRCMP NOT ALLOWED!!!!
+t_token identify_tok(char *str)
 {
-    if (strcmp(str, "|") == 0)
+    if (ft_strncmp(str, "|", 2) == 0)
         return (PIPE);
-    else if (strcmp(str, ">") == 0)
+    else if (ft_strncmp(str, ">", 2) == 0)
         return (MORE);
-    else if (strcmp(str, ">>") == 0)
+    else if (ft_strncmp(str, ">>", 3) == 0)
         return (MOREMORE);
-    else if (strcmp(str, "<") == 0)
+    else if (ft_strncmp(str, "<", 2) == 0)
         return (LESS);
-    else if (strcmp(str, "<<") == 0)
+    else if (ft_strncmp(str, "<<", 3) == 0)
         return (LESSLESS);
-    else if (strcmp(str, "&&") == 0)
+    else if (ft_strncmp(str, "&&", 3) == 0)
         return (AND);
-    else if (strcmp(str, "||") == 0)
+    else if (ft_strncmp(str, "||", 3) == 0)
         return (OR);
     return (WORD); //DEFAULT
 }
@@ -54,20 +54,40 @@ t_redir *parse_input(char *input)
     t_redir *head;
     t_redir *last;
     t_redir *new;
-    char *token;
+    t_token id;
+    char **tokens;
+    int first_word;
+    int i;
 
+    i = 0;
+    first_word = 1;
     head = NULL;
     last = NULL;
-    token = strtok(input, " \t\n"); //split by space, tab and newline - STROK NOT ALLOWED!! - FT_SPLIT!!!
+    tokens = ft_split(input, ' ');
+    if (!tokens)
+        return (NULL);
 
-    while (token)
+    while (tokens[i])
     {
-        new = add_token(last, token);
+        new = malloc(sizeof(t_redir));
+        if (!new)
+            return (free_split(tokens), NULL);
+        new ->filename = ft_strdup(tokens[i]);
+        id = identify_tok(tokens[i]);
+        if (id == WORD && first_word)
+            new->type = CMD;
+        else
+            new->type = id;
+        first_word = (new->type == PIPE);
+        new->next = NULL;
         if (!head)
             head = new;
+        else
+            last->next = new;
         last = new;
-        token = strtok(NULL, " \t\n");
+        i++;
     }
+    free_split(tokens);
     return (head);
 }
 
