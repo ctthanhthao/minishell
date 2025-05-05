@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/05 11:36:07 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/05 13:59:25 by amarcz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,20 +20,27 @@
 // ===============================
 // ENUMS
 // ===============================
-typedef enum e_redir_type
+// TOKENS - DUDE:
+
+typedef enum e_token
 {
-    REDIR_IN,      // <
-    REDIR_OUT,     // >
-    REDIR_APPEND,  // >>
-    REDIR_HEREDOC  // <<
-}   t_redir_type;
+    CMD, //A command: ls, echo, cd
+    WORD, //A generic word arguement
+    PIPE, // |
+    MORE, // >
+    MOREMORE, // >>
+    LESS, // <
+    LESSLESS, // <<
+    AND, // &&
+    OR // ||
+}   t_token;
 
 // ===============================
 // STRUCTS
 // ===============================
 typedef struct s_redir
 {
-    t_redir_type     type;
+    t_token     type;
     char            *filename;  // or delimiter for heredoc
     struct s_redir  *next;
 }   t_redir;
@@ -46,7 +53,7 @@ typedef struct s_cmd
 }   t_cmd;
 
 // ===============================
-// PARSER INTERFACE
+// PARSER INTERFACE - András
 // ===============================
 t_cmd   *parse_input(const char *line, char **envp);
 char    **tokenize_line(const char *line);                            // optional internal
@@ -54,7 +61,7 @@ t_cmd   *build_cmd_list(char **tokens, char **envp);                 // optional
 t_redir *parse_redirections(char **tokens, int *i);                  // optional internal
 
 // ===============================
-// EXECUTOR INTERFACE
+// EXECUTOR INTERFACE - Thao
 // ===============================
 int     execute_commands(t_cmd *cmd_list, char **envp);
 int     is_builtin(const char *cmd);
