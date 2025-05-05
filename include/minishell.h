@@ -6,7 +6,7 @@
 /*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/05 15:39:12 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/05/05 17:25:12 by amarcz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ typedef struct s_cmd
 // ===============================
 t_redir *parse_input(char *input);
 void    print_tokens(t_redir *head);
+char    **ft_tokenize(char *input);
 void    free_tokens(t_redir *head);
 void    free_split(char **arr);
 char    **tokenize_line(const char *line);                            // optional internal

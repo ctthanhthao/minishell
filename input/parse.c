@@ -6,7 +6,7 @@
 /*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 14:36:53 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/05 15:50:38 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/05/05 17:25:41 by amarcz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ t_redir *parse_input(char *input)
     first_word = 1;
     head = NULL;
     last = NULL;
-    tokens = ft_split(input, ' ');
+    tokens = ft_tokenize(input);
     if (!tokens)
         return (NULL);
 
