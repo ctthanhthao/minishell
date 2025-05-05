@@ -1,9 +1,58 @@
 NAME        	:= minishell
 CC          	:= cc
 CFLAGS      	:= -Wall -Wextra -Werror -g -Iinclude
+LDFLAGS 		:= -lreadline
 
 
 # Source Files (explicitly listed)
-SRCS    := main.c
+SRCS    := main.c input/parse.c
 	
-OBJS        := $(SRCS:.c=.o)
+OBJ        := $(SRCS:.c=.o)
+
+#LIBFT
+
+LIBFT_DIR = Libft
+LIBFT = $(LIBFT_DIR)/libft.a
+
+#FT_PRINTF
+
+PRINTF_DIR = Libft/ft_printf
+PRINTF = $(PRINTF_DIR)/libftprintf.a
+
+INCLUDES = -I$(LIBFT_DIR)
+
+#COLORS:
+GREEN = \033[1;32m
+DEFAULT = \033[0m
+
+$(NAME): $(PRINTF) $(LIBFT) $(OBJ)
+	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) $(PRINTF) -o $(NAME) $(LDFLAGS)
+	@echo "$(GREEN) [minishell] Built is totally complete, Dude!$(DEFAULT)"
+
+$(LIBFT):
+	$(MAKE) -C $(LIBFT_DIR)
+
+$(PRINTF):
+	$(MAKE) -C $(PRINTF_DIR)
+
+%.o: %.c
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+all: $(NAME)
+
+clean:
+	rm -r $(OBJ)
+	$(MAKE) -C $(LIBFT_DIR) clean
+	$(MAKE) -C $(PRINTF_DIR) clean
+	@echo "$(GREEN) Everything is cleaned, Dude!$(DEFAULT)"
+
+fclean: clean
+	rm -r $(NAME)
+	$(MAKE) -C $(LIBFT_DIR) clean
+	$(MAKE) -C $(PRINTF_DIR) clean
+	@echo "$(GREEN) Everything is fully cleaned, Dude!$(DEFAULT)"
+
+re: fclean all
+	@echo "$(GREEN) Rebuild is done, Dude!$(DEFAULT)"
+
+.PHONY: all clean fclean re

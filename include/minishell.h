@@ -6,7 +6,7 @@
 /*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/05 13:59:25 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/05/05 14:58:51 by amarcz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,11 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
+#include <readline/readline.h>
+#include <readline/history.h>
+#include <string.h>
+#include "../Libft/libft.h"
+#include "../Libft/ft_printf/printf.h"
 
 // ===============================
 // ENUMS
@@ -55,7 +60,9 @@ typedef struct s_cmd
 // ===============================
 // PARSER INTERFACE - András
 // ===============================
-t_cmd   *parse_input(const char *line, char **envp);
+t_redir *parse_input(char *input);
+void    print_tokens(t_redir *head);
+void    free_tokens(t_redir *head);
 char    **tokenize_line(const char *line);                            // optional internal
 t_cmd   *build_cmd_list(char **tokens, char **envp);                 // optional internal
 t_redir *parse_redirections(char **tokens, int *i);                  // optional internal
