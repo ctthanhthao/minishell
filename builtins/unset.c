@@ -6,11 +6,11 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:32:07 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/07 14:27:40 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/07 19:42:19 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
 static int	check_env_exists(char **envp, char *var_name)
 {
@@ -58,7 +58,7 @@ static void	unset_env_var(char ***envp, char *var_name)
 	new_envp[j] = NULL, free(*envp), *envp = new_envp;
 }
 
-int unset_builtin(t_cmd *cmd, char ***envp)
+int	unset_builtin(t_cmd *cmd, char ***envp)
 {
 	int		i;
 	

@@ -6,13 +6,13 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:25:18 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/07 12:25:37 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/07 19:48:27 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
-int	pwd_builtin(t_cmd *cmd)
+int	pwd_builtin()
 {
 	char	*cwd;
 

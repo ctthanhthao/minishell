@@ -6,11 +6,11 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:26:01 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/07 13:05:27 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/07 19:42:34 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
 static void	add_env_var(char ***envp, char *new_var)
 {

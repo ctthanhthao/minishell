@@ -6,11 +6,11 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:08:16 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/07 13:27:15 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/07 19:47:49 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
 static void	handle_argv(char *arg)
 {
@@ -28,13 +28,12 @@ static void	handle_argv(char *arg)
 
 int echo_builtin(t_cmd *cmd)
 {
-	int     i;
-	int     newline;
-	char    *env_value;
+	int	i;
+	int	newline;
 
 	i = 1;
 	newline = 1;
-	if (cmd->argv[i] && !ft_strcmp(cmd->argv[i], "-n"))
+	if (cmd->argv[i] && !ft_strncmp(cmd->argv[i], "-n", 2))
 	{
 		newline = 0;
 		i++;

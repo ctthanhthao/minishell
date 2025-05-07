@@ -1,26 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/07 18:44:16 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/07 20:10:19 by thchau           ###   ########.fr       */
+/*   Created: 2025/05/07 20:25:39 by thchau            #+#    #+#             */
+/*   Updated: 2025/05/07 20:27:52 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-int env_builtin(char **envp)
+int exit_builtin(t_cmd *cmd, char ***envp)
 {
-	int		i;
-
-	i = 0;
-	while (envp[i])
-	{
-		ft_printf("%s\n", envp[i]);
-		i++;
-	}
-	return (0);
+	free_cmd(cmd);
+	free_envp(*envp);
+	free(*envp);
+	*envp = NULL;
+	exit(0);
 }

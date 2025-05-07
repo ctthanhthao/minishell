@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/07 15:00:01 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/05/07 20:29:44 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,13 +87,18 @@ int		is_builtin(const char *cmd);
 int		execute_builtin(t_cmd *cmd, char ***envp);
 void	apply_redirections(t_redir *redirs);
 int		cd_builtin(t_cmd *cmd);
-int		pwd_builtin(t_cmd *cmd);
+int		pwd_builtin();
 int		export_builtin(t_cmd *cmd, char ***envp);
 int		echo_builtin(t_cmd *cmd);
+int		unset_builtin(t_cmd *cmd, char ***envp);
+int		env_builtin(char **envp);
+int 	exit_builtin(t_cmd *cmd, char ***envp);
+
 // ===============================
 // CLEANUP / UTILS
 // ===============================
 void    free_cmd_list(t_cmd *cmd_list);
 void    free_split(char **arr);
+void	free_cmd(t_cmd *cmd);
 
 #endif
