@@ -5,7 +5,8 @@ LDFLAGS 		:= -lreadline
 
 
 # Source Files (explicitly listed)
-SRCS    := main.c input/parse.c input/utils.c input/tokenizer.c
+SRCS    := main.c input/parse.c input/utils.c input/tokenizer.c \
+			input/redir_parse.c
 	
 OBJ        := $(SRCS:.c=.o)
 

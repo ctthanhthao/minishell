@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/07 11:51:11 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/07 13:14:51 by amarcz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,10 +68,12 @@ typedef struct s_cmd
 // ===============================
 // PARSER INTERFACE - András
 // ===============================
-t_redir *parse_input(char *input);
-void    print_tokens(t_redir *head);
+t_cmd *parse_input(char *input);
+void    print_cmds(t_cmd *cmd);
 char    **ft_tokenize(char *input);
-void    free_tokens(t_redir *head);
+int     is_redirection(char *token);
+int    handle_redirection(t_cmd *cmd, char **tokens, int *i);
+void    free_cmds(t_cmd *cmd);
 void    free_split(char **arr);
 char    **tokenize_line(const char *line);                            // optional internal
 t_cmd   *build_cmd_list(char **tokens, char **envp);                 // optional internal

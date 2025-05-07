@@ -6,7 +6,7 @@
 /*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 14:36:53 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/05 17:25:41 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/05/07 13:12:12 by amarcz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,72 +49,155 @@ t_redir *add_token(t_redir *last, char *value)
 }
 
 //Main parsing function:
-t_redir *parse_input(char *input)
+t_cmd *parse_input(char *input)
 {
-    t_redir *head;
-    t_redir *last;
-    t_redir *new;
-    t_token id;
     char **tokens;
-    int first_word;
     int i;
-
-    i = 0;
-    first_word = 1;
-    head = NULL;
-    last = NULL;
+    int argv_i;
+    t_cmd *head;
+    t_cmd *curr;
+    t_cmd *prev;
+    // t_redir *new;
+    // t_token id;
+    // int first_word;
+    
     tokens = ft_tokenize(input);
     if (!tokens)
         return (NULL);
+    i = 0;
+    argv_i = 0;
+    head = NULL;
+    curr = NULL;
+    prev = NULL;
+    // first_word = 1;
 
+    //ft_printf("Loop: \n");
     while (tokens[i])
     {
-        new = malloc(sizeof(t_redir));
-        if (!new)
-            return (free_split(tokens), NULL);
-        new ->filename = ft_strdup(tokens[i]);
-        id = identify_tok(tokens[i]);
-        if (id == WORD && first_word)
-            new->type = CMD;
-        else
-            new->type = id;
-        first_word = (new->type == PIPE);
-        new->next = NULL;
-        if (!head)
-            head = new;
-        else
-            last->next = new;
-        last = new;
-        i++;
+        //ft_printf("First if:\n");
+        if (!curr)
+        {
+            curr = malloc(sizeof(t_cmd));
+            if (!curr)
+                return (NULL);
+            curr->argv = malloc(sizeof(char *) * 1024);
+            curr->redirs = NULL;
+            curr->next = NULL;
+            argv_i = 0;
+            if (!head)
+                head = curr;
+            else
+                prev->next = curr;       
+        }
+        //ft_printf("Second if:\n");
+        if (ft_strncmp(tokens[i], "|", 2) == 0)
+        {
+            curr->argv[argv_i] = NULL;
+            i++; // Skip pipe symbol
+            prev = curr;
+            curr = NULL;
+            continue;
+        }
+        //ft_printf("Third if:\n");
+        if (is_redirection(tokens[i]))
+        {
+            if (!handle_redirection(curr, tokens, &i))
+            {
+                free_split(tokens);
+                free_cmds(head);
+                return (NULL);
+            }
+            continue;
+        }
+        //ft_printf("Rest:\n");
+        curr->argv[argv_i++] = ft_strdup(tokens[i++]);
+        // new = malloc(sizeof(t_redir));
+        // if (!new)
+        //     return (free_split(tokens), NULL);
+        // new ->filename = ft_strdup(tokens[i]);
+        // id = identify_tok(tokens[i]);
+        // if (id == WORD && first_word)
+        //     new->type = CMD;
+        // else
+        //     new->type = id;
+        // first_word = (new->type == PIPE);
+        // new->next = NULL;
+        // if (!head)
+        //     head = new;
+        // else
+        //     last->next = new;
+        // last = new;
+        // i++;
     }
+    //ft_printf("End loop\n");
+    if (curr)
+        curr->argv[argv_i] = NULL;
     free_split(tokens);
     return (head);
 }
 
 //DEBUG FUNCTION TO PRINT TOKENS:
 
-void print_tokens(t_redir *head)
+void print_cmds(t_cmd *cmd)
 {
     const char  *token_names[] = {
         "CMD", "WORD", "PIPE", "MORE", "MOREMORE", "LESS", "LESSLESS", \
         "AND", "OR"
     };
-    while (head)
+    int i;
+    t_redir *r;
+
+    i = -1;
+    while (cmd)
     {
-        ft_printf("Token: %-10s | Type: %s\n", head->filename, token_names[head->type]);
-        head = head->next;
+        ft_printf("==== Command === \n");
+
+        if (cmd->argv)
+        {
+            while (cmd->argv[++i])
+            {
+                ft_printf("Arg[%d]: %s\n", i, cmd->argv[i]);
+            }
+        }
+        r = cmd ->redirs;
+        while (r)
+        {
+            ft_printf("Redir: %-10s | Type: %s\n", r->filename, token_names[r->type]);
+            r = r->next;
+        }
+        cmd = cmd->next;
+        i = -1;
     }
 }
 
-//Free token list
-void free_tokens(t_redir *head)
+//Free command list
+void free_cmds(t_cmd *cmd)
 {
-    t_redir *tmp;
-    while (head)
+    t_cmd *tmp_cmd;
+    int i;
+    t_redir *r;
+    t_redir *tmp_redir;
+
+    while (cmd)
     {
-        tmp = head;
-        head = head->next;
-        free(tmp->filename);
-        free(tmp);
+        tmp_cmd = cmd;
+        cmd = cmd->next;
+
+        if (tmp_cmd->argv)
+        {
+            i = 0;
+            while (tmp_cmd->argv[i])
+                free (tmp_cmd->argv[i++]);
+            free (tmp_cmd->argv);
+        }
+        r = tmp_cmd->redirs;
+        while (r)
+        {
+            tmp_redir = r;
+            r = r->next;
+            free(tmp_redir->filename);
+            free(tmp_redir);
+        }
+        free(tmp_cmd);
     }
 }

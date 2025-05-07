@@ -6,7 +6,7 @@
 /*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:11:32 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/05 14:15:02 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/05/07 11:51:26 by amarcz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int main (void)
 {
     char *input;
-    t_redir *tokens;
+    t_cmd *cmd;
     int i;
 
     i = -1;
@@ -33,10 +33,10 @@ int main (void)
         add_history(input);
 
         //Parse the input
-        tokens = parse_input(input);
+        cmd = parse_input(input);
 
-        print_tokens(tokens); //Debug output
-        free_tokens(tokens);
+        print_cmds(cmd); //Debug output
+        free_cmds(cmd);
 
         //free the memory allocated in readline
         free(input);
