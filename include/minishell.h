@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/07 14:40:04 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/07 15:00:01 by amarcz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,12 @@
 // ===============================
 // TOKENS - DUDE:
 
-typedef enum e_cmd_type {
-	CMD_NONE,
-	CMD_AND_IF,
-	CMD_OR_IF,
-	CMD_PIPE
-}   t_cmd_type;
+    typedef enum e_cmd_type {
+        CMD_NONE,
+        CMD_AND_IF,
+        CMD_OR_IF,
+        CMD_PIPE
+    }   t_cmd_type;
 
 typedef enum e_token
 {

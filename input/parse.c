@@ -6,7 +6,7 @@
 /*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 14:36:53 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/07 13:12:12 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/05/07 14:59:18 by amarcz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,19 @@
 //IDENTIFY TOKEN
 t_token identify_tok(char *str)
 {
-    if (ft_strncmp(str, "|", 2) == 0)
+    if (ft_strncmp(str, "||", 2) == 0)
         return (PIPE);
-    else if (ft_strncmp(str, ">", 2) == 0)
+    else if (ft_strncmp(str, ">>", 2) == 0)
         return (MORE);
-    else if (ft_strncmp(str, ">>", 3) == 0)
+    else if (ft_strncmp(str, ">", 1) == 0)
         return (MOREMORE);
-    else if (ft_strncmp(str, "<", 2) == 0)
+    else if (ft_strncmp(str, "<<", 2) == 0)
         return (LESS);
-    else if (ft_strncmp(str, "<<", 3) == 0)
+    else if (ft_strncmp(str, "<", 1) == 0)
         return (LESSLESS);
-    else if (ft_strncmp(str, "&&", 3) == 0)
+    else if (ft_strncmp(str, "&&", 2) == 0)
         return (AND);
-    else if (ft_strncmp(str, "||", 3) == 0)
+    else if (ft_strncmp(str, "|", 1) == 0)
         return (OR);
     return (WORD); //DEFAULT
 }
@@ -83,6 +83,7 @@ t_cmd *parse_input(char *input)
             curr->argv = malloc(sizeof(char *) * 1024);
             curr->redirs = NULL;
             curr->next = NULL;
+            curr->next_type = CMD_NONE;
             argv_i = 0;
             if (!head)
                 head = curr;
@@ -90,10 +91,42 @@ t_cmd *parse_input(char *input)
                 prev->next = curr;       
         }
         //ft_printf("Second if:\n");
-        if (ft_strncmp(tokens[i], "|", 2) == 0)
+        if (ft_strncmp(tokens[i], "||", 2) == 0)
         {
+            //ft_printf("OR_IF detected\n");
+            if (curr)
+                curr->next_type = CMD_OR_IF;
+            curr->argv[argv_i] = NULL;
+            i++; // Skip || symbol
+            prev = curr;
+            curr = NULL;
+            continue;
+        }
+        else if (ft_strncmp(tokens[i], "|", 1) == 0)
+        {
+            //ft_printf("Pipe detected\n");
+            if (curr)
+            {
+                curr->next_type = CMD_PIPE;
+                //ft_printf("prev->next_type (%d) = CMD_PIPE\n", curr->next_type);
+            }
+                
             curr->argv[argv_i] = NULL;
             i++; // Skip pipe symbol
+            prev = curr;
+            curr = NULL;
+            continue;
+        }
+        else if (ft_strncmp(tokens[i], "&&", 2) == 0)
+        {
+            //ft_printf("AND_IF detected\n");
+            if (curr)
+            {
+                curr->next_type = CMD_AND_IF;
+                //ft_printf("prev->next_type (%d) = CMD_AND_IF\n", curr->next_type);
+            }
+            curr->argv[argv_i] = NULL;
+            i++; // Skip && symbol
             prev = curr;
             curr = NULL;
             continue;
@@ -132,6 +165,7 @@ t_cmd *parse_input(char *input)
     //ft_printf("End loop\n");
     if (curr)
         curr->argv[argv_i] = NULL;
+    prev = curr;
     free_split(tokens);
     return (head);
 }
@@ -144,6 +178,7 @@ void print_cmds(t_cmd *cmd)
         "CMD", "WORD", "PIPE", "MORE", "MOREMORE", "LESS", "LESSLESS", \
         "AND", "OR"
     };
+    const char *cmd_type_strs[] = {"NONE", "AND_IF", "OR_IF", "PIPE"};
     int i;
     t_redir *r;
 
@@ -158,6 +193,7 @@ void print_cmds(t_cmd *cmd)
             {
                 ft_printf("Arg[%d]: %s\n", i, cmd->argv[i]);
             }
+            ft_printf("Next type: %s\n", cmd_type_strs[cmd->next_type]);
         }
         r = cmd ->redirs;
         while (r)
