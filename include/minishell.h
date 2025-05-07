@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/05 17:25:12 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/05/07 11:51:11 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,13 @@
 // ENUMS
 // ===============================
 // TOKENS - DUDE:
+
+typedef enum e_cmd_type {
+    CMD_NONE,
+    CMD_AND_IF,
+    CMD_OR_IF,
+    CMD_PIPE
+}   t_cmd_type;
 
 typedef enum e_token
 {
@@ -55,6 +62,7 @@ typedef struct s_cmd
     char          **argv;       // arguments passed to execve or builtin
     t_redir        *redirs;     // list of redirections
     struct s_cmd   *next;       // next command in pipeline
+    t_cmd_type     next_type; // e.g. AND_IF, OR_IF, PIPE
 }   t_cmd;
 
 // ===============================
