@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:25:18 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/07 19:48:27 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/08 09:59:52 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	pwd_builtin()
 {
 	char	*cwd;
-
+	ft_printf("pwd builtin is called...\n");
 	cwd = getcwd(NULL, 0);
 	if (cwd == NULL)
 	{

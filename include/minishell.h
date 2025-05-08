@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/07 20:49:57 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/08 21:01:58 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #include <string.h>
 #include "../Libft/libft.h"
 #include "../Libft/ft_printf/printf.h"
+#include <sys/wait.h>
 
 // ===============================
 // ENUMS
@@ -101,5 +102,9 @@ void    free_cmd_list(t_cmd *cmd_list);
 void    free_split(char **arr);
 void	free_cmd(t_cmd *cmd);
 void	free_envp(char **envp);
+char	*ft_strndup(char *str, int len);
+int		ft_strcmp(char *s1, char *s2);
+char	**selection_sort(char **ar);
+char	**clone_arr(char **ar);
 
 #endif

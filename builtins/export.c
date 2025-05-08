@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:26:01 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/07 19:42:34 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/08 21:12:53 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,39 @@ static void	add_env_var(char ***envp, char *new_var)
 	*envp = new_envp;
 }
 
+static void	print_sorted_env(char **env)
+{
+	int		i;
+	char	*eq;
+	char	*key;
+	char	**copy;
+
+	i = 0;
+	if (!env)
+		return ;
+	copy = selection_sort(clone_arr(env));
+	while (copy[i])
+	{
+		eq = ft_strchr(env[i], '=');
+		key = ft_substr(env[i], 0, eq - env[i]);
+		ft_printf("declare -x %s=\"%s\"\n", key, (eq + 1));
+		i++;
+	}
+	free_split(copy);
+	copy = NULL;
+}
+
 int	export_builtin(t_cmd *cmd, char ***envp)
 {
 	int		i;
 	char	*new_var;
 
+	ft_printf("export builtin is called...\n");
 	if (cmd->argv[1] == NULL)
-		return (0);
+	{
+		print_sorted_env(*envp);
+		return (0);	
+	}
 	i = 1;
 	while (cmd->argv[i])
 	{

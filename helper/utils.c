@@ -6,61 +6,44 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:38:06 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/07 20:22:30 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/08 20:40:24 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
-void free_split(char **arr)
+/*char	*ft_strndup(char *str, int len)
 {
-    int i;
+	int		i;
+	char	*re;
 
-    i = 0;
-    if (!arr)
-        return;
-    while (arr[i])
-    {
-        free(arr[i]);
-        i++;
-    }
-    free(arr);
-}
-
-void free_cmd(t_cmd *cmd)
-{
-	int i;
-	t_redir *tmp;
-
-	if (!cmd) return;
 	i = 0;
-	while (cmd->argv[i])
+	if (!str)
+		return (NULL);
+	if (len > ft_strlen(str))
+		len = ft_strlen(str);
+	re = malloc(sizeof(char) * (len + 1));
+	while (i < len)
 	{
-		free(cmd->argv[i]);
+		re[i] = str[i];
 		i++;
 	}
-	while (cmd->redirs)
-	{
-		tmp = cmd->redirs;
-		cmd->redirs = cmd->redirs->next;
-		free(tmp->filename);
-		free(tmp);
-	}
-	free(cmd->argv);
-	free(cmd);
-}
+	re[i] = '\0';
+	return (re);
+}*/
 
-void	free_envp(char **envp)
+int	ft_strcmp(char *s1, char *s2)
 {
-	int i;
-
-	if (!envp)
-		return;
-	i = 0;
-	while (envp[i])
+	if (!s1 && !s2)
+		return (0);
+	if (!s1)
+		return (-1);
+	if (!s2)
+		return (1);
+	while (*s1 && *s1 == *s2)
 	{
-		free(envp[i]);
-		i++;
+		s1++;
+		s2++;
 	}
-	free(envp);
+	return (unsigned char)*s1 - (unsigned char)*s2;
 }

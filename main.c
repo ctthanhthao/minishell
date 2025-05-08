@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:11:32 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/07 11:51:26 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/05/08 21:21:21 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@ int main (void)
 {
     char *input;
     t_cmd *cmd;
-    int i;
+//    int i;
 
-    i = -1;
+//    i = -1;
     //MAIN LOOP
     while (1)
     {
