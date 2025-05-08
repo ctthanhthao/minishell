@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:26:01 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/08 21:12:53 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/08 22:03:51 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int	export_builtin(t_cmd *cmd, char ***envp)
 	if (cmd->argv[1] == NULL)
 	{
 		print_sorted_env(*envp);
-		return (0);	
+		return (0);
 	}
 	i = 1;
 	while (cmd->argv[i])

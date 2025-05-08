@@ -30,7 +30,7 @@ INCLUDES = -I$(LIBFT_DIR)
 GREEN = \033[1;32m
 DEFAULT = \033[0m
 
-$(NAME): $(PRINTF) $(LIBFT) $(OBJ)
+$(NAME): submodules $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) $(PRINTF) -o $(NAME) $(LDFLAGS)
 	@echo "$(GREEN) [minishell] Welcome to the minishell - Dude version, Dude!$(DEFAULT)"
 
@@ -45,14 +45,18 @@ $(PRINTF):
 
 all: $(NAME)
 
+submodules:
+	$(MAKE) -C $(LIBFT_DIR)
+	$(MAKE) -C $(PRINTF_DIR)
+
 clean:
-	rm -r $(OBJ)
+	rm -f $(OBJ)
 	$(MAKE) -C $(LIBFT_DIR) clean
 	$(MAKE) -C $(PRINTF_DIR) clean
 	@echo "$(GREEN) Everything is cleaned, Dude!$(DEFAULT)"
 
 fclean: clean
-	rm -r $(NAME)
+	rm -f $(NAME)
 	$(MAKE) -C $(LIBFT_DIR) clean
 	$(MAKE) -C $(PRINTF_DIR) clean
 	@echo "$(GREEN) Everything is fully cleaned, Dude!$(DEFAULT)"

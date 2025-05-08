@@ -6,15 +6,16 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:25:18 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/08 09:59:52 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/08 22:06:32 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-int	pwd_builtin()
+int	pwd_builtin(void)
 {
 	char	*cwd;
+
 	ft_printf("pwd builtin is called...\n");
 	cwd = getcwd(NULL, 0);
 	if (cwd == NULL)

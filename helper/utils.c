@@ -6,31 +6,11 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:38:06 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/08 20:40:24 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/08 21:51:13 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
-/*char	*ft_strndup(char *str, int len)
-{
-	int		i;
-	char	*re;
-
-	i = 0;
-	if (!str)
-		return (NULL);
-	if (len > ft_strlen(str))
-		len = ft_strlen(str);
-	re = malloc(sizeof(char) * (len + 1));
-	while (i < len)
-	{
-		re[i] = str[i];
-		i++;
-	}
-	re[i] = '\0';
-	return (re);
-}*/
 
 int	ft_strcmp(char *s1, char *s2)
 {
@@ -45,5 +25,5 @@ int	ft_strcmp(char *s1, char *s2)
 		s1++;
 		s2++;
 	}
-	return (unsigned char)*s1 - (unsigned char)*s2;
+	return ((unsigned char)*s1 - (unsigned char)*s2);
 }

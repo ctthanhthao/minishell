@@ -6,34 +6,36 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:07:20 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/08 21:17:11 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/08 22:00:09 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void free_split(char **arr)
+void	free_split(char **arr)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    if (!arr)
-        return;
-    while (arr[i])
-    {
-        free(arr[i]);
+	i = 0;
+	if (!arr)
+		return ;
+	while (arr[i])
+	{
+		free(arr[i]);
 		arr[i] = NULL;
-        i++;
-    }
-    free(arr);
+		i++;
+	}
+	free(arr);
 	arr = NULL;
 }
 
-void free_cmd(t_cmd *cmd)
+void	free_cmd(t_cmd *cmd)
 {
-	int i;
-	t_redir *tmp;
-	if (!cmd) return;
+	int		i;
+	t_redir	*tmp;
+
+	if (!cmd)
+		return ;
 	ft_printf("free_cmd is called...\n");
 	i = 0;
 	while (cmd->argv[i])
@@ -57,10 +59,10 @@ void free_cmd(t_cmd *cmd)
 
 void	free_envp(char **envp)
 {
-	int i;
+	int	i;
 
 	if (!envp)
-		return;
+		return ;
 	ft_printf("free_envp is called...\n");
 	i = 0;
 	while (envp[i])

@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 20:09:21 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/08 20:59:57 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/08 21:50:17 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char	**selection_sort(char **ar)
 	int	min_idx;
 	int	i;
 	int	j;
-	
+
 	if (!ar || !*ar)
 		return (ar);
 	i = 0;

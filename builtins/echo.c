@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:08:16 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/08 09:59:01 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/08 22:04:39 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static void	handle_argv(char *arg)
 		ft_printf("%s", arg);
 }
 
-int echo_builtin(t_cmd *cmd)
+int	echo_builtin(t_cmd *cmd)
 {
 	int	i;
 	int	newline;

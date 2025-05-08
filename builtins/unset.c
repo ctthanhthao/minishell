@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:32:07 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/08 12:29:31 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/08 22:23:01 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,25 @@ static int	check_env_exists(char **envp, char *var_name)
 	var_len = ft_strlen(var_name);
 	while (envp[i])
 	{
-		if (ft_strncmp(envp[i], var_name, var_len) == 0 &&
-						envp[i][var_len] == '=')
+		if (ft_strncmp(envp[i], var_name, var_len) == 0
+			&& envp[i][var_len] == '=')
 			return (1);
 		i++;
 	}
 	return (0);
+}
+
+static void	handle_unset(char *env, char **new_envp, char *var_name, int *j)
+{
+	if (ft_strncmp(env, var_name, ft_strlen(var_name)) == 0
+		&& (env[ft_strlen(var_name)] == '='))
+		free(env);
+	else
+	{
+		new_envp[*j] = ft_strdup(env);
+		(*j)++;
+		free(env);
+	}
 }
 
 static void	unset_env_var(char ***envp, char *var_name)
@@ -48,22 +61,18 @@ static void	unset_env_var(char ***envp, char *var_name)
 		return ;
 	while ((*envp)[i])
 	{
-		if (ft_strncmp((*envp)[i], var_name, ft_strlen(var_name)) == 0 &&
-				(*envp)[i][ft_strlen(var_name)] == '=')
-			free((*envp)[i]);
-		else
-		{
-			new_envp[j++] = ft_strdup((*envp)[i]);	
-			free((*envp)[i]);	
-		}
+		handle_unset((*envp)[i], new_envp, var_name, &j);
 		i++;
 	}
-	new_envp[j] = NULL, free(*envp), *envp = new_envp;
+	new_envp[j] = NULL;
+	free(*envp);
+	*envp = new_envp;
 }
 
 int	unset_builtin(t_cmd *cmd, char ***envp)
 {
 	int		i;
+
 	ft_printf("unset builtin is called...\n");
 	if (cmd->argv[1] == NULL)
 		return (0);

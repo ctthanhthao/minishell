@@ -2,52 +2,6 @@
 #include "mem_debug.h"
 #include <string.h>
 
-static int	env_cmp(const void *a, const void *b)
-{
-	const char *s1 = *(const char **)a;
-	const char *s2 = *(const char **)b;
-	return strcmp(s1, s2);
-}
-
-void	print_sorted_env(char **envp)
-{
-	int		count = 0;
-	char	**sorted_env;
-	char	*eq;
-
-	// Count entries
-	while (envp[count])
-		count++;
-
-	// Duplicate envp to sort
-	sorted_env = malloc(sizeof(char *) * (count + 1));
-	if (!sorted_env)
-		return ;
-
-	for (int i = 0; i < count; i++)
-		sorted_env[i] = strdup(envp[i]);
-	sorted_env[count] = NULL;
-
-	// Sort
-	qsort(sorted_env, count, sizeof(char *), env_cmp);
-
-	// Print in format: export VAR="value"
-	for (int i = 0; i < count; i++)
-	{
-		eq = strchr(sorted_env[i], '=');
-		if (eq)
-		{
-			*eq = '\0';
-			printf("export %s=\"%s\"\n", sorted_env[i], eq + 1);
-			*eq = '='; // Restore
-		}
-		else
-			printf("export %s\n", sorted_env[i]);
-		free(sorted_env[i]);
-	}
-	free(sorted_env);
-}
-
 t_cmd *parse_input(char *line)
 {
 	t_cmd *cmd = malloc(sizeof(t_cmd));
