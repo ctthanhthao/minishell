@@ -5,7 +5,7 @@ LDFLAGS 		:= -lreadline
 
 
 # Source Files (explicitly listed)
-SRCS    := main.c input/parse.c input/utils.c input/tokenizer.c \
+SRCS    := main_test.c input/utils.c input/tokenizer.c \
 			input/redir_parse.c builtins/cd.c builtins/echo.c builtins/env.c \
 			builtins/export.c builtins/pwd.c builtins/unset.c builtins/exit.c \
 			executor/execute_builtin.c
