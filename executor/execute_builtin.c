@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:42:30 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/07 20:50:28 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/09 14:52:06 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	is_builtin(const char *cmd)
 			!ft_memcmp(cmd, "pwd", 3));
 }
 
-int execute_builtin(t_cmd *cmd, char ***envp)
+int execute_builtin(t_cmd *cmd, char ***envp, int status)
 {
 	if (!ft_memcmp(cmd->argv[0], "cd", 2))
 		return (cd_builtin(cmd));
@@ -34,7 +34,7 @@ int execute_builtin(t_cmd *cmd, char ***envp)
 	else if (!ft_memcmp(cmd->argv[0], "unset", 5))
 		return (unset_builtin(cmd, envp));
 	else if (!ft_memcmp(cmd->argv[0], "echo", 4))
-		return (echo_builtin(cmd));
+		return (echo_builtin(cmd, status));
 	else if (!ft_memcmp(cmd->argv[0], "env", 3))
 		return (env_builtin(*envp));
 	else if (!ft_memcmp(cmd->argv[0], "pwd", 3))

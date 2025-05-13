@@ -6,17 +6,22 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:08:16 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/08 22:04:39 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/09 14:56:15 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-static void	handle_argv(char *arg)
+static void	handle_argv(char *arg, int status)
 {
 	char	*env_value;
 
-	if (arg[0] == '$')
+	if (arg[0] == '$' && arg[1] == '?')
+	{
+		ft_printf("%d", status);
+		ft_printf("%s", (ft_strchr(arg, '?') + 1));
+	}
+	else if (arg[0] == '$')
 	{
 		env_value = getenv(arg + 1);
 		if (env_value)
@@ -26,7 +31,7 @@ static void	handle_argv(char *arg)
 		ft_printf("%s", arg);
 }
 
-int	echo_builtin(t_cmd *cmd)
+int	echo_builtin(t_cmd *cmd, int status)
 {
 	int	i;
 	int	newline;
@@ -41,7 +46,7 @@ int	echo_builtin(t_cmd *cmd)
 	}
 	while (cmd->argv[i])
 	{
-		handle_argv(cmd->argv[i]);
+		handle_argv(cmd->argv[i], status);
 		if (cmd->argv[i + 1])
 			ft_printf(" ");
 		i++;

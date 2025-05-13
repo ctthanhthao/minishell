@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/08 21:51:05 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/09 14:51:44 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,12 +85,12 @@ t_redir *parse_redirections(char **tokens, int *i);                  // optional
 // ===============================
 int		execute_commands(t_cmd *cmd_list, char **envp);
 int		is_builtin(const char *cmd);
-int		execute_builtin(t_cmd *cmd, char ***envp);
+int		execute_builtin(t_cmd *cmd, char ***envp, int status);
 void	apply_redirections(t_redir *redirs);
 int		cd_builtin(t_cmd *cmd);
 int		pwd_builtin();
 int		export_builtin(t_cmd *cmd, char ***envp);
-int		echo_builtin(t_cmd *cmd);
+int		echo_builtin(t_cmd *cmd, int status);
 int		unset_builtin(t_cmd *cmd, char ***envp);
 int		env_builtin(char **envp);
 int 	exit_builtin(t_cmd *cmd, char ***envp);

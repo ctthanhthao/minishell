@@ -1,60 +1,115 @@
 #include "../include/minishell.h"
-#include "mem_debug.h"
+//#include "mem_debug.h"
 #include <string.h>
+#include <ctype.h>
 
 t_cmd *parse_input(char *line)
 {
-	t_cmd *cmd = malloc(sizeof(t_cmd));
-	if (!cmd) return NULL;
+    t_cmd *cmd = malloc(sizeof(t_cmd));
+    if (!cmd) return NULL;
 
-	int count = 0;
-	char *tmp = strdup(line);
-	char *token = strtok(tmp, " \t\n");
-	while (token)
-	{
-		count++;
-		token = strtok(NULL, " \t\n");
-	}
-	free(tmp);
+    int count = 0;
+    char *tmp = strdup(line);
+    int in_single_quote = 0, in_double_quote = 0;
 
-	cmd->argv = malloc(sizeof(char *) * (count + 1));
-	if (!cmd->argv) return NULL;
+    // First pass: count tokens
+    for (char *p = tmp; *p; p++)
+    {
+        if (*p == '\\') // Skip the next character
+        {
+            p++;
+            continue;
+        }
+        if (*p == '\'' && !in_double_quote)
+            in_single_quote = !in_single_quote;
+        else if (*p == '"' && !in_single_quote)
+            in_double_quote = !in_double_quote;
+        else if (!in_single_quote && !in_double_quote && (*p == ' ' || *p == '\t' || *p == '\n'))
+        {
+            *p = '\0';
+            if (p > tmp && *(p - 1) != '\0')
+                count++;
+        }
+    }
+    if (tmp[0] != '\0')
+        count++;
+    free(tmp);
 
-	int i = 0;
-	token = strtok(line, " \t\n");
-	while (token)
-	{
-		cmd->argv[i++] = strdup(token);
-		token = strtok(NULL, " \t\n");
-	}
-	cmd->argv[i] = NULL;
-	cmd->redirs = NULL;
-	return cmd;
-}
+    cmd->argv = malloc(sizeof(char *) * (count + 1));
+    if (!cmd->argv) return NULL;
 
-char **dup_envp(char **envp)
-{
-	int i = 0;
-	char **copy;
+    // Second pass: extract tokens and handle variable expansion
+    int i = 0;
+    in_single_quote = 0;
+    in_double_quote = 0;
+    char *start = NULL;
 
-	while (envp[i])
-		i++;
-	copy = malloc(sizeof(char *) * (i + 1));
-	if (!copy)
-		return NULL;
+    for (char *p = line; *p; p++)
+    {
+        if (*p == '\\') // Handle escape sequences
+        {
+            if (!start)
+                start = p;
+            memmove(p, p + 1, strlen(p)); // Remove the backslash
+            continue;
+        }
+        if (*p == '\'' && !in_double_quote)
+        {
+            in_single_quote = !in_single_quote;
+            if (!in_single_quote && start)
+            {
+                cmd->argv[i++] = strndup(start, p - start);
+                start = NULL;
+            }
+            else if (in_single_quote)
+                start = p + 1;
+        }
+        else if (*p == '"' && !in_single_quote)
+        {
+            in_double_quote = !in_double_quote;
+            if (!in_double_quote && start)
+            {
+                cmd->argv[i++] = strndup(start, p - start);
+                start = NULL;
+            }
+            else if (in_double_quote)
+                start = p + 1;
+        }
+        else if (!in_single_quote && in_double_quote && *p == '$') // Handle variable expansion
+        {
+            char *var_start = p + 1;
+            while (*p && (isalnum(*p) || *p == '_'))
+                p++;
+            char *var_name = strndup(var_start, p - var_start);
+            char *var_value = getenv(var_name);
+            free(var_name);
+            if (var_value)
+            {
+                size_t len = strlen(var_value);
+                memmove(var_start - 1 + len, p, strlen(p) + 1); // Shift the rest of the string
+                memcpy(var_start - 1, var_value, len);          // Insert the variable value
+                p = var_start - 1 + len - 1;                   // Adjust pointer
+            }
+            p--; // Adjust for the loop increment
+        }
+        else if (!in_single_quote && !in_double_quote && (*p == ' ' || *p == '\t' || *p == '\n'))
+        {
+            *p = '\0';
+            if (start)
+            {
+                cmd->argv[i++] = strdup(start);
+                start = NULL;
+            }
+        }
+        else if (!start)
+            start = p;
+    }
+    if (start)
+        cmd->argv[i++] = strdup(start);
 
-	for (int j = 0; j < i; j++) {
-		copy[j] = strdup(envp[j]);
-		if (!copy[j]) {
-			// free everything before returning NULL
-			for (int k = 0; k < j; k++)
-				free(copy[k]);
-			free(copy);
-			return NULL;
-		}
-	}
-	copy[i] = NULL;
-	return copy;
+    cmd->argv[i] = NULL;
+    cmd->redirs = NULL;
+    return cmd;
 }
 
 char *join_path(const char *dir, const char *cmd)
@@ -100,9 +155,10 @@ int	main(int argc, char **argv, char **envp)
 	char	*line;
 	t_cmd	*cmd;
 	int		status = 0;
+	int		last_exit_status = 0;
 
 	// Duplicate environment
-	char **shell_envp = dup_envp(envp);
+	char **shell_envp = clone_arr(envp);
 	if (!shell_envp)
 		return (1);
 
@@ -125,7 +181,7 @@ int	main(int argc, char **argv, char **envp)
 
 		if (is_builtin(cmd->argv[0]))
 		{
-			execute_builtin(cmd, &shell_envp);
+			last_exit_status = execute_builtin(cmd, &shell_envp, last_exit_status);
 		}
 		else
 		{
