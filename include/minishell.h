@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/09 14:51:44 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/14 12:32:28 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,23 @@
 #include "../Libft/ft_printf/printf.h"
 #include <sys/wait.h>
 
+# define RST		"\033[0m" // Reset formatting
+# define R			"\033[31m" // Red
+# define G			"\033[32m" // Green
+# define Y			"\033[33m" // Yellow
+# define B			"\033[34m" // Blue
+
 // ===============================
 // ENUMS
 // ===============================
 // TOKENS - DUDE:
 
-    typedef enum e_cmd_type {
-        CMD_NONE,
-        CMD_AND_IF,
-        CMD_OR_IF,
-        CMD_PIPE
-    }   t_cmd_type;
+typedef enum e_cmd_type {
+	CMD_NONE,
+	CMD_AND_IF,
+	CMD_OR_IF,
+	CMD_PIPE
+}   t_cmd_type;
 
 typedef enum e_token
 {
@@ -53,18 +59,18 @@ typedef enum e_token
 // ===============================
 typedef struct s_redir
 {
-	t_token     type;
-	char            *filename;  // or delimiter for heredoc
-	struct s_redir  *next;
-}   t_redir;
+	t_token			type;
+	char			*filename;  // or delimiter for heredoc
+	struct s_redir	*next;
+}	t_redir;
 
 typedef struct s_cmd
 {
-	char          **argv;       // arguments passed to execve or builtin
-	t_redir        *redirs;     // list of redirections
-	struct s_cmd   *next;       // next command in pipeline
-	t_cmd_type     next_type; // e.g. AND_IF, OR_IF, PIPE
-}   t_cmd;
+	char			**argv;	// arguments passed to execve or builtin
+	t_redir			*redirs;	// list of redirections
+	struct s_cmd	*next;	// next command in pipeline
+	t_cmd_type		next_type;	// e.g. AND_IF, OR_IF, PIPE
+}	t_cmd;
 
 // ===============================
 // PARSER INTERFACE - András
@@ -105,5 +111,6 @@ void	free_envp(char **envp);
 int		ft_strcmp(char *s1, char *s2);
 char	**selection_sort(char **ar);
 char	**clone_arr(char **ar);
+void		log_error(const char *error, const char *function);
 
 #endif
