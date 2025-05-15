@@ -6,7 +6,7 @@
 /*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 14:36:53 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/07 14:59:18 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/05/15 14:03:19 by amarcz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,11 @@ t_cmd *parse_input(char *input)
     // int first_word;
     
     tokens = ft_tokenize(input);
-    if (!tokens)
+    if (!validate_tokens(tokens) || !tokens)
+    {
+        free_split(tokens);
         return (NULL);
+    }
     i = 0;
     argv_i = 0;
     head = NULL;

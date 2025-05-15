@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/15 11:45:23 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/15 14:02:09 by amarcz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ void    print_cmds(t_cmd *cmd);
 char    **ft_tokenize(char *input);
 int     is_redirection(char *token);
 int    handle_redirection(t_cmd *cmd, char **tokens, int *i);
+int		validate_tokens(char **tokens);
 void    free_cmds(t_cmd *cmd);
 void    free_split(char **arr);
 char    **tokenize_line(const char *line);                            // optional internal
