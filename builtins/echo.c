@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:08:16 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/09 14:56:15 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/15 11:03:40 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,5 +53,5 @@ int	echo_builtin(t_cmd *cmd, int status)
 	}
 	if (newline)
 		ft_printf("\n");
-	return (0);
+	return (CMD_SUCCESS);
 }

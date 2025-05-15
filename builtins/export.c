@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:26:01 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/08 22:03:51 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/15 11:06:03 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,20 +70,20 @@ int	export_builtin(t_cmd *cmd, char ***envp)
 	if (cmd->argv[1] == NULL)
 	{
 		print_sorted_env(*envp);
-		return (0);
+		return (CMD_SUCCESS);
 	}
 	i = 1;
 	while (cmd->argv[i])
 	{
 		new_var = ft_strdup(cmd->argv[i]);
 		if (new_var == NULL)
-			return (1);
+			return (CMD_FAILURE);
 		if (ft_strchr(new_var, '=') == NULL)
-			return (1);
+			return (CMD_FAILURE);
 		add_env_var(envp, new_var);
 		free(new_var);
 		new_var = NULL;
 		i++;
 	}
-	return (0);
+	return (CMD_SUCCESS);
 }

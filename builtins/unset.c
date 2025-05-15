@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:32:07 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/08 22:23:01 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/15 11:07:16 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,10 @@ static int	check_env_exists(char **envp, char *var_name)
 	{
 		if (ft_strncmp(envp[i], var_name, var_len) == 0
 			&& envp[i][var_len] == '=')
-			return (1);
+			return (CMD_FAILURE);
 		i++;
 	}
-	return (0);
+	return (CMD_SUCCESS);
 }
 
 static void	handle_unset(char *env, char **new_envp, char *var_name, int *j)
@@ -75,12 +75,12 @@ int	unset_builtin(t_cmd *cmd, char ***envp)
 
 	ft_printf("unset builtin is called...\n");
 	if (cmd->argv[1] == NULL)
-		return (0);
+		return (CMD_SUCCESS);
 	i = 1;
 	while (cmd->argv[i])
 	{
 		unset_env_var(envp, cmd->argv[i]);
 		i++;
 	}
-	return (0);
+	return (CMD_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:14:40 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/11 16:05:24 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/15 11:03:21 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	cd_builtin(t_cmd *cmd)
 	if (chdir(path) == -1)
 	{
 		perror("cd");
-		return (1);
+		return (127);
 	}
-	return (0);
+	return (CMD_SUCCESS);
 }

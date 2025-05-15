@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/14 12:32:28 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/15 11:45:23 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,15 @@
 # define MINISHELL_H
 
 # include <unistd.h>
+# include <fcntl.h>
 # include <stdlib.h>
 # include <stdio.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <string.h>
-#include "../Libft/libft.h"
-#include "../Libft/ft_printf/printf.h"
-#include <sys/wait.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include <string.h>
+# include "../Libft/libft.h"
+# include "../Libft/ft_printf/printf.h"
+# include <sys/wait.h>
 
 # define RST		"\033[0m" // Reset formatting
 # define R			"\033[31m" // Red
@@ -53,6 +54,12 @@ typedef enum e_token
 	AND, // &&
 	OR // ||
 }   t_token;
+
+typedef enum e_cmd_status
+{
+	CMD_SUCCESS,
+	CMD_FAILURE
+}   t_cmd_status;
 
 // ===============================
 // STRUCTS

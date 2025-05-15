@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:25:18 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/08 22:06:32 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/15 11:06:23 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ int	pwd_builtin(void)
 	if (cwd == NULL)
 	{
 		perror("pwd");
-		return (1);
+		return (CMD_FAILURE);
 	}
 	ft_printf("%s\n", cwd);
 	free(cwd);
 	cwd = NULL;
-	return (0);
+	return (CMD_SUCCESS);
 }

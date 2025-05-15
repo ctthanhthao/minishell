@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 18:44:16 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/08 22:03:08 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/15 11:05:13 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,5 +23,5 @@ int	env_builtin(char **envp)
 		ft_printf("%s\n", envp[i]);
 		i++;
 	}
-	return (0);
+	return (CMD_SUCCESS);
 }

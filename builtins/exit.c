@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 20:25:39 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/08 22:00:41 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/15 11:05:27 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,5 +19,5 @@ int	exit_builtin(t_cmd *cmd, char ***envp)
 	free_envp(*envp);
 	free(*envp);
 	*envp = NULL;
-	exit(0);
+	exit(EXIT_SUCCESS);
 }

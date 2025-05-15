@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:42:30 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/09 14:52:06 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/15 11:07:34 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,5 @@ int execute_builtin(t_cmd *cmd, char ***envp, int status)
 		return (env_builtin(*envp));
 	else if (!ft_memcmp(cmd->argv[0], "pwd", 3))
 		return (pwd_builtin());
-	return (1);
+	return (CMD_FAILURE);
 }
