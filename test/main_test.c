@@ -6,111 +6,114 @@
 t_cmd *parse_input(char *line)
 {
     t_cmd *cmd = malloc(sizeof(t_cmd));
-    if (!cmd) return NULL;
+    if (!cmd)
+        return NULL;
 
-    int count = 0;
-    char *tmp = strdup(line);
-    int in_single_quote = 0, in_double_quote = 0;
+    cmd->argv = malloc(sizeof(char *) * 64); // arbitrary capacity for now
+    if (!cmd->argv)
+        return NULL;
 
-    // First pass: count tokens
-    for (char *p = tmp; *p; p++)
-    {
-        if (*p == '\\') // Skip the next character
-        {
-            p++;
-            continue;
-        }
-        if (*p == '\'' && !in_double_quote)
-            in_single_quote = !in_single_quote;
-        else if (*p == '"' && !in_single_quote)
-            in_double_quote = !in_double_quote;
-        else if (!in_single_quote && !in_double_quote && (*p == ' ' || *p == '\t' || *p == '\n'))
-        {
-            *p = '\0';
-            if (p > tmp && *(p - 1) != '\0')
-                count++;
-        }
-    }
-    if (tmp[0] != '\0')
-        count++;
-    free(tmp);
+    cmd->redirs = NULL;
 
-    cmd->argv = malloc(sizeof(char *) * (count + 1));
-    if (!cmd->argv) return NULL;
-
-    // Second pass: extract tokens and handle variable expansion
     int i = 0;
-    in_single_quote = 0;
-    in_double_quote = 0;
+    int in_single_quote = 0, in_double_quote = 0;
     char *start = NULL;
+    t_redir *last_redir = NULL;
 
-    for (char *p = line; *p; p++)
+    for (char *p = line; *p;)
     {
-        if (*p == '\\') // Handle escape sequences
-        {
-            if (!start)
-                start = p;
-            memmove(p, p + 1, strlen(p)); // Remove the backslash
-            continue;
-        }
+        // Skip whitespace
+        while (*p == ' ' || *p == '\t' || *p == '\n')
+            *p++ = '\0';
+
+        if (*p == '\0') break;
+
+        // Handle quotes
         if (*p == '\'' && !in_double_quote)
         {
             in_single_quote = !in_single_quote;
-            if (!in_single_quote && start)
-            {
-                cmd->argv[i++] = strndup(start, p - start);
-                start = NULL;
-            }
-            else if (in_single_quote)
-                start = p + 1;
+            start = ++p;
+            while (*p && (*p != '\'' || in_single_quote == 0))
+                p++;
+            in_single_quote = 0;
+            *p++ = '\0';
+            cmd->argv[i++] = strdup(start);
         }
         else if (*p == '"' && !in_single_quote)
         {
             in_double_quote = !in_double_quote;
-            if (!in_double_quote && start)
-            {
-                cmd->argv[i++] = strndup(start, p - start);
-                start = NULL;
-            }
-            else if (in_double_quote)
-                start = p + 1;
-        }
-        else if (!in_single_quote && in_double_quote && *p == '$') // Handle variable expansion
-        {
-            char *var_start = p + 1;
-            while (*p && (isalnum(*p) || *p == '_'))
+            start = ++p;
+            while (*p && (*p != '"' || in_double_quote == 0))
                 p++;
-            char *var_name = strndup(var_start, p - var_start);
-            char *var_value = getenv(var_name);
-            free(var_name);
-            if (var_value)
-            {
-                size_t len = strlen(var_value);
-                memmove(var_start - 1 + len, p, strlen(p) + 1); // Shift the rest of the string
-                memcpy(var_start - 1, var_value, len);          // Insert the variable value
-                p = var_start - 1 + len - 1;                   // Adjust pointer
-            }
-            p--; // Adjust for the loop increment
+            in_double_quote = 0;
+            *p++ = '\0';
+            cmd->argv[i++] = strdup(start);
         }
-        else if (!in_single_quote && !in_double_quote && (*p == ' ' || *p == '\t' || *p == '\n'))
+        else if (*p == '>' || *p == '<')
         {
-            *p = '\0';
-            if (start)
+            t_redir *new_redir = malloc(sizeof(t_redir));
+            if (!new_redir)
+                return NULL;
+
+            new_redir->next = NULL;
+
+            if (*p == '>' && *(p + 1) == '>')
             {
-                cmd->argv[i++] = strdup(start);
-                start = NULL;
+                new_redir->type = MOREMORE;
+                p += 2;
             }
-        }
-        else if (!start)
+            else if (*p == '<' && *(p + 1) == '<')
+            {
+                new_redir->type = LESSLESS;
+                p += 2;
+            }
+            else if (*p == '>')
+            {
+                new_redir->type = MORE;
+                p++;
+            }
+            else
+            {
+                new_redir->type = LESS;
+                p++;
+            }
+
+            // Skip whitespace
+            while (*p == ' ' || *p == '\t')
+                p++;
+
+            // Capture filename
             start = p;
+            while (*p && *p != ' ' && *p != '\t' && *p != '\n' && *p != '<' && *p != '>')
+                p++;
+            new_redir->filename = strndup(start, p - start);
+
+            // Append to redir list
+            if (!cmd->redirs)
+                cmd->redirs = new_redir;
+            else
+                last_redir->next = new_redir;
+
+            last_redir = new_redir;
+        }
+        else
+        {
+            start = p;
+            while (*p && *p != ' ' && *p != '\t' && *p != '\n' && *p != '<' && *p != '>')
+                p++;
+            if (*p)
+                *p++ = '\0';
+            cmd->argv[i++] = strdup(start);
+        }
     }
-    if (start)
-        cmd->argv[i++] = strdup(start);
 
     cmd->argv[i] = NULL;
-    cmd->redirs = NULL;
+    cmd->next = NULL;
+    cmd->next_type = CMD_NONE;
+
     return cmd;
 }
+
 
 char *join_path(const char *dir, const char *cmd)
 {
@@ -154,8 +157,8 @@ int	main(int argc, char **argv, char **envp)
 
 	char	*line;
 	t_cmd	*cmd;
-	int		status = 0;
 	int		last_exit_status = 0;
+	int		stdout_bk;
 
 	// Duplicate environment
 	char **shell_envp = clone_arr(envp);
@@ -178,8 +181,29 @@ int	main(int argc, char **argv, char **envp)
 			free_cmd(cmd);
 			continue;
 		}
-
-		if (is_builtin(cmd->argv[0]))
+		// Save the original STDOUT_FILENO
+		stdout_bk = dup(STDOUT_FILENO);
+		if (stdout_bk == -1)
+		{
+			log_error("Error saving STDOUT_FILENO", "dup");
+			return (CMD_FAILURE);
+		}
+		if (apply_redirections(cmd->redirs) == CMD_FAILURE)
+		{
+			last_exit_status = 1;
+			free_cmd(cmd);
+			continue;
+		}
+		execute_commands(cmd, shell_envp, last_exit_status);
+		// Restore the original STDOUT_FILENO
+		if (dup2(stdout_bk, STDOUT_FILENO) == -1)
+		{
+			log_error("Error restoring STDOUT_FILENO", "dup2");
+			free_cmd(cmd);
+			continue;
+		}
+		close(stdout_bk);
+		/*if (is_builtin(cmd->argv[0]))
 		{
 			last_exit_status = execute_builtin(cmd, &shell_envp, last_exit_status);
 		}
@@ -198,7 +222,7 @@ int	main(int argc, char **argv, char **envp)
 			}
 			else
 				waitpid(pid, &status, 0);
-		}
+		}*/
 		free_cmd(cmd);
 		cmd = NULL;
 	}

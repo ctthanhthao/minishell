@@ -8,9 +8,10 @@ LDFLAGS 		:= -lreadline
 SRCS    := main.c \
 			helper/utils.c helper/cleanup.c helper/clone.c helper/sort.c \
 			input/validation.c input/parse.c input/tokenizer.c input/redir_parse.c \
-			builtins/cd.c builtins/echo.c builtins/env.c \
-			builtins/export.c builtins/pwd.c builtins/unset.c builtins/exit.c \
-			executor/execute_builtin.c
+			builtins/cd.c     builtins/echo.c builtins/env.c \
+			builtins/export.c builtins/pwd.c  builtins/unset.c builtins/exit.c \
+			executor/execute_builtin.c       executor/apply_redirections.c executor/execute_commands.c \
+			executor/execute_sgl_command.c
 	
 OBJ        := $(SRCS:.c=.o)
 

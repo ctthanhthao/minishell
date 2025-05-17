@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:38:06 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/14 14:01:39 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/16 11:50:36 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,9 @@
 
 void	log_error(const char *error, const char *function)
 {
+	printf(R "%s\n" RST, error);
 	if (function)
-	{
-		printf(R "%s\n" RST, error);
 		perror(function);
-	}
-	else
-		printf(R "%s\n" RST, error);
 }
 
 int	ft_strcmp(char *s1, char *s2)

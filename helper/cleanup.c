@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:07:20 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/08 22:00:09 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/16 11:21:02 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,21 +38,21 @@ void	free_cmd(t_cmd *cmd)
 		return ;
 	ft_printf("free_cmd is called...\n");
 	i = 0;
-	while (cmd->argv[i])
+	if (cmd->argv)
 	{
-		free(cmd->argv[i]);
-		i++;
+		while (cmd->argv[i])
+			free(cmd->argv[i++]);
+		free(cmd->argv);
 	}
 	while (cmd->redirs)
 	{
 		tmp = cmd->redirs;
 		cmd->redirs = cmd->redirs->next;
-		free(tmp->filename);
-		tmp->filename = NULL;
+		if (tmp->filename)
+			free(tmp->filename);
 		free(tmp);
 		tmp = NULL;
 	}
-	free(cmd->argv);
 	free(cmd);
 	cmd = NULL;
 }

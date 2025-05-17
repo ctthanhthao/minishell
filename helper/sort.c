@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 20:09:21 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/08 21:50:17 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/17 22:20:28 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char	**selection_sort(char **ar)
 		j = i + 1;
 		while (ar[j])
 		{
-			if (ft_strcmp(ar[i], ar[j]) > 0)
+			if (ft_strcmp(ar[min_idx], ar[j]) > 0)
 				min_idx = j;
 			j++;
 		}
@@ -51,7 +51,7 @@ char	**selection_sort(char **ar)
 #include "utils.c"
 int main()
 {
-	char *ar[] = {"TERM", "TEAM", "Hello", "world", NULL};
+	char *ar[] = {"GIT_ASKPASS", "TERM=xterm-256color", "MallocNanoZone=0", "COLORTERM=truecolor", NULL};
 	char **re = selection_sort(ar);
 	int i = 0;
 	while (re[i])

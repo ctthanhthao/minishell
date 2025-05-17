@@ -7,3 +7,4 @@ libftprintf.a
 .vscode
 minishell
 .gitignore
+.DS_Store

@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:26:01 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/15 11:06:03 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/17 22:27:53 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ static void	print_sorted_env(char **env)
 	copy = selection_sort(clone_arr(env));
 	while (copy[i])
 	{
-		eq = ft_strchr(env[i], '=');
-		key = ft_substr(env[i], 0, eq - env[i]);
+		eq = ft_strchr(copy[i], '=');
+		key = ft_substr(copy[i], 0, eq - copy[i]);
 		ft_printf("declare -x %s=\"%s\"\n", key, (eq + 1));
 		i++;
 	}

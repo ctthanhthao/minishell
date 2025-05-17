@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/15 14:02:09 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/05/17 22:34:59 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,10 +97,11 @@ t_redir *parse_redirections(char **tokens, int *i);                  // optional
 // ===============================
 // EXECUTOR INTERFACE - Thao
 // ===============================
-int		execute_commands(t_cmd *cmd_list, char **envp);
+int		execute_commands(t_cmd *cmd_list, char **envp, int last_status);
 int		is_builtin(const char *cmd);
 int		execute_builtin(t_cmd *cmd, char ***envp, int status);
-void	apply_redirections(t_redir *redirs);
+int		process_pipe(t_cmd *cmd, char **envp, int last_status);
+int		apply_redirections(t_redir *redirs);
 int		cd_builtin(t_cmd *cmd);
 int		pwd_builtin();
 int		export_builtin(t_cmd *cmd, char ***envp);
@@ -108,6 +109,7 @@ int		echo_builtin(t_cmd *cmd, int status);
 int		unset_builtin(t_cmd *cmd, char ***envp);
 int		env_builtin(char **envp);
 int 	exit_builtin(t_cmd *cmd, char ***envp);
+int		execute_single_command(t_cmd *cmd, char **envp, int last_status);
 
 // ===============================
 // CLEANUP / UTILS
