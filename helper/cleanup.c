@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:07:20 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/19 09:45:20 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/19 13:30:34 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	free_cmd(t_cmd *cmd)
 	t_redir	*tmp_re;
 
 	ft_printf("free_cmd is called...\n");
+	i = 0;
 	while (cmd)
 	{
 		next = cmd->next;

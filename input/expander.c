@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 10:23:05 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/19 11:42:02 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/19 12:59:01 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,18 @@ static char	*get_env_value(const char *name, char **env)
 	char	*eq;
 	int		i;
 
+	i = 0;
 	while (env[i])
 	{
 		eq = ft_strchr(env[i], '=');
 		if (!eq)
 		{
 			i++;
-			continue;
+			continue ;
 		}
 		len = eq - env[i];
-		if (ft_strncmp(env[i], name, len) == 0 && name[len] == '\0')
+		if (ft_strncmp(env[i], name, len) == 0 && env[i][len] == '='
+				&& name[len] == '\0')
 			return (eq + 1);
 		i++;
 	}
@@ -36,16 +38,16 @@ static char	*get_env_value(const char *name, char **env)
 
 static char	*expand_one_var(const char **p, int last_status, char **env)
 {
-	const char *start;
-	int 		len;
+	const char	*start;
+	int			len;
 	char		*var_name;
 	char		*value;
-	
+
 	start = *p + 1;
 	if (*start == '?')
 	{
 		(*p) += 2;
-		return ft_itoa(last_status);
+		return (ft_itoa(last_status));
 	}
 	len = 0;
 	while (start[len] && (ft_isalnum(start[len]) || start[len] == '_'))
@@ -54,45 +56,80 @@ static char	*expand_one_var(const char **p, int last_status, char **env)
 	value = ft_strdup(get_env_value(var_name, env));
 	free(var_name);
 	*p += len + 1;
-	return value;
+	return (value);
 }
+
+static bool	handle_quotes(char **p, int *in_double, int *in_single, char **tmp)
+{
+	char	*c;
+
+	c = **p;
+	if (c == '\'' && !*in_double)
+	{
+		*in_single = !*in_single;
+		*tmp = ft_substr(*p, 0, 1);
+		(*p)++;
+		return (true);
+	}
+	else if (c == '"' && !*in_single)
+	{
+		*in_double = !*in_double;
+		*tmp = ft_substr(*p, 0, 1);
+		(*p)++;
+		return (true);
+	}
+	return (false);
+}
+
+static void	handle_text(char **p, int in_double, int in_single, char **tmp)
+{
+	int	start;
+
+	start = 0;
+	while (*p[start] && (*p[start] != '$' || in_single))
+	{
+		if (*p[start] == '\'' && !in_double)
+			break ;
+		if (*p[start] == '"' && !in_single)
+			break ;
+		start++;
+	}
+	*tmp = ft_substr(*p, 0, start);
+	(*p) += start;
+}
+/**
+ * It's supposed to apply to an argv in cmd,
+ * - If argv contains valid env variables, new argv is returned after 
+ * those variables are replaced by their value.
+ * - Otherwise, original argv is returned. 
+ * It supports
+ * + Quotes (' should disable expansion)
+ * + Recursive expansion ($FOO_$BAR)
+ * + Skipping invalid variable names ($5X or $!)
+ */
 
 char	*expand_dollar(const char *arg, int last_status, char **env)
 {
-	const char	*p = arg;
-	char		*result = ft_calloc(1, 1);
-	char		*tmp;
-	int			start;
-	int			in_single = 0;
-	int			in_double = 0;
+	char	*p ;
+	char	*result;
+	char	*tmp;
+	int		in_single;
+	int		in_double;
 
+	p = (char *)arg;
+	result = ft_calloc(1, 1);
+	in_single = 0;
+	in_double = 0;
 	while (*p)
 	{
-		if (*p == '\'' && !in_double) {
-			in_single = !in_single;
-			tmp = ft_substr(p, 0, 1);
-			p++;
-		}
-		else if (*p == '"' && !in_single) {
-			in_double = !in_double;
-			tmp = ft_substr(p, 0, 1);
-			p++;
-		}
-		else if (*p == '$' && !in_single) {
+		if (handle_quotes(&p, &in_double, &in_single, &tmp))
+			;
+		else if (*p == '$' && !in_single)
 			tmp = expand_one_var(&p, last_status, env);
-		}
-		else {
-			start = 0;
-			while (p[start] && (p[start] != '$' || in_single)) {
-				if (p[start] == '\'' && !in_double) break;
-				if (p[start] == '"' && !in_single) break;
-				start++;
-			}
-			tmp = ft_substr(p, 0, start);
-			p += start;
-		}
+		else
+			handle_text(&p, in_double, in_single, &tmp);
 		result = ft_strjoin_free(result, tmp);
 		free(tmp);
 	}
-	return result;
+	return (result);
 }

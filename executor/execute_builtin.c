@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:42:30 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/19 10:14:34 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/19 13:28:37 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,33 +14,33 @@
 
 int	is_builtin(const char *cmd)
 {
-	return (!ft_memcmp(cmd, "cd", 2) ||
-			!ft_memcmp(cmd, "exit", 4) ||
-			!ft_memcmp(cmd, "export", 6) ||
-			!ft_memcmp(cmd, "unset", 5) ||
-			!ft_memcmp(cmd, "echo", 4) ||
-			!ft_memcmp(cmd, "env", 3) ||
-			!ft_memcmp(cmd, "pwd", 3));
+	return (!ft_strcmp(cmd, "cd") ||
+			!ft_strcmp(cmd, "exit") ||
+			!ft_strcmp(cmd, "export") ||
+			!ft_strcmp(cmd, "unset") ||
+			!ft_strcmp(cmd, "echo") ||
+			!ft_strcmp(cmd, "env") ||
+			!ft_strcmp(cmd, "pwd"));
 }
 
 int execute_builtin(t_cmd *cmd, char ***envp, int *status)
 {
-	if (!ft_memcmp(cmd->argv[0], "cd", 2))
+	if (!ft_strcmp(cmd->argv[0], "cd"))
 		*status = cd_builtin(cmd);
-	else if (!ft_memcmp(cmd->argv[0], "exit", 4))
+	else if (!ft_strcmp(cmd->argv[0], "exit"))
 	{
 		*status = exit_builtin(cmd, envp);
 		return (CMD_EXIT);
 	}
-	else if (!ft_memcmp(cmd->argv[0], "export", 6))
+	else if (!ft_strcmp(cmd->argv[0], "export"))
 		*status = export_builtin(cmd, envp);
-	else if (!ft_memcmp(cmd->argv[0], "unset", 5))
+	else if (!ft_strcmp(cmd->argv[0], "unset"))
 		*status = unset_builtin(cmd, envp);
-	else if (!ft_memcmp(cmd->argv[0], "echo", 4))
+	else if (!ft_strcmp(cmd->argv[0], "echo"))
 		*status = echo_builtin(cmd, status);
-	else if (!ft_memcmp(cmd->argv[0], "env", 3))
+	else if (!ft_strcmp(cmd->argv[0], "env"))
 		*status = env_builtin(*envp);
-	else if (!ft_memcmp(cmd->argv[0], "pwd", 3))
+	else if (!ft_strcmp(cmd->argv[0], "pwd"))
 		*status = pwd_builtin();
 	else
 		*status = 1;

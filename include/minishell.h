@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/19 11:42:35 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/19 13:33:50 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include "../Libft/libft.h"
 # include "../Libft/ft_printf/printf.h"
 # include <sys/wait.h>
+# include <stdbool.h>
 //# include "../test/mem_debug.h"
 
 # define RST		"\033[0m" // Reset formatting
@@ -100,15 +101,15 @@ char	*expand_dollar(const char *arg, int last_status, char **env);              
 // ===============================
 // EXECUTOR INTERFACE - Thao
 // ===============================
-int		execute_commands(t_cmd *cmd_list, char **envp, int last_status);
+int		execute_commands(t_cmd *cmd_list, char **envp, int *last_status);
 int		is_builtin(const char *cmd);
-int		execute_builtin(t_cmd *cmd, char ***envp, int status);
+int		execute_builtin(t_cmd *cmd, char ***envp, int *status);
 int		process_pipe(t_cmd *cmd, char **envp, int last_status);
 int		apply_redirections(t_redir *redirs);
 int		cd_builtin(t_cmd *cmd);
 int		pwd_builtin();
 int		export_builtin(t_cmd *cmd, char ***envp);
-int		echo_builtin(t_cmd *cmd, int status);
+int		echo_builtin(t_cmd *cmd, int *status);
 int		unset_builtin(t_cmd *cmd, char ***envp);
 int		env_builtin(char **envp);
 int 	exit_builtin(t_cmd *cmd, char ***envp);
@@ -121,7 +122,7 @@ char	*ft_strjoin_free(char *s1, const char *s2);
 void	free_split(char **arr);
 void	free_cmd(t_cmd *cmd);
 void	free_envp(char **envp);
-int		ft_strcmp(char *s1, char *s2);
+int		ft_strcmp(const char *s1, const char *s2);
 char	**selection_sort(char **ar);
 char	**clone_arr(char **ar);
 void	log_error(const char *error, const char *function);

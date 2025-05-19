@@ -6,13 +6,13 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:08:16 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/19 10:24:37 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/19 13:23:22 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-int	echo_builtin(t_cmd *cmd, int status)
+int	echo_builtin(t_cmd *cmd, int *status)
 {
 	int	i;
 	int	newline;
@@ -20,7 +20,7 @@ int	echo_builtin(t_cmd *cmd, int status)
 	i = 1;
 	newline = 1;
 	ft_printf("echo builtin is called...\n");
-	if (cmd->argv[i] && !ft_strncmp(cmd->argv[i], "-n", 3))
+	if (cmd->argv[i] && !ft_strcmp(cmd->argv[i], "-n"))
 	{
 		newline = 0;
 		i++;
@@ -34,5 +34,6 @@ int	echo_builtin(t_cmd *cmd, int status)
 	}
 	if (newline)
 		ft_printf("\n");
+	*status = 0;
 	return (CMD_SUCCESS);
 }
