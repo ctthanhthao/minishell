@@ -226,8 +226,7 @@ int	main(int argc, char **argv, char **envp)
 		free_cmd(cmd);
 		cmd = NULL;
 	}
-
-	free_envp(shell_envp);
+	free_split(shell_envp);
 //	print_allocs(); // to see if anything is leaking
 	return 0;
 }

@@ -1,23 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   ft_strjoin_free.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/07 20:25:39 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/19 09:46:22 by thchau           ###   ########.fr       */
+/*   Created: 2025/05/19 11:09:06 by thchau            #+#    #+#             */
+/*   Updated: 2025/05/19 11:11:00 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-int	exit_builtin(t_cmd *cmd, char ***envp)
+char	*ft_strjoin_free(char *s1, const char *s2)
 {
-	ft_printf("exit builtin is called...\n");
-	free_cmd(cmd);
-	free_split(*envp);
-	free(*envp);
-	*envp = NULL;
-	exit(EXIT_SUCCESS);
+	char	*joined;
+	
+	if (!s1 && !s2)
+		return (NULL);
+	if (!s1)
+		return (ft_strdup(s2));
+	if (!s2)
+		return (ft_strdup(s1));
+	joined = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	if (!joined)
+		return (NULL);
+	ft_strcpy(joined, s1);
+	ft_strcat(joined, s2);
+	free(s1);
+	return (joined);
 }

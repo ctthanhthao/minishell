@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:07:20 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/16 11:21:02 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/19 09:45:20 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,29 +32,30 @@ void	free_split(char **arr)
 void	free_cmd(t_cmd *cmd)
 {
 	int		i;
-	t_redir	*tmp;
+	t_cmd	*next;
+	t_redir	*tmp_re;
 
-	if (!cmd)
-		return ;
 	ft_printf("free_cmd is called...\n");
-	i = 0;
-	if (cmd->argv)
+	while (cmd)
 	{
-		while (cmd->argv[i])
-			free(cmd->argv[i++]);
-		free(cmd->argv);
+		next = cmd->next;
+		if (cmd->argv)
+		{
+			while (cmd->argv[i])
+				free(cmd->argv[i++]);
+			free(cmd->argv);
+		}
+		while (cmd->redirs)
+		{
+			tmp_re = cmd->redirs;
+			cmd->redirs = cmd->redirs->next;
+			if (tmp_re->filename)
+				free(tmp_re->filename);
+			free(tmp_re);
+		}
+		free(cmd);
+		cmd = next;
 	}
-	while (cmd->redirs)
-	{
-		tmp = cmd->redirs;
-		cmd->redirs = cmd->redirs->next;
-		if (tmp->filename)
-			free(tmp->filename);
-		free(tmp);
-		tmp = NULL;
-	}
-	free(cmd);
-	cmd = NULL;
 }
 
 void	free_envp(char **envp)
