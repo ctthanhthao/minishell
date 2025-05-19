@@ -194,7 +194,7 @@ int	main(int argc, char **argv, char **envp)
 			free_cmd(cmd);
 			continue;
 		}
-		execute_commands(cmd, shell_envp, last_exit_status);
+		execute_commands(cmd, shell_envp, &last_exit_status);
 		// Restore the original STDOUT_FILENO
 		if (dup2(stdout_bk, STDOUT_FILENO) == -1)
 		{

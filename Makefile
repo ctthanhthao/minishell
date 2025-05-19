@@ -6,7 +6,7 @@ LDFLAGS 		:= -lreadline
 
 # Source Files (explicitly listed)
 SRCS    := main.c \
-			helper/utils.c helper/cleanup.c helper/clone.c helper/sort.c helper/ft_strjoin_free.c  \
+			helper/utils.c helper/cleanup.c helper/clone.c helper/sort.c helper/ms_ft_strjoin.c  \
 			input/validation.c input/parse.c input/tokenizer.c input/redir_parse.c \
 			input/expander.c \
 			builtins/cd.c     builtins/echo.c builtins/env.c \
@@ -59,8 +59,8 @@ clean:
 
 fclean: clean
 	rm -f $(NAME)
-	$(MAKE) -C $(LIBFT_DIR) clean
-	$(MAKE) -C $(PRINTF_DIR) clean
+	$(MAKE) -C $(LIBFT_DIR) fclean
+	$(MAKE) -C $(PRINTF_DIR) fclean
 	@echo "$(GREEN) Everything is fully cleaned, Dude!$(DEFAULT)"
 
 re: fclean all

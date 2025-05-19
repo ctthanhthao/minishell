@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strjoin_free.c                                  :+:      :+:    :+:   */
+/*   ms_ft_strjoin.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 11:09:06 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/19 15:00:37 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/19 22:27:55 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,21 @@ char	*ft_strjoin_free(char *s1, char *s2)
 	ft_strlcat(joined, s2, ft_strlen(s2));
 	free(s1);
 	return (joined);
+}
+
+char	*ft_strjoin_path(char *s1, char *s2)
+{
+	size_t	len1;
+	size_t	len2;
+	char	*res;
+
+	len1 = ft_strlen(s1);
+	len2 = ft_strlen(s2);
+	res = malloc(len1 + len2 + 2);
+	if (!res)
+		return (NULL);
+	ft_strlcpy(res, s1, len1 + 1);
+	res[len1] = '/';
+	ft_strlcpy(res + len1 + 1, s2, len2 + 1);
+	return (res);
 }

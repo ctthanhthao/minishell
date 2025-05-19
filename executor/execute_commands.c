@@ -17,7 +17,7 @@ int		execute_commands(t_cmd *cmd_list, char **envp, int *last_status)
 	t_cmd	*cur;
 
 	if (!cmd_list)
-		return (*last_status);
+		return (CMD_SUCCESS);
 	cur = cmd_list;
 	while (cur)
 	{
@@ -30,13 +30,13 @@ int		execute_commands(t_cmd *cmd_list, char **envp, int *last_status)
 			while (cur->next && cur->next_type == CMD_PIPE)
 				cur = cur->next;
 		}
-		else if (cur->next_type == CMD_AND_IF && *last_status == CMD_FAILURE)
+		else if (cur->next_type == CMD_AND_IF && *last_status != CMD_SUCCESS)
 				break;
 		else if (cur->next_type == CMD_OR_IF && *last_status == CMD_SUCCESS)
 				break;
-		if (*last_status == CMD_FAILURE)
+		if (*last_status != CMD_SUCCESS)
 			break;
 		cur = cur->next;
 	}
-	return (*last_status);
+	return (CMD_SUCCESS);
 }
