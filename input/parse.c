@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 14:36:53 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/19 15:25:50 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/19 15:32:04 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ t_redir *add_token(t_redir *last, char *value)
 }
 
 //Main parsing function:
-t_cmd *parse_input(char *input, char **env)
+t_cmd *parse_input(char *input)
 {
     char **tokens;
     int i;
@@ -146,7 +146,7 @@ t_cmd *parse_input(char *input, char **env)
             continue;
         }
         //ft_printf("Rest:\n");
-        expand_dollar(NULL, 0, env);
+        //expand_dollar(NULL, 0, env);
         curr->argv[argv_i++] = ft_strdup(tokens[i++]);// 
         // new = malloc(sizeof(t_redir));
         // if (!new)
