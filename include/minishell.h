@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/19 15:22:01 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/19 15:23:53 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ int		execute_single_command(t_cmd *cmd, char **envp, int *last_status);
 // ===============================
 // CLEANUP / UTILS
 // ===============================
-char	*ft_strjoin_free(char *s1, const char *s2);
+char	*ft_strjoin_free(char *s1, char *s2);
 void	free_split(char **arr);
 void	free_cmd(t_cmd *cmd);
 void	free_envp(char **envp);
