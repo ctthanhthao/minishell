@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 10:23:05 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/19 12:59:01 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/19 14:57:14 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static char	*get_env_value(const char *name, char **env)
 	return ("");
 }
 
-static char	*expand_one_var(const char **p, int last_status, char **env)
+static char	*expand_one_var(char **p, int last_status, char **env)
 {
 	const char	*start;
 	int			len;
@@ -61,7 +61,7 @@ static char	*expand_one_var(const char **p, int last_status, char **env)
 
 static bool	handle_quotes(char **p, int *in_double, int *in_single, char **tmp)
 {
-	char	*c;
+	char	c;
 
 	c = **p;
 	if (c == '\'' && !*in_double)

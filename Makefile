@@ -6,8 +6,9 @@ LDFLAGS 		:= -lreadline
 
 # Source Files (explicitly listed)
 SRCS    := main.c \
-			helper/utils.c helper/cleanup.c helper/clone.c helper/sort.c \
+			helper/utils.c helper/cleanup.c helper/clone.c helper/sort.c helper/ft_strjoin_free.c  \
 			input/validation.c input/parse.c input/tokenizer.c input/redir_parse.c \
+			input/expander.c \
 			builtins/cd.c     builtins/echo.c builtins/env.c \
 			builtins/export.c builtins/pwd.c  builtins/unset.c builtins/exit.c \
 			executor/execute_builtin.c       executor/apply_redirections.c executor/execute_commands.c \

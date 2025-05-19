@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 14:36:53 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/15 14:03:19 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/05/19 14:53:50 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ t_redir *add_token(t_redir *last, char *value)
 }
 
 //Main parsing function:
-t_cmd *parse_input(char *input)
+t_cmd *parse_input(char *input, char **env)
 {
     char **tokens;
     int i;
@@ -146,7 +146,7 @@ t_cmd *parse_input(char *input)
             continue;
         }
         //ft_printf("Rest:\n");
-        curr->argv[argv_i++] = ft_strdup(tokens[i++]);
+        curr->argv[argv_i++] = expand_dollar(tokens[i++], 0, env); //ft_strdup(tokens[i++]);
         // new = malloc(sizeof(t_redir));
         // if (!new)
         //     return (free_split(tokens), NULL);
