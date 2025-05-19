@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/19 13:33:50 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/19 15:22:01 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ typedef struct s_cmd
 // ===============================
 // PARSER INTERFACE - András
 // ===============================
-t_cmd *parse_input(char *input);
+t_cmd *parse_input(char *input, char **envp);
 void    print_cmds(t_cmd *cmd);
 char    **ft_tokenize(char *input);
 int     is_redirection(char *token);
