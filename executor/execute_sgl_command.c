@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 17:47:05 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/20 13:50:46 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/20 19:06:07 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static char	*find_valid_path(char *cmd, char **envp)
 	return (free_split(paths), full_path);
 }
 
-static int	execute_external_cmd(t_cmd *cmd, char **envp)
+static int	execute_external_cmd(t_cmd *cmd, char ***envp)
 {
 	pid_t	pid;
 	int		status;
@@ -77,7 +77,7 @@ static int	execute_external_cmd(t_cmd *cmd, char **envp)
 				"fork"), CMD_FAILURE);
 	if (pid == 0)
 	{
-		if (execve(find_valid_path(cmd->argv[0], envp), cmd->argv, envp) == -1)
+		if (execve(find_valid_path(cmd->argv[0], *envp), cmd->argv, *envp) == -1)
 		{
 			log_error("Error happened in execve during execute_single_command",
 				cmd->argv[0]);
@@ -90,12 +90,12 @@ static int	execute_external_cmd(t_cmd *cmd, char **envp)
 	return (128 + WTERMSIG(status));
 }
 
-int	execute_single_command(t_cmd *cmd, char **envp, int *last_status)
+int	execute_single_command(t_cmd *cmd, char ***envp, int *last_status)
 {
 	if (!cmd || !cmd->argv || !cmd->argv[0])
 		return (*last_status);
 	if (is_builtin(cmd->argv[0]))
-		*last_status = execute_builtin(cmd, &envp, last_status);
+		*last_status = execute_builtin(cmd, envp, last_status);
 	else
 		*last_status = execute_external_cmd(cmd, envp);
 	return (*last_status);

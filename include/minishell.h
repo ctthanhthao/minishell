@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/20 06:23:45 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/20 20:18:03 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ char	*expand_dollar(const char *arg, int last_status, char **env);              
 // ===============================
 // EXECUTOR INTERFACE - Thao
 // ===============================
-int		execute_commands(t_cmd *cmd_list, char **envp, int *last_status);
+int		execute_commands(t_cmd *cmd_list, char ***envp, int *last_status);
 int		is_builtin(const char *cmd);
 int		execute_builtin(t_cmd *cmd, char ***envp, int *status);
 int		process_pipe(t_cmd *cmd, char **envp, int last_status);
@@ -113,7 +113,7 @@ int		echo_builtin(t_cmd *cmd, int *status);
 int		unset_builtin(t_cmd *cmd, char ***envp);
 int		env_builtin(char **envp);
 int 	exit_builtin(t_cmd *cmd, char ***envp);
-int		execute_single_command(t_cmd *cmd, char **envp, int *last_status);
+int		execute_single_command(t_cmd *cmd, char ***envp, int *last_status);
 
 // ===============================
 // CLEANUP / UTILS
@@ -122,10 +122,12 @@ char	*ft_strjoin_free(char *s1, char *s2);
 char	*ft_strjoin_path(char *s1, char *s2);
 void	free_split(char **arr);
 void	free_cmd(t_cmd *cmd);
-void	free_envp(char **envp);
 int		ft_strcmp(const char *s1, const char *s2);
 char	**selection_sort(char **ar);
 char	**clone_arr(char **ar);
 void	log_error(const char *error, const char *function);
+int		is_valid_identifier(const char *s);
+void	print_sorted_env(char **env);
+void	print_env(char **envp);
 
 #endif

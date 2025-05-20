@@ -12,7 +12,7 @@
 
 #include "../include/minishell.h"
 
-int		execute_commands(t_cmd *cmd_list, char **envp, int *last_status)
+int		execute_commands(t_cmd *cmd_list, char ***envp, int *last_status)
 {
 	t_cmd	*cur;
 

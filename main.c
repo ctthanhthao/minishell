@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:11:32 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/20 13:56:07 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/20 19:03:26 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int main (int argc, char **argv, char **envp)
 			free_cmd(cmd);
 			continue;
 		}
-		execute_commands(cmd, shell_envp, &last_exit_status);
+		execute_commands(cmd, &shell_envp, &last_exit_status);
         // Restore the original STDIN_FILENO STDOUT_FILENO
 		if (stdout_bk != -1)
 		{

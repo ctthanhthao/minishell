@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:07:20 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/19 13:30:34 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/20 19:44:57 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,18 +59,3 @@ void	free_cmd(t_cmd *cmd)
 	}
 }
 
-void	free_envp(char **envp)
-{
-	int	i;
-
-	if (!envp)
-		return ;
-	ft_printf("free_envp is called...\n");
-	i = 0;
-	while (envp[i])
-	{
-		free(envp[i]);
-		envp[i] = NULL;
-		i++;
-	}
-}
