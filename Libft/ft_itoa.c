@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 12:41:01 by amarcz            #+#    #+#             */
-/*   Updated: 2024/09/25 11:09:54 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/05/20 12:53:09 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ char	*ft_itoa(int nbr)
 	if (!str)
 		return (NULL);
 	if (nbr == 0)
-		return ("0");
+		return (ft_strdup("0"));
 	if (nbr < 0)
 		str[0] = '-';
 	fill_str (str, nb, size - 1);

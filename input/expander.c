@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 10:23:05 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/20 12:15:46 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/05/20 12:54:06 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ char	*expand_dollar(const char *arg, int last_status, char **env)
 	result = ft_calloc(1, 1);
 	in_single = 0;
 	in_double = 0;
-	ft_printf("The arg is %s\n", arg);
+	//ft_printf("expand_dollar arg is %s\n", arg);
 	while (*p)
 	{
 		if (handle_quotes(&p, &in_double, &in_single, &tmp))
@@ -134,5 +134,8 @@ char	*expand_dollar(const char *arg, int last_status, char **env)
 		result = ft_strjoin_free(result, tmp);
 		free(tmp);
 	}
-	return (result);
+	//ft_printf("expand_dollar result is %s\n", result);
+	tmp = ft_strtrim(result, "\"\'");
+	free(result);
+	return (tmp);
 }

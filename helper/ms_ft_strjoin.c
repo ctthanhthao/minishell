@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 11:09:06 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/20 07:28:25 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/20 12:40:59 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 char	*ft_strjoin_free(char *s1, char *s2)
 {
 	char	*joined;
+	size_t	len1;
+	size_t	len2;
 	
 	if (!s1 && !s2)
 		return (NULL);
@@ -22,11 +24,13 @@ char	*ft_strjoin_free(char *s1, char *s2)
 		return (ft_strdup(s2));
 	if (!s2)
 		return (ft_strdup(s1));
-	joined = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	len1 = ft_strlen(s1);
+	len2 = ft_strlen(s2);
+	joined = malloc(len1 + len2 + 1);
 	if (!joined)
 		return (NULL);
-	ft_strlcpy(joined, s1, ft_strlen(s1) + 1);
-	ft_strlcat(joined, s2, ft_strlen(s2) + 1);
+	ft_strlcpy(joined, s1, len1 + 1);
+	ft_strlcpy(joined + len1, s2, len2 + 1);
 	free(s1);
 	return (joined);
 }
