@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:11:32 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/19 20:57:43 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/20 06:24:19 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int main (int argc, char **argv, char **envp)
         	add_history(input);
 
         //Parse the input
-        cmd = parse_input(input);
+        cmd = parse_input(input, last_exit_status, envp);
 		//free the memory allocated in readline
         free(input);
 		if (!cmd || !cmd->argv || !cmd->argv[0])

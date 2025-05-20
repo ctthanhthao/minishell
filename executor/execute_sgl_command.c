@@ -6,47 +6,25 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 17:47:05 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/19 22:30:20 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/20 06:12:46 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-static void	test_in_dev_null(char *full_path, char *cmd, char **envp)
-{
-	int	fd;
-
-	fd = open("/dev/null", O_WRONLY);
-	if (fd != -1)
-	{
-		dup2(fd, STDOUT_FILENO);
-		dup2(fd, STDERR_FILENO);
-		close(fd);
-	}
-	execve(full_path, (char *[]){cmd, NULL}, envp);
-	exit(126);
-}
-
-static char	*build_and_test(char **paths, char *cmd, char **envp)
+static char	*build_path_and_test(char **paths, char *cmd)
 {
 	char	*full_path;
-	pid_t	pid;
-	int		status;
 	int		i;
 
 	i = -1;
 	while (paths[++i])
 	{
 		full_path = ft_strjoin_path(paths[i], cmd);
-		pid = fork();
-		if (pid == 0)
-			test_in_dev_null(full_path, cmd, envp);
-		else if (pid > 0)
-		{
-			waitpid(pid, &status, 0);
-			if (WIFEXITED(status) && WEXITSTATUS(status) != 126)
-				return (full_path);
-		}
+		if (full_path == NULL)
+			continue;
+		if (access(full_path, X_OK) == 0)
+			return (full_path);
 		if (full_path)
 			free(full_path);
 	}
@@ -83,7 +61,7 @@ static char	*find_valid_path(char *cmd, char **envp)
 	paths = ft_split(path_env, ':');
 	if (!paths)
 		return (NULL);
-	full_path = build_and_test(paths, cmd, envp);
+	full_path = build_path_and_test(paths, cmd);
 	return (free_split(paths), full_path);
 }
 

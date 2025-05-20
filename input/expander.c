@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 10:23:05 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/19 14:57:14 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/20 08:20:45 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,17 +84,19 @@ static bool	handle_quotes(char **p, int *in_double, int *in_single, char **tmp)
 static void	handle_text(char **p, int in_double, int in_single, char **tmp)
 {
 	int	start;
+	char	*s;
 
 	start = 0;
-	while (*p[start] && (*p[start] != '$' || in_single))
+	s = *p;
+	while (s[start] && (s[start] != '$' || in_single))
 	{
-		if (*p[start] == '\'' && !in_double)
+		if (s[start] == '\'' && !in_double)
 			break ;
-		if (*p[start] == '"' && !in_single)
+		if (s[start] == '"' && !in_single)
 			break ;
 		start++;
 	}
-	*tmp = ft_substr(*p, 0, start);
+	*tmp = ft_substr(s, 0, start);
 	(*p) += start;
 }
 /**
