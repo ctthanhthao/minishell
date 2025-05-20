@@ -6,7 +6,7 @@
 /*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:50:42 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/15 14:26:54 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/05/20 12:12:59 by amarcz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,13 @@ char **ft_tokenize(char *input)
             quote = input[i++];
             start = i;
             while (input[i] && input[i] != quote)
-                i++;
-            tokens[tokeni++] = ft_substr(input, start, i - start);
+                i++; 
+            ft_printf("The i is %d\n and the start is %d \n", i, start);
             if (input[i] == quote)
                 i++;
+            ft_printf("The i is %d\n and the start is %d \n", i, start);
+            ft_printf("The lenght is %d\n", i - (start - 1));
+            tokens[tokeni++] = ft_substr(input, start - 1, i - (start - 1));
             continue;
         }
 
