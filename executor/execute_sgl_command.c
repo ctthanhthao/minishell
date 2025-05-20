@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 17:47:05 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/20 06:12:46 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/20 13:50:46 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,10 +93,10 @@ static int	execute_external_cmd(t_cmd *cmd, char **envp)
 int	execute_single_command(t_cmd *cmd, char **envp, int *last_status)
 {
 	if (!cmd || !cmd->argv || !cmd->argv[0])
-		return (CMD_SUCCESS);
+		return (*last_status);
 	if (is_builtin(cmd->argv[0]))
 		*last_status = execute_builtin(cmd, &envp, last_status);
 	else
 		*last_status = execute_external_cmd(cmd, envp);
-	return (CMD_SUCCESS);
+	return (*last_status);
 }

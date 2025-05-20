@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:11:32 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/20 06:24:19 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/20 13:46:56 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ int main (int argc, char **argv, char **envp)
     t_cmd *cmd;
     char    **shell_envp;
 	int		stdout_bk;
+	int		stdin_bk;
 	int		last_exit_status = 0;
 //    int status = 0;
     (void)argc;
@@ -26,6 +27,8 @@ int main (int argc, char **argv, char **envp)
 
 //    i = -1;
     //MAIN LOOP
+	stdout_bk = -1;
+	stdin_bk = -1;
     shell_envp = clone_arr(envp);
 	if (!shell_envp)
 		return (1);
@@ -51,12 +54,21 @@ int main (int argc, char **argv, char **envp)
 			free_cmd(cmd);
 			continue;
 		}
-        // Save the original STDOUT_FILENO
-		stdout_bk = dup(STDOUT_FILENO);
-		if (stdout_bk == -1)
+		if (cmd->redirs)
 		{
-			log_error("Error saving STDOUT_FILENO", "dup");
-			return (CMD_FAILURE);
+			// Save the original STDOUT_FILENO
+			stdout_bk = dup(STDOUT_FILENO);
+			if (stdout_bk == -1)
+			{
+				log_error("Error saving STDOUT_FILENO", "dup");
+				return (CMD_FAILURE);
+			}
+			stdin_bk = dup(STDIN_FILENO);
+			if (stdin_bk == -1)
+			{
+				log_error("Error saving STDIN_FILENO", "dup");
+				return (CMD_FAILURE);
+			}
 		}
 		if (apply_redirections(cmd->redirs) == CMD_FAILURE)
 		{
@@ -65,14 +77,28 @@ int main (int argc, char **argv, char **envp)
 			continue;
 		}
 		execute_commands(cmd, shell_envp, &last_exit_status);
-        // Restore the original STDOUT_FILENO
-		if (dup2(stdout_bk, STDOUT_FILENO) == -1)
+		printf("In main loop, exit code %i\n", last_exit_status);
+        // Restore the original STDIN_FILENO STDOUT_FILENO
+		if (stdout_bk != -1)
 		{
-			log_error("Error restoring STDOUT_FILENO", "dup2");
-			free_cmd(cmd);
-			continue;
+			if (dup2(stdout_bk, STDOUT_FILENO) == -1)
+			{
+				log_error("Error restoring STDOUT_FILENO", "dup2");
+				free_cmd(cmd);
+				continue;
+			}
+			close(stdout_bk);
 		}
-		close(stdout_bk);
+		if (stdin_bk != -1)
+		{
+			if (dup2(stdin_bk, STDIN_FILENO) == -1)
+			{
+				log_error("Error restoring STDOUT_FILENO", "dup2");
+				free_cmd(cmd);
+				continue;
+			}
+			close(stdin_bk);
+		}
 //        print_cmds(cmd); //Debug output
         free_cmds(cmd);
     }
