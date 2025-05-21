@@ -6,11 +6,35 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 10:44:52 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/21 10:46:05 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/21 12:39:23 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+static char	*get_env_value(const char *name, char **env)
+{
+	int		len;
+	char	*eq;
+	int		i;
+
+	i = 0;
+	while (env[i])
+	{
+		eq = ft_strchr(env[i], '=');
+		if (!eq)
+		{
+			i++;
+			continue ;
+		}
+		len = eq - env[i];
+		if (ft_strncmp(env[i], name, len) == 0 && env[i][len] == '='
+				&& name[len] == '\0')
+			return (eq + 1);
+		i++;
+	}
+	return ("");
+}
 
 char	*expand_one_var(char **p, int last_status, char **env)
 {

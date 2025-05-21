@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 14:36:53 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/21 10:16:45 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/05/21 11:56:38 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ t_cmd	*parse_input(char *input, int last_status, char **envp)
 			}
 			continue ;
 		}
-		curr->argv[argv_i++] = expand_dollar(tokens[i++], last_status, envp);
+		curr->argv[argv_i++] = handle_expansion_if_any(tokens[i++], last_status, envp);
 	}
 	if (curr)
 		curr->argv[argv_i] = NULL;

@@ -6,46 +6,38 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 10:23:05 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/21 11:28:30 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/21 12:52:36 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-static char	*get_env_value(const char *name, char **env)
+/*static bool	handle_backslash(char **p, char **tmp, int in_single)
 {
-	int		len;
-	char	*eq;
-	int		i;
-
-	i = 0;
-	while (env[i])
+	char	*s;
+	
+	s = *p;
+	if (*s == '\\')
 	{
-		eq = ft_strchr(env[i], '=');
-		if (!eq)
+		if (in_single && (s + 1) && *(s + 1) == '$')
 		{
-			i++;
-			continue ;
+			*tmp = ft_substr(*p, 0, 2);
+			(*p) += 2;
+		} 
+		else if (in_single)
+		{
+			*tmp = ft_substr(*p, 0, 1);
+			(*p) ++;
 		}
-		len = eq - env[i];
-		if (ft_strncmp(env[i], name, len) == 0 && env[i][len] == '='
-				&& name[len] == '\0')
-			return (eq + 1);
-		i++;
-	}
-	return ("");
-}
-
-static bool	handle_backslash(char **p, char **tmp)
-{
-	if (*p == '\\' && *(p + 1) == '$')
-	{
-		tmp = ft_substr(p + 1, 0, 1);
-		p += 2;
+		else
+		{
+			*tmp = ft_substr((*p) + 1, 0, 1);
+			(*p) += 2;
+		}
 		return (true);
 	}
 	return (false);
-}
+}*/
 
 static bool	handle_quotes(char **p, int *in_double, int *in_single, char **tmp)
 {
@@ -71,35 +63,16 @@ static bool	handle_quotes(char **p, int *in_double, int *in_single, char **tmp)
 
 static void	handle_text(char **p, int in_double, int in_single, char **tmp)
 {
-	int	start;
+	int		start;
 	char	*s;
 
+	// ft_printf("handle_backslash.....\n");
+	// if (handle_backslash(p, tmp, in_single))
+	// 	return ;
 	start = 0;
 	s = *p;
-	if (*p == '\\') //&& *(p + 1) == '$')
-	{
-		if (in_single && (p + 1) && *(p + 1) == '$')
-		{
-			tmp = ft_substr(p, 0, 2);
-			p += 2;
-			return ;
-		} 
-		else if (in_single)
-		{
-			tmp = ft_substr(p, 0, 1);
-			p++;
-			return ;
-		}
-		else if ((p + 1) && *(p + 1) == '$')
-		{
-			tmp = ft_substr(p + 1, 0, 1);
-			p += 2;
-		}
-			p++;
-		
-		return (true);
-	}
-	while (s[start] && ((s[start] != '$' && s[start] == '\\') || in_single))
+	ft_printf("handle_text......\n");
+	while (s[start] && ((s[start] != '$') || in_single))
 	{
 		if (s[start] == '\'' && !in_double)
 			break ;
@@ -137,8 +110,6 @@ char	*handle_expansion_if_any(const char *arg, int last_status, char **env)
 	while (*p)
 	{
 		if (handle_quotes(&p, &in_double, &in_single, &tmp))
-			;
-		else if (handle_backslash(&p, &tmp))
 			;
 		else if (*p == '$' && !in_single)
 			tmp = expand_one_var(&p, last_status, env);
