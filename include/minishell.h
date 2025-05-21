@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/20 20:18:03 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/21 11:40:38 by amarcz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ typedef struct s_cmd
 // PARSER INTERFACE - András
 // ===============================
 t_cmd	*parse_input(char *input, int last_status, char **envp);
+char	*complete_input(void);
 void    print_cmds(t_cmd *cmd);
 char    **ft_tokenize(char *input);
 int     is_redirection(char *token);

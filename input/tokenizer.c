@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:50:42 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/20 12:50:40 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/21 10:52:57 by amarcz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,9 @@ char **ft_tokenize(char *input)
     int start;
     int tokeni;
     char quote;
+    // int quote_nr;
 
+    // quote_nr = 0;
     i = 0;
     tokeni = 0;
     tokens = malloc(sizeof(char *) * 1024);
@@ -37,16 +39,14 @@ char **ft_tokenize(char *input)
         //Handle quotes
         if (input[i] == '\'' || input[i] == '\"')
         {
-            quote = input[i++];
-            start = i;
+            quote = input[i];
+            start = i++;
             while (input[i] && input[i] != quote)
                 i++; 
-            ft_printf("The i is %d\n and the start is %d \n", i, start);
-            if (input[i] == quote)
-                i++;
-            ft_printf("The i is %d\n and the start is %d \n", i, start);
-            ft_printf("The lenght is %d\n", i - (start - 1));
-            tokens[tokeni++] = ft_substr(input, start - 1, i - (start - 1));
+            if (!input[i])
+                return (free_split(tokens), (char **)-1);
+            i++;
+            tokens[tokeni++] = ft_substr(input, start, i - start);
             continue;
         }
 

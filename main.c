@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:11:32 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/20 19:03:26 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/21 11:38:37 by amarcz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int main (int argc, char **argv, char **envp)
     while (1)
     {
         //DISPLAY THE PROMPT
-        input = readline("\033[1;34mminishell_dude$\033[0m ");
+        input = complete_input();
 
         //Exit the shellif user presses CTRL+D (EOF)
         if(!input)
@@ -66,7 +66,7 @@ int main (int argc, char **argv, char **envp)
 			stdin_bk = dup(STDIN_FILENO);
 			if (stdin_bk == -1)
 			{
-				log_error("Error saving STDIN_FILENO", "dup");
+				log_error("Error saving		close(stdout_bk); STDIN_FILENO", "dup");
 				return (CMD_FAILURE);
 			}
 		}
@@ -98,9 +98,11 @@ int main (int argc, char **argv, char **envp)
 			}
 			close(stdin_bk);
 		}
-//        print_cmds(cmd); //Debug output
-        free_cmds(cmd);
-    }
+
+		//print_cmds(cmd); //Debug output
+        free_cmd(cmd);
+	}
+
     free_split(shell_envp);
     return (0);
 }
