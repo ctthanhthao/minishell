@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/21 19:11:37 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/21 19:43:48 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,7 @@ int		is_builtin(const char *cmd);
 int		execute_builtin(t_cmd *cmd, char ***envp, int *status);
 int		process_pipe(t_cmd *cmd, char **envp, int last_status);
 int		apply_redirections(t_redir *redirs);
+int		process_heredoc(t_redir *redir);
 int		cd_builtin(t_cmd *cmd);
 int		pwd_builtin();
 int		export_builtin(t_cmd *cmd, char ***envp);

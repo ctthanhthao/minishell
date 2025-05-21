@@ -3,14 +3,47 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:11:32 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/21 11:38:37 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/05/21 21:06:27 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/minishell.h"
+
+static bool	save_original_std_inout(int *stdin_bk, int *stdout_bk)
+{
+	*stdout_bk = dup(STDOUT_FILENO);
+	if (*stdout_bk == -1)
+	{
+		log_error("Error saving STDOUT_FILENO", "dup");
+		return (false);
+	}
+	*stdin_bk = dup(STDIN_FILENO);
+	if (*stdin_bk == -1)
+	{
+		log_error("Error saving STDIN_FILENO", "dup");
+		return (false);
+	}
+	return (true);
+}
+
+static void	restore_original_std_inout(int stdin_bk, int stdout_bk)
+{
+	if (stdout_bk != -1)
+	{
+		if (dup2(stdout_bk, STDOUT_FILENO) == -1)
+			log_error("Error restoring STDOUT_FILENO", "dup2");
+		close(stdout_bk);
+	}
+	if (stdin_bk != -1)
+	{
+		if (dup2(stdin_bk, STDIN_FILENO) == -1)
+			log_error("Error restoring STDOUT_FILENO", "dup2");
+		close(stdin_bk);
+	}
+}
 
 int main (int argc, char **argv, char **envp)
 {
@@ -20,6 +53,7 @@ int main (int argc, char **argv, char **envp)
 	int		stdout_bk;
 	int		stdin_bk;
 	int		last_exit_status = 0;
+	bool	redirected;
 //    int status = 0;
     (void)argc;
 	(void)argv;
@@ -29,6 +63,7 @@ int main (int argc, char **argv, char **envp)
     //MAIN LOOP
 	stdout_bk = -1;
 	stdin_bk = -1;
+	redirected = false;
     shell_envp = clone_arr(envp);
 	if (!shell_envp)
 		return (1);
@@ -55,48 +90,23 @@ int main (int argc, char **argv, char **envp)
 			continue;
 		}
 		if (cmd->redirs)
-		{
-			// Save the original STDOUT_FILENO
-			stdout_bk = dup(STDOUT_FILENO);
-			if (stdout_bk == -1)
-			{
-				log_error("Error saving STDOUT_FILENO", "dup");
-				return (CMD_FAILURE);
-			}
-			stdin_bk = dup(STDIN_FILENO);
-			if (stdin_bk == -1)
-			{
-				log_error("Error saving		close(stdout_bk); STDIN_FILENO", "dup");
-				return (CMD_FAILURE);
-			}
-		}
+			redirected = save_original_std_inout(&stdin_bk, &stdout_bk);
+			
 		if (apply_redirections(cmd->redirs) == CMD_FAILURE)
 		{
+			ft_printf("apply_redirections failed.....\n");
 			last_exit_status = 1;
+			if (redirected)
+				restore_original_std_inout(stdin_bk, stdout_bk);
 			free_cmd(cmd);
 			continue;
 		}
 		execute_commands(cmd, &shell_envp, &last_exit_status);
         // Restore the original STDIN_FILENO STDOUT_FILENO
-		if (stdout_bk != -1)
+		if (redirected)
 		{
-			if (dup2(stdout_bk, STDOUT_FILENO) == -1)
-			{
-				log_error("Error restoring STDOUT_FILENO", "dup2");
-				free_cmd(cmd);
-				continue;
-			}
-			close(stdout_bk);
-		}
-		if (stdin_bk != -1)
-		{
-			if (dup2(stdin_bk, STDIN_FILENO) == -1)
-			{
-				log_error("Error restoring STDOUT_FILENO", "dup2");
-				free_cmd(cmd);
-				continue;
-			}
-			close(stdin_bk);
+			restore_original_std_inout(stdin_bk, stdout_bk);
+			redirected = false;	
 		}
 
 		//print_cmds(cmd); //Debug output

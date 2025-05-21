@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execute_commands.c                                  :+:      :+:    :+:   */
+/*   execute_commands.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 13:42:06 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/15 22:14:31 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/21 20:04:23 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-int		execute_commands(t_cmd *cmd_list, char ***envp, int *last_status)
+int	execute_commands(t_cmd *cmd_list, char ***envp, int *last_status)
 {
 	t_cmd	*cur;
 
@@ -31,11 +31,11 @@ int		execute_commands(t_cmd *cmd_list, char ***envp, int *last_status)
 				cur = cur->next;
 		}
 		else if (cur->next_type == CMD_AND_IF && *last_status != CMD_SUCCESS)
-				break;
+			break ;
 		else if (cur->next_type == CMD_OR_IF && *last_status == CMD_SUCCESS)
-				break;
+			break ;
 		if (*last_status != CMD_SUCCESS)
-			break;
+			break ;
 		cur = cur->next;
 	}
 	return (CMD_SUCCESS);

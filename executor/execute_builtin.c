@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:42:30 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/19 13:28:37 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/21 20:12:24 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,16 @@
 
 int	is_builtin(const char *cmd)
 {
-	return (!ft_strcmp(cmd, "cd") ||
-			!ft_strcmp(cmd, "exit") ||
-			!ft_strcmp(cmd, "export") ||
-			!ft_strcmp(cmd, "unset") ||
-			!ft_strcmp(cmd, "echo") ||
-			!ft_strcmp(cmd, "env") ||
-			!ft_strcmp(cmd, "pwd"));
+	return (!ft_strcmp(cmd, "cd")
+		|| !ft_strcmp(cmd, "exit")
+		|| !ft_strcmp(cmd, "export")
+		|| !ft_strcmp(cmd, "unset")
+		|| !ft_strcmp(cmd, "echo")
+		|| !ft_strcmp(cmd, "env")
+		|| !ft_strcmp(cmd, "pwd"));
 }
 
-int execute_builtin(t_cmd *cmd, char ***envp, int *status)
+int	execute_builtin(t_cmd *cmd, char ***envp, int *status)
 {
 	if (!ft_strcmp(cmd->argv[0], "cd"))
 		*status = cd_builtin(cmd);

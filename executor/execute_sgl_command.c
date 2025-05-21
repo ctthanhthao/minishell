@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 17:47:05 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/20 19:06:07 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/21 20:11:27 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static char	*build_path_and_test(char **paths, char *cmd)
 	{
 		full_path = ft_strjoin_path(paths[i], cmd);
 		if (full_path == NULL)
-			continue;
+			continue ;
 		if (access(full_path, X_OK) == 0)
 			return (full_path);
 		if (full_path)
@@ -77,7 +77,8 @@ static int	execute_external_cmd(t_cmd *cmd, char ***envp)
 				"fork"), CMD_FAILURE);
 	if (pid == 0)
 	{
-		if (execve(find_valid_path(cmd->argv[0], *envp), cmd->argv, *envp) == -1)
+		if (execve(find_valid_path(cmd->argv[0], *envp),
+				cmd->argv, *envp) == -1)
 		{
 			log_error("Error happened in execve during execute_single_command",
 				cmd->argv[0]);
