@@ -6,13 +6,13 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:32:07 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/15 11:07:16 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/21 19:33:33 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-static int	check_env_exists(char **envp, char *var_name)
+static bool	check_env_exists(char **envp, char *var_name)
 {
 	int		i;
 	int		var_len;
@@ -22,17 +22,17 @@ static int	check_env_exists(char **envp, char *var_name)
 	while (envp[i])
 	{
 		if (ft_strncmp(envp[i], var_name, var_len) == 0
-			&& envp[i][var_len] == '=')
-			return (CMD_FAILURE);
+			&& (envp[i][var_len] == '=' || envp[i][var_len] == '\0'))
+			return (true);
 		i++;
 	}
-	return (CMD_SUCCESS);
+	return (false);
 }
 
 static void	handle_unset(char *env, char **new_envp, char *var_name, int *j)
 {
 	if (ft_strncmp(env, var_name, ft_strlen(var_name)) == 0
-		&& (env[ft_strlen(var_name)] == '='))
+		&& (env[ft_strlen(var_name)] == '=' || env[ft_strlen(var_name)] == '\0'))
 		free(env);
 	else
 	{

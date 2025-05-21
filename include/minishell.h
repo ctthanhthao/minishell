@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/21 11:50:29 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/21 19:11:37 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,6 @@ char    **ft_tokenize(char *input);
 int     is_redirection(char *token);
 int    handle_redirection(t_cmd *cmd, char **tokens, int *i);
 int		validate_tokens(char **tokens);
-void    free_cmds(t_cmd *cmd);
 void    free_split(char **arr);
 char    **tokenize_line(const char *line);                            // optional internal
 t_cmd   *build_cmd_list(char **tokens, char **envp);                 // optional internal
