@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 14:36:53 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/21 11:56:38 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/21 18:50:51 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ t_cmd	*parse_input(char *input, int last_status, char **envp)
 // void print_cmds(t_cmd *cmd)
 // {
 //     const char  *token_names[] = {
-//         "CMD", "WORD", "PIPE", "MORE", "MOREMORE", "LESS", "LESSLESS", \
+//         "CMD", "WORD", "PIPE", "MORE", "MOREMORE", "LESS", "LESSLESS",
 //         "AND", "OR"
 //     };
 //     const char *cmd_type_strs[] = {"NONE", "AND_IF", "OR_IF", "PIPE"};

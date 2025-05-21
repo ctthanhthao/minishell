@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 20:10:16 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/19 09:38:18 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/20 20:20:15 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ char	**clone_arr(char **ar)
 		return (NULL);
 	while (ar[i])
 	{
-//		printf("ar[%i] is %s\n",i, ar[i]);
 		copy[i] = ft_strdup(ar[i]);
 		if (!copy[i])
 		{
