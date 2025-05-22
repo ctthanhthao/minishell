@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:14:40 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/19 13:28:59 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/22 10:09:40 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ int	cd_builtin(t_cmd *cmd)
 {
 	char	*path;
 
-	ft_printf("cd builtin is called...\n");
 	if (cmd->argv[1] == NULL)
 		path = getenv("HOME");
 	else

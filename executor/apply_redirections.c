@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:32:50 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/21 20:11:46 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/22 10:05:49 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,12 @@ static int	process_write(t_redir *re, int type)
 	if (type == MORE)
 	{
 		fd = open(re->filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		return (handle_file(fd, STDOUT_FILENO, "open >"));
+		return (handle_file(fd, STDOUT_FILENO, re->filename));
 	}
 	if (type == MOREMORE)
 	{
 		fd = open(re->filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		return (handle_file(fd, STDOUT_FILENO, "open >>"));
+		return (handle_file(fd, STDOUT_FILENO, re->filename));
 	}
 	return (CMD_FAILURE);
 }
@@ -53,7 +53,7 @@ static int	process_read(t_redir *re, int type)
 	if (type == LESS)
 	{
 		fd = open(re->filename, O_RDONLY);
-		return (handle_file(fd, STDIN_FILENO, "open <"));
+		return (handle_file(fd, STDIN_FILENO, re->filename));
 	}
 	if (type == LESSLESS)
 		return (process_heredoc(re));

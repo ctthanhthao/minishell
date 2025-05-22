@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:08:16 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/19 13:23:22 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/22 10:09:34 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ int	echo_builtin(t_cmd *cmd, int *status)
 
 	i = 1;
 	newline = 1;
-	ft_printf("echo builtin is called...\n");
 	if (cmd->argv[i] && !ft_strcmp(cmd->argv[i], "-n"))
 	{
 		newline = 0;
