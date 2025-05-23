@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:50:42 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/21 10:52:57 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/05/23 08:51:36 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char **ft_tokenize(char *input)
     // quote_nr = 0;
     i = 0;
     tokeni = 0;
-    tokens = malloc(sizeof(char *) * 1024);
+    tokens = ft_calloc(1024, sizeof(char *));
     if (!tokens)
         return (NULL);
     while (input[i])

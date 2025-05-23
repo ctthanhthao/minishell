@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:38:06 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/20 19:43:59 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/23 09:16:58 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 void	log_error(const char *error, const char *function)
 {
-	printf(R "%s\n" RST, error);
+	if (error)
+		ft_printf(R "%s\n" RST, error);
 	if (function)
 		perror(function);
 }

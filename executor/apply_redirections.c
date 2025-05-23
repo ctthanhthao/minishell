@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:32:50 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/22 10:05:49 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/23 09:15:47 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static int	handle_file(int fd, int std_in_out, char *error)
 {
 	if (fd == -1)
 	{
-		log_error("Error opening file", error);
+		log_error(NULL, error);
 		return (CMD_FAILURE);
 	}
 	if (dup2(fd, std_in_out) == -1)

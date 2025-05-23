@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:11:32 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/21 21:06:27 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/23 09:14:51 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,12 @@ static void	restore_original_std_inout(int stdin_bk, int stdout_bk)
 {
 	if (stdout_bk != -1)
 	{
-		if (dup2(stdout_bk, STDOUT_FILENO) == -1)
-			log_error("Error restoring STDOUT_FILENO", "dup2");
+		dup2(stdout_bk, STDOUT_FILENO);
 		close(stdout_bk);
 	}
 	if (stdin_bk != -1)
 	{
-		if (dup2(stdin_bk, STDIN_FILENO) == -1)
-			log_error("Error restoring STDOUT_FILENO", "dup2");
+		dup2(stdin_bk, STDIN_FILENO);
 		close(stdin_bk);
 	}
 }
@@ -94,7 +92,6 @@ int main (int argc, char **argv, char **envp)
 			
 		if (apply_redirections(cmd->redirs) == CMD_FAILURE)
 		{
-			ft_printf("apply_redirections failed.....\n");
 			last_exit_status = 1;
 			if (redirected)
 				restore_original_std_inout(stdin_bk, stdout_bk);

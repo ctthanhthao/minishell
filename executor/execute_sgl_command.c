@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 17:47:05 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/21 20:11:27 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/23 09:00:36 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,9 @@ static int	execute_external_cmd(t_cmd *cmd, char ***envp)
 {
 	pid_t	pid;
 	int		status;
+	char	*success_path;
 
+	success_path = find_valid_path(cmd->argv[0], *envp);
 	pid = fork();
 	if (pid == -1)
 		return (log_error("Error happened in fork during"
@@ -77,14 +79,15 @@ static int	execute_external_cmd(t_cmd *cmd, char ***envp)
 				"fork"), CMD_FAILURE);
 	if (pid == 0)
 	{
-		if (execve(find_valid_path(cmd->argv[0], *envp),
-				cmd->argv, *envp) == -1)
+		if (execve(success_path, cmd->argv, *envp) == -1)
 		{
 			log_error("Error happened in execve during execute_single_command",
 				cmd->argv[0]);
 			exit(127);
 		}
 	}
+	if (success_path)
+		free(success_path);
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
