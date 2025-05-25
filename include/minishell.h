@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/21 19:43:48 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/25 17:18:18 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,8 @@
 
 # define RST		"\033[0m" // Reset formatting
 # define R			"\033[31m" // Red
-# define G			"\033[32m" // Green
-# define Y			"\033[33m" // Yellow
-# define B			"\033[34m" // Blue
+#define BLUE		"\001\033[1;34m\002"
+#define RESET		"\001\033[0m\002"
 
 // ===============================
 // ENUMS
@@ -82,6 +81,17 @@ typedef struct s_cmd
 	t_cmd_type		next_type;	// e.g. AND_IF, OR_IF, PIPE
 }	t_cmd;
 
+
+typedef struct s_pid_pipe_fd
+{
+	pid_t	pids[100];
+	pid_t	pid;
+	int		prev_fd;
+	int		pipe_fd[2];
+	int		child_count;
+	
+}	t_pid_pipe_fd;
+
 // ===============================
 // PARSER INTERFACE - András
 // ===============================
@@ -105,7 +115,7 @@ char	*expand_one_var(char **p, int last_status, char **env);
 int		execute_commands(t_cmd *cmd_list, char ***envp, int *last_status);
 int		is_builtin(const char *cmd);
 int		execute_builtin(t_cmd *cmd, char ***envp, int *status);
-int		process_pipe(t_cmd *cmd, char **envp, int last_status);
+int		process_pipe(t_cmd *cmd, char ***envp, int *last_status);
 int		apply_redirections(t_redir *redirs);
 int		process_heredoc(t_redir *redir);
 int		cd_builtin(t_cmd *cmd);
@@ -115,7 +125,8 @@ int		echo_builtin(t_cmd *cmd, int *status);
 int		unset_builtin(t_cmd *cmd, char ***envp);
 int		env_builtin(char **envp);
 int 	exit_builtin(t_cmd *cmd, char ***envp);
-int		execute_single_command(t_cmd *cmd, char ***envp, int *last_status);
+int		execute_single_command(t_cmd *cmd, char ***envp, int *last_status,
+		bool should_fork);
 
 // ===============================
 // CLEANUP / UTILS
@@ -130,6 +141,6 @@ char	**clone_arr(char **ar);
 void	log_error(const char *error, const char *function);
 int		is_valid_identifier(const char *s);
 void	print_sorted_env(char **env);
-void	print_env(char **envp);
+int		safe_dup2(int oldfd, int newfd, char *error, char *function);
 
 #endif

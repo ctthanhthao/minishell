@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 20:09:21 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/17 22:20:28 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/25 17:25:34 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,8 @@ char	**selection_sort(char **ar)
 #include "utils.c"
 int main()
 {
-	char *ar[] = {"GIT_ASKPASS", "TERM=xterm-256color", "MallocNanoZone=0", "COLORTERM=truecolor", NULL};
+	char *ar[] = {"GIT_ASKPASS", "TERM=xterm-256color", 
+	"MallocNanoZone=0", "COLORTERM=truecolor", NULL};
 	char **re = selection_sort(ar);
 	int i = 0;
 	while (re[i])

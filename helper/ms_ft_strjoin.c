@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 11:09:06 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/20 12:40:59 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/25 17:26:00 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char	*ft_strjoin_free(char *s1, char *s2)
 	char	*joined;
 	size_t	len1;
 	size_t	len2;
-	
+
 	if (!s1 && !s2)
 		return (NULL);
 	if (!s1)

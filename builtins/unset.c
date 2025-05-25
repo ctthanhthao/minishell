@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:32:07 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/22 10:09:01 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/25 17:06:53 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ static bool	check_env_exists(char **envp, char *var_name)
 static void	handle_unset(char *env, char **new_envp, char *var_name, int *j)
 {
 	if (ft_strncmp(env, var_name, ft_strlen(var_name)) == 0
-		&& (env[ft_strlen(var_name)] == '=' || env[ft_strlen(var_name)] == '\0'))
+		&& (env[ft_strlen(var_name)] == '='
+			|| env[ft_strlen(var_name)] == '\0'))
 		free(env);
 	else
 	{

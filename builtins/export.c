@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:26:01 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/20 20:15:48 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/25 17:06:25 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,22 +45,13 @@ static char	**add_env_var(char **envp, const char *new_var)
 
 static bool	update_env(char **entry_env, const char *new_var, size_t key_len)
 {
-	size_t	key_env_len;
-
-	key_env_len = ft_strlen(*entry_env);
-	if (key_env_len > key_len && (*entry_env)[key_len] == '='
-		&& !new_var[key_len])
+	if (!new_var[key_len])
 		return (true);
 	else if (new_var[key_len] == '=')
 	{
-		if ((key_env_len > key_len && (*entry_env)[key_len] == '=')
-			|| key_env_len == key_len)
-		{
-			free(*entry_env);
-			*entry_env = ft_strdup(new_var);
-			return (true);
-		}
-		return (false);
+		free(*entry_env);
+		*entry_env = ft_strdup(new_var);
+		return (true);
 	}
 	else
 		return (false);
@@ -79,7 +70,8 @@ static char	**update_or_add_env(char **envp, const char *new_var)
 	i = -1;
 	while (envp[++i])
 	{
-		if (ft_strncmp(envp[i], key, key_len) == 0)
+		if ((ft_strncmp(envp[i], key, key_len) == 0) && (!envp[i][key_len]
+			|| envp[i][key_len] == '='))
 		{
 			if (update_env(&envp[i], new_var, key_len))
 			{

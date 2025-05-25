@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 17:47:05 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/23 09:00:36 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/25 17:10:29 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,18 +65,28 @@ static char	*find_valid_path(char *cmd, char **envp)
 	return (free_split(paths), full_path);
 }
 
-static int	execute_external_cmd(t_cmd *cmd, char ***envp)
+static int	execute_external_cmd_without_fork(t_cmd *cmd, char ***envp,
+	char *success_path)
+{
+	if (execve(success_path, cmd->argv, *envp) == -1)
+	{
+		log_error("Error happened in execve during execute_single_command",
+			cmd->argv[0]);
+		exit(127);
+	}
+	return (127);
+}
+
+static int	execute_external_cmd(t_cmd *cmd, char ***envp,
+	char *success_path)
 {
 	pid_t	pid;
 	int		status;
-	char	*success_path;
 
-	success_path = find_valid_path(cmd->argv[0], *envp);
 	pid = fork();
 	if (pid == -1)
 		return (log_error("Error happened in fork during"
-				"execute_single_command",
-				"fork"), CMD_FAILURE);
+				"execute_single_command", "fork"), CMD_FAILURE);
 	if (pid == 0)
 	{
 		if (execve(success_path, cmd->argv, *envp) == -1)
@@ -86,21 +96,31 @@ static int	execute_external_cmd(t_cmd *cmd, char ***envp)
 			exit(127);
 		}
 	}
-	if (success_path)
-		free(success_path);
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
 	return (128 + WTERMSIG(status));
 }
 
-int	execute_single_command(t_cmd *cmd, char ***envp, int *last_status)
+int	execute_single_command(t_cmd *cmd, char ***envp,
+	int *last_status, bool should_fork)
 {
+	char	*success_path;
+
 	if (!cmd || !cmd->argv || !cmd->argv[0])
 		return (*last_status);
 	if (is_builtin(cmd->argv[0]))
 		*last_status = execute_builtin(cmd, envp, last_status);
 	else
-		*last_status = execute_external_cmd(cmd, envp);
+	{
+		success_path = find_valid_path(cmd->argv[0], *envp);
+		if (should_fork)
+			*last_status = execute_external_cmd(cmd, envp, success_path);
+		else
+			*last_status = execute_external_cmd_without_fork(cmd, envp,
+					success_path);
+		if (success_path)
+			free(success_path);
+	}
 	return (*last_status);
 }

@@ -13,7 +13,7 @@ SRCS    := main.c \
 			builtins/cd.c     builtins/echo.c builtins/env.c \
 			builtins/export.c builtins/pwd.c  builtins/unset.c builtins/exit.c \
 			executor/execute_builtin.c      executor/apply_redirections.c executor/execute_commands.c \
-			executor/execute_sgl_command.c	executor/process_heredoc.c
+			executor/execute_sgl_command.c	executor/process_heredoc.c    executor/process_pipe.c
 	
 OBJ        := $(SRCS:.c=.o)
 

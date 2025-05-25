@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:38:06 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/23 09:16:58 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/25 17:26:23 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,19 +73,24 @@ void	print_sorted_env(char **env)
 			free(key);
 		}
 		else
-			ft_printf("declare -x %s\n", copy[i]);	
+			ft_printf("declare -x %s\n", copy[i]);
 	}
 	free_split(copy);
 }
 
-void print_env(char **envp)
+int	safe_dup2(int oldfd, int newfd, char *error, char *function)
 {
-	int i = 0;
-
-	ft_printf("Printing envp:\n");
-	while (envp && envp[i])
+	if (oldfd == -1)
 	{
-		ft_printf("[%d]: %s\n", i, envp[i]);
-		i++;
+		log_error(error, function);
+		return (CMD_FAILURE);
 	}
+	if (dup2(oldfd, newfd) == -1)
+	{
+		close(oldfd);
+		log_error("Error duplicating file descriptor", function);
+		return (CMD_FAILURE);
+	}
+	close(oldfd);
+	return (CMD_SUCCESS);
 }

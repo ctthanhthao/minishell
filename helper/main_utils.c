@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 10:55:57 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/21 11:18:46 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/05/24 19:05:01 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,17 @@ char *complete_input(void)
     char *temp;
     char **tokens;
     char *next_line;
+	static const char *shell_prompt;
 
-    input = readline("\033[1;34mminishell_dude$\033[0m ");
+	shell_prompt = BLUE "minishell_dude$ " RESET;
+    input = readline(shell_prompt);
     if(!input)
         return (NULL);
     //ft_printf("Tokenizer:\n");
     tokens = ft_tokenize(input);
     while ((long)tokens == -1)
     {
+		tokens = NULL;
         //ft_printf("Unmatched quotes\n");
         next_line = readline("> ");
         if (!next_line)

@@ -6,102 +6,123 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 12:40:57 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/17 18:09:03 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/25 17:22:27 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-static int	is_builtin(const char *cmd)
+/**
+ * Collect status of last command.
+ */
+static void	collect_pipeline_status(pid_t *pids, int *last_status,
+	int child_count)
 {
-	if (ft_strcmp(cmd, "echo") == 0 || ft_strcmp(cmd, "cd") == 0 ||
-		ft_strcmp(cmd, "pwd") == 0 || ft_strcmp(cmd, "export") == 0 ||
-		ft_strcmp(cmd, "unset") == 0 || ft_strcmp(cmd, "env") == 0 ||
-		ft_strcmp(cmd, "exit") == 0)
-		return (1);
-	return (0);
+	int	i;
+	int	status;
+
+	i = -1;
+	while (++i < child_count)
+	{
+		if (waitpid(pids[i], &status, 0) == -1)
+			continue ;
+		if (i == child_count - 1)
+		{
+			if (WIFEXITED(status))
+				*last_status = WEXITSTATUS(status);
+			else if (WIFSIGNALED(status))
+				*last_status = 128 + WTERMSIG(status);
+			else
+				*last_status = CMD_FAILURE;
+		}
+	}
 }
-static void	execute(int *pipe_fd, t_cmd *cmd, char **envp, int last_status)
+
+static void	execute_pipeline_child(t_cmd *cur, char ***env,
+	t_pid_pipe_fd *pid_data, int *last_status)
 {
-	pid_t	pid;
-	int		status;
-	
-	if (pipe(pipe_fd) == -1)
+	if (pid_data->prev_fd != -1)
 	{
-		log_error("Error happened in pipe during processing pipe",
-			"pipe");
-		return (CMD_FAILURE);
-	}
-	pid = fork();
-	if (pid == -1)
-	{
-		close(pipe_fd[0]);
-		close(pipe_fd[1]);
-		log_error("Error happened in fork during processing pipe",
-			"fork");
-		return (CMD_FAILURE);
-	}
-	if (pid == 0)
-	{
-		close(pipe_fd[0]);
-		if (dup2(pipe_fd[1], STDOUT_FILENO) == -1)
+		if (safe_dup2(pid_data->prev_fd, STDIN_FILENO,
+				"dup2 error: bad source fd (-1)\n", "safe_dup2") == CMD_FAILURE)
 		{
-			close(pipe_fd[1]);
-			log_error("Error happened in dup2 during processing pipe", "dup2");
+			close(pid_data->pipe_fd[0]);
+			close(pid_data->pipe_fd[1]);
+			exit (CMD_FAILURE);
+		}
+	}
+	if (cur->next_type == CMD_PIPE)
+	{
+		close(pid_data->pipe_fd[0]);
+		if (safe_dup2(pid_data->pipe_fd[1], STDOUT_FILENO,
+				"dup2 error: bad source fd (-1)\n", "safe_dup2") == CMD_FAILURE)
 			exit(CMD_FAILURE);
-		}
-		close(pipe_fd[1]);
-		if (is_builtin(cmd->argv[0]))
-		{
-			if (execute_builtin(cmd, &envp, 0) == -1)
-				log_error("Error happened in execute_builtin during "
-					"processing pipe", "execute_builtin");
-			exit(CMD_SUCCESS);	
-		}
-		if (execve(cmd->argv[0], cmd->argv, envp) == -1)
-		{
-			log_error("Error happened in execve during processing pipe",
-				"execve");
-			exit(CMD_FAILURE);	
-		}
+	}
+	if (pid_data->pipe_fd[0] != -1)
+		close(pid_data->pipe_fd[0]);
+	*last_status = execute_single_command(cur, env, last_status, false);
+	exit(*last_status);
+}
+
+static int	create_pipeline_if_needed(t_cmd *cur, int *pipe_fd)
+{
+	if (cur->next && cur->next_type == CMD_PIPE)
+	{
+		if (pipe(pipe_fd) == -1)
+			return (log_error("Pipe failed in process_pipe", "pipe"),
+				CMD_FAILURE);
 	}
 	else
 	{
-		close(pipe_fd[1]);
-		dup2(pipe_fd[0], STDIN_FILENO);
-		close(pipe_fd[0]);
-		waitpid(pid, &status, 0);
-
-		if (WIFEXITED(status)) {
-			int exit_code = WEXITSTATUS(status);
-			if (exit_code != 0)
-				return CMD_FAILURE;
-		} else if (WIFSIGNALED(status)) {
-			// Process terminated by signal, count as failure
-			return CMD_FAILURE;
-		}
-		// else success or continue
-		return CMD_SUCCESS;
+		pipe_fd[0] = -1;
+		pipe_fd[1] = -1;
 	}
+	return (CMD_SUCCESS);
 }
 
-int	process_pipe(t_cmd *cmd, char **envp, int last_status)
+static int	spawn_pipeline_process(t_pid_pipe_fd *pid_data, t_cmd *cur,
+	char ***envp, int *last_status)
 {
-	int		pipe_fd[2];
-	t_cmd	*cur;
+	pid_data->pid = fork();
+	if (pid_data->pid == -1)
+		return (log_error("Fork failed in process_pipe", "fork"),
+			CMD_FAILURE);
+	if (pid_data->pid == 0)
+		execute_pipeline_child(cur, envp, pid_data, last_status);
+	else
+	{
+		pid_data->pids[pid_data->child_count++] = pid_data->pid;
+		if (pid_data->prev_fd != -1)
+			close(pid_data->prev_fd);
+		if (pid_data->pipe_fd[1] != -1)
+			close(pid_data->pipe_fd[1]);
+		pid_data->prev_fd = pid_data->pipe_fd[0];
+	}
+	return (CMD_SUCCESS);
+}
 
-	if (!cmd)
-		return (CMD_SUCCESS);
-	if (cmd->next_type != CMD_PIPE)
-		return (CMD_FAILURE);
+int	process_pipe(t_cmd *cmd, char ***envp, int *last_status)
+{
+	t_cmd			*cur;
+	t_pid_pipe_fd	pid_data;
+
 	cur = cmd;
+	pid_data.prev_fd = -1;
+	pid_data.child_count = 0;
 	while (cur)
 	{
-		execute(pipe_fd, cur, envp, last_status);
-		if (cur->next && cur->next->next_type == CMD_PIPE)
+		if (create_pipeline_if_needed(cur, pid_data.pipe_fd) == CMD_FAILURE)
+			return (CMD_FAILURE);
+		if (spawn_pipeline_process(&pid_data, cur, envp, last_status)
+			== CMD_FAILURE)
+			return (CMD_FAILURE);
+		if (cur->next_type == CMD_PIPE)
 			cur = cur->next;
 		else
 			break ;
 	}
-	return (CMD_SUCCESS);
+	collect_pipeline_status(pid_data.pids, last_status, pid_data.child_count);
+	if (pid_data.prev_fd != -1)
+		close(pid_data.prev_fd);
+	return (*last_status);
 }
