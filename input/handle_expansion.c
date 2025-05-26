@@ -6,116 +6,49 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 10:23:05 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/21 18:59:05 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/26 19:50:49 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-static bool	handle_backslash(char **p, char **tmp, int in_single)
+static bool	contains_unquoted_star(char *str)
 {
-	char	*s;
+	bool	in_single;
+	bool	in_double;
 
-	s = *p;
-	if (*s == '\\')
+	in_single = false;
+	in_double = false;
+	while (*str)
 	{
-		if (in_single && *(s + 1) == '$')
-		{
-			*tmp = ft_substr(*p, 0, 2);
-			(*p) += 2;
-		}
-		else if (in_single)
-		{
-			*tmp = ft_substr(*p, 0, 1);
-			(*p)++;
-		}
-		else
-		{
-			*tmp = ft_substr((*p) + 1, 0, 1);
-			(*p) += 2;
-		}
-		return (true);
+		if (*str == '\'' && !in_double)
+			in_single = !in_single;
+		else if (*str == '\"' && !in_single)
+			in_double = !in_double;
+		else if (*str == '*' && !in_single && !in_double)
+			return (true);
+		str++;
 	}
 	return (false);
 }
 
-static bool	handle_quotes(char **p, int *in_double, int *in_single, char **tmp)
+char **handle_expansion_if_any(char *token, int last_status, char **envp)
 {
-	char	c;
-
-	c = **p;
-	if (c == '\'' && !*in_double)
+	char	*expanded;
+	char	**wildcards;
+	char 	**res;
+	
+	expanded = expand_variables(token, last_status, envp);
+	if (!expanded)
+		return (NULL);
+	if (contains_unquoted_star(expanded))
 	{
-		*in_single = !*in_single;
-		*tmp = ft_substr(*p, 0, 1);
-		(*p)++;
-		return (true);
+		wildcards = expand_wildcard(expanded);
+		free(expanded);
+		return (wildcards);
 	}
-	else if (c == '"' && !*in_single)
-	{
-		*in_double = !*in_double;
-		*tmp = ft_substr(*p, 0, 1);
-		(*p)++;
-		return (true);
-	}
-	return (false);
-}
-
-static void	handle_text(char **p, int in_double, int in_single, char **tmp)
-{
-	int		start;
-	char	*s;
-
-	if (handle_backslash(p, tmp, in_single))
-		return ;
-	start = 0;
-	s = *p;
-	while (s[start] && ((s[start] != '$' && s[start] != '\\') || in_single))
-	{
-		if (s[start] == '\'' && !in_double)
-			break ;
-		if (s[start] == '"' && !in_single)
-			break ;
-		start++;
-	}
-	*tmp = ft_substr(s, 0, start);
-	(*p) += start;
-}
-/**
- * It's supposed to apply to an argv in cmd,
- * - If argv contains valid env variables, new argv is returned after 
- * those variables are replaced by their value.
- * - Otherwise, original argv is returned. 
- * It supports
- * + Quotes (' should disable expansion)
- * + Recursive expansion ($FOO_$BAR)
- * + Skipping invalid variable names ($5X or $!)
- */
-
-char	*handle_expansion_if_any(const char *arg, int last_status, char **env)
-{
-	char	*p ;
-	char	*result;
-	char	*tmp;
-	int		in_single;
-	int		in_double;
-
-	p = (char *)arg;
-	result = ft_calloc(1, 1);
-	in_single = 0;
-	in_double = 0;
-	while (*p)
-	{
-		if (handle_quotes(&p, &in_double, &in_single, &tmp))
-			;
-		else if (*p == '$' && !in_single)
-			tmp = expand_one_var(&p, last_status, env);
-		else
-			handle_text(&p, in_double, in_single, &tmp);
-		result = ft_strjoin_free(result, tmp);
-		free(tmp);
-	}
-	tmp = ft_strtrim(result, "\"\'");
-	free(result);
-	return (tmp);
+	res = malloc(sizeof(char *) * 2);
+	res[0] = expanded;
+	res[1] = NULL;
+	return (res);
 }

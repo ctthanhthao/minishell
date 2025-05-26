@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 14:36:53 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/26 11:49:27 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/26 19:55:43 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,12 @@ t_cmd	*parse_input(char *input, int last_status, char **envp)
 {
 	char	**tokens;
 	int		i;
+	int		j;
 	int		argv_i;
 	t_cmd	*head;
 	t_cmd	*curr;
 	t_cmd	*prev;
+	char 	**expanded;
 
 	tokens = ft_tokenize(input);
 	if (!validate_tokens(tokens) || !tokens)
@@ -144,7 +146,14 @@ t_cmd	*parse_input(char *input, int last_status, char **envp)
 			}
 			continue ;
 		}
-		curr->argv[argv_i++] = handle_expansion_if_any(tokens[i++], last_status, envp);
+		expanded = handle_expansion_if_any(tokens[i++], last_status, envp);
+		if (expanded)
+		{
+			j = 0;
+			while (expanded[j])
+				curr->argv[argv_i++] = expanded[j++];
+			free(expanded); // Free the wrapper, not the strings
+		}
 	}
 	if (curr)
 		curr->argv[argv_i] = NULL;
