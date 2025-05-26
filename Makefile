@@ -8,8 +8,9 @@ LDFLAGS 		:= -lreadline
 SRCS    := main.c \
 			helper/utils.c helper/cleanup.c helper/clone.c helper/sort.c helper/ms_ft_strjoin.c  \
 			helper/main_utils.c \
-			input/validation.c       input/parse.c       input/tokenizer.c input/redir_parse.c \
-			input/handle_expansion.c input/expand_var.c  input/signal.c \
+			input/validation.c       input/parse.c       		input/tokenizer.c 		  input/redir_parse.c \
+			input/handle_expansion.c input/expand_variables1.c  input/expand_variables2.c input/signal.c \
+			input/expand_wildcard.c  \
 			builtins/cd.c     builtins/echo.c builtins/env.c \
 			builtins/export.c builtins/pwd.c  builtins/unset.c builtins/exit.c \
 			executor/execute_builtin.c      executor/apply_redirections.c executor/execute_commands.c \
