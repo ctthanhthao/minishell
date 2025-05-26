@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:11:32 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/25 17:04:56 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/26 11:06:44 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ int main (int argc, char **argv, char **envp)
     shell_envp = clone_arr(envp);
 	if (!shell_envp)
 		return (1);
+	setup_signals();
     while (1)
     {
         //DISPLAY THE PROMPT

@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/25 17:18:18 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/26 11:08:03 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include "../Libft/ft_printf/printf.h"
 # include <sys/wait.h>
 # include <stdbool.h>
+# include <signal.h>
 //# include "../test/mem_debug.h"
 
 # define RST		"\033[0m" // Reset formatting
@@ -108,6 +109,7 @@ t_cmd   *build_cmd_list(char **tokens, char **envp);                 // optional
 t_redir *parse_redirections(char **tokens, int *i);  
 char	*handle_expansion_if_any(const char *arg, int last_status, char **env);                // optional internal
 char	*expand_one_var(char **p, int last_status, char **env);
+void	setup_signals(void);
 
 // ===============================
 // EXECUTOR INTERFACE - Thao

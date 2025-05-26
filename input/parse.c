@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 14:36:53 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/21 18:50:51 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/26 11:49:27 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,17 @@ t_redir	*add_token(t_redir *last, char *value)
 	return (new);
 }
 
+static void	clean_up(char **tokens, t_cmd *head, t_cmd *curr, t_cmd *prev)
+{
+	free_split(tokens);
+	free_cmd(head);
+	if (curr && curr != prev) // not yet linked to head
+	{
+		if (curr->argv)
+			free(curr->argv);
+		free(curr);
+	}
+}
 //Main parsing function:
 t_cmd	*parse_input(char *input, int last_status, char **envp)
 {
@@ -75,8 +86,16 @@ t_cmd	*parse_input(char *input, int last_status, char **envp)
 		{
 			curr = malloc(sizeof(t_cmd));
 			if (!curr)
+			{
+				clean_up(tokens, head, curr, prev);
 				return (NULL);
+			}
 			curr->argv = malloc(sizeof(char *) * 1024);
+			if (!curr->argv)
+			{
+				clean_up(tokens, head, curr, prev);
+				return (NULL);
+			}
 			curr->redirs = NULL;
 			curr->next = NULL;
 			curr->next_type = CMD_NONE;
@@ -120,8 +139,7 @@ t_cmd	*parse_input(char *input, int last_status, char **envp)
 		{
 			if (!handle_redirection(curr, tokens, &i))
 			{
-				free_split(tokens);
-				free_cmd(head);
+				clean_up(tokens, head, curr, prev);
 				return (NULL);
 			}
 			continue ;
@@ -130,7 +148,6 @@ t_cmd	*parse_input(char *input, int last_status, char **envp)
 	}
 	if (curr)
 		curr->argv[argv_i] = NULL;
-	prev = curr;
 	free_split(tokens);
 	return (head);
 }
