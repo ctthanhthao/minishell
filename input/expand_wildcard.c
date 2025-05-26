@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 19:11:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/26 20:15:20 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/26 20:25:00 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,10 @@ int	match_pattern(const char *pattern, const char *str)
 
 char	**expand_wildcard(const char *pattern)
 {
-    DIR				*dir;
-    struct dirent	*entry;
-    char 			**matches;
-    int				i;
+	DIR				*dir;
+	struct dirent	*entry;
+	char			**matches;
+	int				i;
 
 	matches = malloc(sizeof(char *) * 1024);
 	if (!matches)
@@ -49,16 +49,17 @@ char	**expand_wildcard(const char *pattern)
 	dir = opendir(".");
 	if (!dir)
 		return (NULL);
-	while ((entry = readdir(dir)))
+	while (1)
 	{
+		entry = readdir(dir);
+		if (!entry)
+			break ;
 		if (entry->d_name[0] == '.' && pattern[0] != '.')
 			continue ;
 		if (match_pattern(pattern, entry->d_name))
-			matches[i++] = ft_strdup(entry->d_name); // Use ft_strdup if needed
+			matches[i++] = ft_strdup(entry->d_name);
 	}
 	if (i == 0)
-		matches[i++] = ft_strdup(pattern); // If no matches, return the pattern itself
-	matches[i] = NULL;
-	closedir(dir);
-	return (matches);
+		matches[i++] = ft_strdup(pattern);
+	return (matches[i] = NULL, closedir(dir), matches);
 }
