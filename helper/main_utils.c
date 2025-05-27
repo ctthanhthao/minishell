@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 10:55:57 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/24 19:05:01 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/27 09:57:19 by amarcz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ char *complete_input(void)
     {
 		tokens = NULL;
         //ft_printf("Unmatched quotes\n");
+        
         next_line = readline("> ");
         if (!next_line)
             return (free(input), NULL);

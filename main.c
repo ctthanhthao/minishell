@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:11:32 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/27 11:07:57 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/27 12:43:41 by amarcz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,13 @@ int main (int argc, char **argv, char **envp)
         free(input);
 		if (!cmd || !cmd->argv || !cmd->argv[0])
 		{
+			// ft_printf("Error!\n");
+			// if (!cmd)
+			// 	ft_printf("!cmd\n");
+			// else if (!cmd->argv)
+			// 	ft_printf("!cmd->argv\n");
+			// else
+			// 	ft_printf("cmd->argv[0]\n");
 			free_cmd(cmd);
 			continue;
 		}

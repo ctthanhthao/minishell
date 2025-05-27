@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/26 20:05:26 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/27 10:02:44 by amarcz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@
 # define R			"\033[31m" // Red
 #define BLUE		"\001\033[1;34m\002"
 #define RESET		"\001\033[0m\002"
+
+# define TOKENIZE_ERROR ((char **)-1)
 
 // ===============================
 // ENUMS
@@ -84,6 +86,17 @@ typedef struct s_cmd
 	t_cmd_type		next_type;	// e.g. AND_IF, OR_IF, PIPE
 }	t_cmd;
 
+typedef	struct s_parse_state
+{
+	int			i;
+	int			argv_i;
+	t_cmd		*curr;
+	t_cmd		*head;
+	t_cmd		*prev;
+	int			last_status;
+	char		**envp;
+} 	t_parse_state;
+
 
 typedef struct s_pid_pipe_fd
 {
@@ -99,9 +112,12 @@ typedef struct s_pid_pipe_fd
 // PARSER INTERFACE - András
 // ===============================
 t_cmd	*parse_input(char *input, int last_status, char **envp);
+int		handle_token(char **tokens, t_parse_state *s);
 char	*complete_input(void);
 void    print_cmds(t_cmd *cmd);
 char    **ft_tokenize(char *input);
+int		skip_whitespace(const char *input, int i);
+void	token_ender(char **tokens, int tokeni);
 int     is_redirection(char *token);
 int    handle_redirection(t_cmd *cmd, char **tokens, int *i);
 int		validate_tokens(char **tokens);

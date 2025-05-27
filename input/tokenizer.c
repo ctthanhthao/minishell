@@ -3,71 +3,84 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:50:42 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/23 08:51:36 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/27 11:49:38 by amarcz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char **ft_tokenize(char *input)
+static int	is_special(char c)
 {
-    char **tokens;
-    int i;
-    int start;
-    int tokeni;
-    char quote;
-    // int quote_nr;
+	return (c == '>' || c == '<' || c == '&' || c == '|');
+}
 
-    // quote_nr = 0;
-    i = 0;
-    tokeni = 0;
-    tokens = ft_calloc(1024, sizeof(char *));
-    if (!tokens)
-        return (NULL);
-    while (input[i])
-    {
-        //Skip whitespace
-        if (input[i] == ' ' || input[i] == '\t')
-        {
-            i++;
-            continue;
-        }
+static int	handle_quotes(char *input, char **tokens, int *i, int *tokeni)
+{
+	int	start;
+	int	quote;
 
-        //Handle quotes
-        if (input[i] == '\'' || input[i] == '\"')
-        {
-            quote = input[i];
-            start = i++;
-            while (input[i] && input[i] != quote)
-                i++; 
-            if (!input[i])
-                return (free_split(tokens), (char **)-1);
-            i++;
-            tokens[tokeni++] = ft_substr(input, start, i - start);
-            continue;
-        }
+	quote = input[*i];
+	start = (*i)++;
+	while (input[*i] && input[*i] != quote)
+		(*i)++;
+	if (!input[*i])
+		return (0);
+	(*i)++;
+	tokens[(*tokeni)++] = ft_substr(input, start, *i - start);
+	return (1);
+}
 
-        //Double tokens
-        if (input[i] == '>' || input[i] == '<' || input[i] == '&' || input[i] == '|')
-        {
-            start = i;
-            if ((input[i] == '>' || input[i] == '<' || input[i] == '&' || input[i] == '|') && input[i] == input[i + 1])
-                i += 2;
-            else
-                i += 1;
-            tokens[tokeni++] = ft_substr(input, start, i - start);
-            continue;
-        }
+static void	handle_operator(char *input, char **tokens, int *i, int *tokeni)
+{
+	int	start;
 
-        //Regular words
-        start = i;
-        while (input[i] && !(input[i] == ' ' || input[i] == '\t' || (input[i] == '>' || input[i] == '<' || input[i] == '&' || input[i] == '|')))
-            i++;
-        tokens[tokeni++] = ft_substr(input, start, i - start);
-    }
-    tokens[tokeni] = NULL;
-    return (tokens);
+	start = *i;
+	if (is_special(input[*i]) && input[*i] == input[*i + 1])
+		*i += 2;
+	else
+		(*i)++;
+	tokens[(*tokeni)++] = ft_substr(input, start, *i - start);
+}
+
+static void	handle_word(char *input, char **tokens, int *i, int *tokeni)
+{
+	int	start;
+
+	start = *i;
+	while (input[*i] && !(input[*i] == ' ' || input[*i] == '\t'
+			|| is_special(input[*i])))
+		(*i)++;
+	tokens[(*tokeni)++] = ft_substr(input, start, *i - start);
+}
+
+char	**ft_tokenize(char *input)
+{
+	char	**tokens;
+	int		i;
+	int		tokeni;
+
+	tokeni = 0;
+	tokens = ft_calloc(1024, sizeof(char *));
+	i = 0;
+	if (!tokens)
+		return (NULL);
+	while (input[i])
+	{
+		i = skip_whitespace(input, i);
+		if (!input[i])
+			break ;
+		if (input[i] == '\'' || input[i] == '\"')
+		{
+			if (!(handle_quotes(input, tokens, &i, &tokeni)))
+				return (free_split(tokens), TOKENIZE_ERROR);
+		}
+		else if (is_special(input[i]))
+			handle_operator(input, tokens, &i, &tokeni);
+		else
+			handle_word(input, tokens, &i, &tokeni);
+	}
+	return (token_ender(tokens, tokeni), tokens);
 }
