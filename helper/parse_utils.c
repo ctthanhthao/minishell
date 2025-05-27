@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 12:42:11 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/27 10:26:22 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/05/27 18:53:11 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,9 +95,9 @@ int	handle_token(char **tokens, t_parse_state *s)
 	expanded = handle_expansion_if_any(tokens[s->i++], s->last_status, s->envp);
 	if (expanded)
 	{
-		j = -1;
-		while (expanded[++j])
-			s->curr->argv[s->argv_i++] = expanded[j];
+		j = 0;
+		while (expanded[j] && expanded[j][0] != '\0')
+			s->curr->argv[s->argv_i++] = expanded[j++];
 		free(expanded); // Free the wrapper, not the strings
 	}
 	return (1);
