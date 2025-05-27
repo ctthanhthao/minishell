@@ -6,34 +6,24 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 19:37:32 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/26 20:19:12 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/27 22:04:28 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-static bool	handle_backslash(char **p, char **tmp, int in_single)
+static bool	handle_backslash(char **p, char **tmp, int in_double, int in_single)
 {
 	char	*s;
 
 	s = *p;
 	if (*s == '\\')
 	{
-		if (in_single && *(s + 1) == '$')
-		{
-			*tmp = ft_substr(*p, 0, 2);
-			(*p) += 2;
-		}
-		else if (in_single)
-		{
-			*tmp = ft_substr(*p, 0, 1);
-			(*p)++;
-		}
-		else
-		{
+		if ((in_double && *(s + 1) == '$') || (!in_double && !in_single))
 			*tmp = ft_substr((*p) + 1, 0, 1);
-			(*p) += 2;
-		}
+		else
+			*tmp = ft_substr((*p), 0, 2);
+		(*p) += 2;
 		return (true);
 	}
 	return (false);
@@ -66,7 +56,7 @@ static void	handle_text(char **p, int in_double, int in_single, char **tmp)
 	int		start;
 	char	*s;
 
-	if (handle_backslash(p, tmp, in_single))
+	if (handle_backslash(p, tmp, in_double, in_single))
 		return ;
 	start = 0;
 	s = *p;
@@ -92,7 +82,7 @@ static void	handle_text(char **p, int in_double, int in_single, char **tmp)
  * + Skipping invalid variable names ($5X or $!)
  */
 
-char	*expand_variables(const char *arg, int last_status, char **env)
+char	*expand_variables(const char *arg, int last_status, char **env, bool first)
 {
 	char	*p ;
 	char	*result;
@@ -116,6 +106,13 @@ char	*expand_variables(const char *arg, int last_status, char **env)
 		free(tmp);
 	}
 	tmp = ft_strtrim(result, "\"\'");
+	ft_printf("ft_strlen(result) %i \n", ft_strlen(ft_strtrim(result, "\"\'")));
+	if (first && ft_strlen(tmp) == 0 && (*arg == '"' || *arg == '\''))
+	{
+		free(tmp);
+		tmp = ft_strdup("\"\"");	
+	}	
+	ft_printf("tmp %s\n", tmp);
 	free(result);
 	return (tmp);
 }

@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 12:42:11 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/27 18:53:11 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/27 22:08:28 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,13 +92,16 @@ int	handle_token(char **tokens, t_parse_state *s)
 			return (clean_up(tokens, s->head, s->curr, s->prev), -1);
 		return (2);
 	}
-	expanded = handle_expansion_if_any(tokens[s->i++], s->last_status, s->envp);
+	if (s->i == 0)
+		expanded = handle_expansion_if_any(tokens[s->i++], s->last_status, s->envp, true);
+	else
+		expanded = handle_expansion_if_any(tokens[s->i++], s->last_status, s->envp, false);
 	if (expanded)
 	{
 		j = 0;
-		while (expanded[j] && expanded[j][0] != '\0')
+		while (expanded[j])
 			s->curr->argv[s->argv_i++] = expanded[j++];
-		free(expanded); // Free the wrapper, not the strings
+		free(expanded);
 	}
 	return (1);
 }
