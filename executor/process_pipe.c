@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 12:40:57 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/25 17:22:27 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/27 16:42:17 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,17 @@
 /**
  * Collect status of last command.
  */
-static void	collect_pipeline_status(pid_t *pids, int *last_status,
-	int child_count)
+static void	collect_pipeline_status(t_pid_pipe_fd *pid_data, int *last_status)
 {
 	int	i;
 	int	status;
 
 	i = -1;
-	while (++i < child_count)
+	while (++i < pid_data->child_count)
 	{
-		if (waitpid(pids[i], &status, 0) == -1)
+		if (waitpid(pid_data->pids[i], &status, 0) == -1)
 			continue ;
-		if (i == child_count - 1)
+		if (i == pid_data->child_count - 1)
 		{
 			if (WIFEXITED(status))
 				*last_status = WEXITSTATUS(status);
@@ -64,18 +63,18 @@ static void	execute_pipeline_child(t_cmd *cur, char ***env,
 	exit(*last_status);
 }
 
-static int	create_pipeline_if_needed(t_cmd *cur, int *pipe_fd)
+static int	create_pipeline_if_needed(t_cmd *cur, t_pid_pipe_fd *pid_data)
 {
 	if (cur->next && cur->next_type == CMD_PIPE)
 	{
-		if (pipe(pipe_fd) == -1)
+		if (pipe(pid_data->pipe_fd) == -1)
 			return (log_error("Pipe failed in process_pipe", "pipe"),
 				CMD_FAILURE);
 	}
 	else
 	{
-		pipe_fd[0] = -1;
-		pipe_fd[1] = -1;
+		pid_data->pipe_fd[0] = -1;
+		pid_data->pipe_fd[1] = -1;
 	}
 	return (CMD_SUCCESS);
 }
@@ -111,7 +110,7 @@ int	process_pipe(t_cmd *cmd, char ***envp, int *last_status)
 	pid_data.child_count = 0;
 	while (cur)
 	{
-		if (create_pipeline_if_needed(cur, pid_data.pipe_fd) == CMD_FAILURE)
+		if (create_pipeline_if_needed(cur, &pid_data) == CMD_FAILURE)
 			return (CMD_FAILURE);
 		if (spawn_pipeline_process(&pid_data, cur, envp, last_status)
 			== CMD_FAILURE)
@@ -121,7 +120,7 @@ int	process_pipe(t_cmd *cmd, char ***envp, int *last_status)
 		else
 			break ;
 	}
-	collect_pipeline_status(pid_data.pids, last_status, pid_data.child_count);
+	collect_pipeline_status(&pid_data, last_status);
 	if (pid_data.prev_fd != -1)
 		close(pid_data.prev_fd);
 	return (*last_status);

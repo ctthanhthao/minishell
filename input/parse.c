@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 14:36:53 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/27 12:42:43 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/05/27 16:47:12 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,8 +165,8 @@ t_cmd	*parse_input(char *input, int last_status, char **envp)
 	// int		j;
 	int		argv_i;
 	t_cmd	*head;
-	t_cmd	*curr;
-	t_cmd	*prev;
+	// t_cmd	*curr;
+	// t_cmd	*prev;
 	// char 	**expanded;
 
 	if (!check_unclosed_quotes(input))
@@ -175,8 +175,8 @@ t_cmd	*parse_input(char *input, int last_status, char **envp)
 	if (!validate_tokens(tokens) || !tokens || !wildcard_check(tokens))
 		return (free_split(tokens), NULL);
 	argv_i = 0;
-	curr = NULL;
-	prev = NULL;
+	// curr = NULL;
+	// prev = NULL;
 	// while (tokens[i])
 	// {
 	// 	if (!curr)

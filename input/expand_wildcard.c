@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 19:11:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/26 20:25:00 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/27 16:42:50 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ char	**expand_wildcard(const char *pattern)
 	i = 0;
 	dir = opendir(".");
 	if (!dir)
-		return (NULL);
+		return (free(matches), NULL);
 	while (1)
 	{
 		entry = readdir(dir);
