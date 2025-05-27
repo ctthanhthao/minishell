@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:11:32 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/26 11:06:44 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/27 11:07:57 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int main (int argc, char **argv, char **envp)
     char    **shell_envp;
 	int		stdout_bk;
 	int		stdin_bk;
-	int		last_exit_status = 0;
+	int		last_status = 0;
 	bool	redirected;
 //    int status = 0;
     (void)argc;
@@ -79,7 +79,7 @@ int main (int argc, char **argv, char **envp)
         	add_history(input);
 
         //Parse the input
-        cmd = parse_input(input, last_exit_status, shell_envp);
+        cmd = parse_input(input, last_status, shell_envp);
 		//free the memory allocated in readline
         free(input);
 		if (!cmd || !cmd->argv || !cmd->argv[0])
@@ -92,13 +92,13 @@ int main (int argc, char **argv, char **envp)
 			
 		if (apply_redirections(cmd->redirs) == CMD_FAILURE)
 		{
-			last_exit_status = 1;
+			last_status = 1;
 			if (redirected)
 				restore_original_std_inout(stdin_bk, stdout_bk);
 			free_cmd(cmd);
 			continue;
 		}
-		execute_commands(cmd, &shell_envp, &last_exit_status);
+		last_status = execute_commands(cmd, &shell_envp, &last_status);
         // Restore the original STDIN_FILENO STDOUT_FILENO
 		if (redirected)
 		{
