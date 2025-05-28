@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 19:37:32 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/27 22:04:28 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/28 11:16:14 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ static void	handle_text(char **p, int in_double, int in_single, char **tmp)
  * + Skipping invalid variable names ($5X or $!)
  */
 
-char	*expand_variables(const char *arg, int last_status, char **env, bool first)
+char	*expand_variables(const char *arg, int last_status, char **env)
 {
 	char	*p ;
 	char	*result;
@@ -105,14 +105,5 @@ char	*expand_variables(const char *arg, int last_status, char **env, bool first)
 		result = ft_strjoin_free(result, tmp);
 		free(tmp);
 	}
-	tmp = ft_strtrim(result, "\"\'");
-	ft_printf("ft_strlen(result) %i \n", ft_strlen(ft_strtrim(result, "\"\'")));
-	if (first && ft_strlen(tmp) == 0 && (*arg == '"' || *arg == '\''))
-	{
-		free(tmp);
-		tmp = ft_strdup("\"\"");	
-	}	
-	ft_printf("tmp %s\n", tmp);
-	free(result);
-	return (tmp);
+	return (result);
 }

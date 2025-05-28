@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 10:23:05 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/27 22:09:04 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/28 11:16:25 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,13 @@ static bool	contains_unquoted_star(char *str)
 	return (false);
 }
 
-char **handle_expansion_if_any(char *token, int last_status, char **envp, bool first)
+char **handle_expansion_if_any(char *token, int last_status, char **envp, bool cmd_pos)
 {
 	char	*expanded;
 	char	**wildcards;
 	char 	**res;
 
-	expanded = expand_variables(token, last_status, envp, first);
+	expanded = expand_variables(token, last_status, envp);
 	if (!expanded)
 		return (NULL);
 	if (contains_unquoted_star(expanded))
@@ -48,7 +48,13 @@ char **handle_expansion_if_any(char *token, int last_status, char **envp, bool f
 		return (wildcards);
 	}
 	res = malloc(sizeof(char *) * 2);
-	res[0] = expanded;
+	if (!cmd_pos)
+	{
+		res[0] = ft_strtrim(expanded, "\"\'");
+		free(expanded);
+	}
+	else
+		res[0] = expanded;
 	res[1] = NULL;
 	return (res);
 }

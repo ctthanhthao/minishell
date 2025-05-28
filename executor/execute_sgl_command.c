@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 17:47:05 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/27 22:07:35 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/28 11:14:15 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ int	execute_single_command(t_cmd *cmd, char ***envp,
 	int *last_status, bool should_fork)
 {
 	char	*success_path;
+	int		i;
 
 	if (!cmd || !cmd->argv || !cmd->argv[0])
 		return (*last_status);
@@ -113,9 +114,10 @@ int	execute_single_command(t_cmd *cmd, char ***envp,
 		*last_status = execute_builtin(cmd, envp, last_status);
 	else
 	{
-		if (ft_strlen(cmd->argv[0]) == 0)
-			return (CMD_SUCCESS);
-		success_path = find_valid_path(cmd->argv[0], *envp);
+		i = 0;
+		while (cmd->argv[i] && ft_strlen(cmd->argv[i]) == 0)
+			i++;
+		success_path = find_valid_path(cmd->argv[i], *envp);
 		if (!success_path) {
 			ft_printf(R "minishell: %s: command not found\n" RST, cmd->argv[0]);
 			return (127);
