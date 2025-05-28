@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:14:40 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/22 10:09:40 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/28 19:36:41 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,11 @@ int	cd_builtin(t_cmd *cmd)
 
 	if (cmd->argv[1] == NULL)
 		path = getenv("HOME");
+	else if (cmd->argv[2])
+	{
+		log_error("too many arguments", "too many arguments");
+		return (CMD_FAILURE);
+	}
 	else
 		path = cmd->argv[1];
 	if (chdir(path) != 0)

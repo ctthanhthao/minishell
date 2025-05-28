@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:32:50 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/23 09:15:47 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/28 22:43:56 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,13 @@ static int	process_write(t_redir *re, int type)
 static int	process_read(t_redir *re, int type)
 {
 	int	fd;
+	char	*file;
 
 	if (type == LESS)
 	{
-		fd = open(re->filename, O_RDONLY);
+		file = ft_strtrim(re->filename, "\"\'");
+		fd = open(file, O_RDONLY);
+		free(file);
 		return (handle_file(fd, STDIN_FILENO, re->filename));
 	}
 	if (type == LESSLESS)

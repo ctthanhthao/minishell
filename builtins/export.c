@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:26:01 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/25 17:06:25 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/28 19:11:04 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,9 @@ static char	**update_or_add_env(char **envp, const char *new_var)
 int	export_builtin(t_cmd *cmd, char ***envp)
 {
 	int	i;
+	int	status;
 
+	status = CMD_SUCCESS;
 	if (!envp || !*envp)
 		return (log_error("env is null", "export_builtin"), CMD_FAILURE);
 	if (!cmd->argv[1])
@@ -98,17 +100,15 @@ int	export_builtin(t_cmd *cmd, char ***envp)
 	{
 		if (!is_valid_identifier(cmd->argv[i]))
 		{
-			log_error("export: invalid identifier", cmd->argv[i]);
+			log_error("export: invalid identifier", "not a valid identifier");
 			i++;
+			status = CMD_FAILURE;
 			continue ;
 		}
 		*envp = update_or_add_env(*envp, cmd->argv[i]);
 		if (!*envp)
-		{
-			log_error("export: memory allocation failed", NULL);
-			return (CMD_FAILURE);
-		}
+			return (log_error("memory allocation failed", NULL), CMD_FAILURE);
 		i++;
 	}
-	return (CMD_SUCCESS);
+	return (status);
 }

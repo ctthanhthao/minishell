@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 17:47:05 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/28 11:14:15 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/28 22:29:03 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,7 @@ int	execute_single_command(t_cmd *cmd, char ***envp,
 		success_path = find_valid_path(cmd->argv[i], *envp);
 		if (!success_path) {
 			ft_printf(R "minishell: %s: command not found\n" RST, cmd->argv[0]);
+			perror("command not found");
 			return (127);
 		}
 		if (should_fork)

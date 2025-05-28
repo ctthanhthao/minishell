@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 10:44:52 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/26 20:19:28 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/28 18:56:17 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,14 @@ char	*expand_one_var(char **p, int last_status, char **env)
 	len = 0;
 	while (start[len] && (ft_isalnum(start[len]) || start[len] == '_'))
 		len++;
-	var_name = ft_substr(start, 0, len);
-	value = ft_strdup(get_env_value(var_name, env));
-	free(var_name);
+	if (len == 0)
+		value = ft_substr(*p, 0, 1);
+	else
+	{
+		var_name = ft_substr(start, 0, len);
+		value = ft_strdup(get_env_value(var_name, env));
+		free(var_name);
+	}
 	*p += len + 1;
 	return (value);
 }

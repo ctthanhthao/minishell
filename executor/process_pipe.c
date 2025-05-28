@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 12:40:57 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/28 12:33:44 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/28 22:32:02 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,8 @@ static void	execute_pipeline_child(t_cmd *cur, char ***env,
 	}
 	if (pid_data->pipe_fd[0] != -1)
 		close(pid_data->pipe_fd[0]);
+	if (apply_redirections(cur->redirs) == CMD_FAILURE)
+		exit(CMD_FAILURE);
 	*last_status = execute_single_command(cur, env, last_status, false);
 	exit(*last_status);
 }
