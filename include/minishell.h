@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/29 10:02:05 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/29 12:51:20 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,8 @@ char	**expand_wildcard(const char *pattern);
 // ===============================
 int		execute_commands(t_cmd *cmd_list, char ***envp, int *last_status);
 int		is_builtin(const char *cmd);
-int		execute_builtin(t_cmd *cmd, char ***envp, int *status);
+bool	has_file_arguments(t_cmd *cmd);
+int		handle_builtin_with_redirection(t_cmd *cmd, char ***envp, int *status);
 int		process_pipe(t_cmd *cmd, char ***envp, int *last_status);
 int		apply_redirections(t_redir *redirs);
 bool	save_original_std_inout(int *stdin_bk, int *stdout_bk);

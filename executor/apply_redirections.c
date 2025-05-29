@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:32:50 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/29 12:08:37 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/29 12:24:41 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static int	process_write(t_redir *re, int type)
 
 static int	process_read(t_redir *re, int type)
 {
-	int	fd;
+	int		fd;
 	char	*file;
 
 	if (type == REDIR_IN)

@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 13:42:06 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/29 08:56:54 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/29 12:48:35 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,7 @@ int	execute_commands(t_cmd *cmd_list, char ***envp, int *last_status)
 				cur = cur->next;
 		}
 		else
-		{
-			
 			*last_status = execute_single_command(cur, envp, last_status, true);
-			
-		}
 		if (cur->next_type == CMD_AND_IF && *last_status != CMD_SUCCESS)
 			break ;
 		if (cur->next_type == CMD_OR_IF && *last_status == CMD_SUCCESS)

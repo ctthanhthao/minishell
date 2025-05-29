@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 12:40:57 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/29 10:02:27 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/29 12:50:51 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,45 +37,11 @@ static void	collect_pipeline_status(t_pid_pipe_fd *pid_data, int *last_status)
 	}
 }
 
-static bool	is_existing_path(const char *path)
-{
-    struct stat	sb;
-	
-    return (path && stat(path, &sb) == 0);
-}
-
-static bool	has_file_arguments(t_cmd *cmd)
-{
-	int		i;
-	char	cwd[1024];
-
-	getcwd(cwd, sizeof(cwd));
-//	printf("🔍 CWD = %s\n", cwd);
-	i = 1;
-	while (cmd->argv[i])
-	{
-//		printf("🔎 Checking arg: %s\n", cmd->argv[i]);
-		if (cmd->argv[i][0] != '-' && is_existing_path(cmd->argv[i]))
-		{
-//			printf("✅ is_file: %s\n", cmd->argv[i]);
-			return (true);
-		}
-		// else
-		// {
-		// 	printf("❌ Not a file: %s\n", cmd->argv[i]);
-		// }
-		i++;
-	}
-	return (false);
-}
-
 static void	execute_pipeline_child(t_cmd *cur, char ***env,
 	t_pid_pipe_fd *pid_data, int *last_status)
 {
-//	ft_printf("cmd %s and has_file_arguments %i \n", cur->argv[0], has_file_arguments(cur));
 	if (pid_data->prev_fd != -1 && !has_file_arguments(cur))
 	{
-//		ft_printf("wiring to sdgin\n");
 		if (safe_dup2(pid_data->prev_fd, STDIN_FILENO,
 				"dup2 error: bad source fd (-1)\n") == CMD_FAILURE)
 		{
@@ -84,7 +50,6 @@ static void	execute_pipeline_child(t_cmd *cur, char ***env,
 			exit (CMD_FAILURE);
 		}
 	}
-//	ft_printf("cmd %s and wiring to stdout \n", cur->argv[0]);
 	if (cur->next_type == CMD_PIPE)
 	{
 		if (safe_dup2(pid_data->pipe_fd[1], STDOUT_FILENO,

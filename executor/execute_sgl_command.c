@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 17:47:05 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/29 09:53:12 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/29 12:51:53 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,29 +108,11 @@ int	execute_single_command(t_cmd *cmd, char ***envp,
 {
 	char	*success_path;
 	int		i;
-	bool	redirected;
-	int		stdin_bk;
-	int		stdout_bk;
 
 	if (!cmd || !cmd->argv || !cmd->argv[0])
 		return (*last_status);
 	if (is_builtin(cmd->argv[0]))
-	{
-		stdin_bk = -1;
-		stdout_bk = -1;
-		if (cmd->redirs)
-			redirected = save_original_std_inout(&stdin_bk, &stdout_bk);
-		if (apply_redirections(cmd->redirs) == CMD_FAILURE)
-		{
-			if (redirected)
-				restore_original_std_inout(stdin_bk, stdout_bk);
-			return (CMD_FAILURE);
-		}
-			
-		*last_status = execute_builtin(cmd, envp, last_status);
-		if (redirected)
-			restore_original_std_inout(stdin_bk, stdout_bk);
-	}
+		*last_status = handle_builtin_with_redirection(cmd, envp, last_status);
 	else
 	{
 		i = 0;
@@ -142,10 +124,8 @@ int	execute_single_command(t_cmd *cmd, char ***envp,
 		if (should_fork)
 			*last_status = execute_external_cmd(cmd, envp, success_path);
 		else
-		{
 			*last_status = execute_external_cmd_without_fork(cmd, envp,
-				success_path);
-		}
+					success_path);
 		if (success_path)
 			free(success_path);
 	}

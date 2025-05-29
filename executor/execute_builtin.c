@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:42:30 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/25 13:05:17 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/29 12:49:11 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	is_builtin(const char *cmd)
 		|| !ft_strcmp(cmd, "pwd"));
 }
 
-int	execute_builtin(t_cmd *cmd, char ***envp, int *status)
+static int	execute_builtin(t_cmd *cmd, char ***envp, int *status)
 {
 	if (!ft_strcmp(cmd->argv[0], "cd"))
 		*status = cd_builtin(cmd);
@@ -44,5 +44,28 @@ int	execute_builtin(t_cmd *cmd, char ***envp, int *status)
 		*status = pwd_builtin();
 	else
 		*status = 1;
+	return (*status);
+}
+
+int	handle_builtin_with_redirection(t_cmd *cmd, char ***envp, int *status)
+{
+	int		stdin_bk;
+	int		stdout_bk;
+	bool	redirected;
+
+	stdin_bk = -1;
+	stdout_bk = -1;
+	redirected = false;
+	if (cmd->redirs)
+		redirected = save_original_std_inout(&stdin_bk, &stdout_bk);
+	if (apply_redirections(cmd->redirs) == CMD_FAILURE)
+	{
+		if (redirected)
+			restore_original_std_inout(stdin_bk, stdout_bk);
+		return (CMD_FAILURE);
+	}
+	*status = execute_builtin(cmd, envp, status);
+	if (redirected)
+		restore_original_std_inout(stdin_bk, stdout_bk);
 	return (*status);
 }
