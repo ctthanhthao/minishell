@@ -15,7 +15,7 @@ SRCS    := main.c \
 			builtins/export.c builtins/pwd.c  builtins/unset.c builtins/exit.c \
 			executor/execute_builtin.c      executor/apply_redirections.c executor/execute_commands.c \
 			executor/execute_sgl_command.c	executor/process_heredoc.c    executor/process_pipe.c \
-			executor/backup_restore_redirections.c
+			executor/backup_restore_redirections.c  executor/has_file_arguments.c
 	
 OBJ        := $(SRCS:.c=.o)
 
