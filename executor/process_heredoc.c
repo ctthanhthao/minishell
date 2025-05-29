@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 19:42:49 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/21 21:10:33 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/29 09:55:15 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,7 @@ static int	redirect_last_stdin(int last_fd)
 	{
 		if (dup2(last_fd, STDIN_FILENO) == -1)
 		{
-			log_error("Error when duplicating last_fd in process_heredoc",
-				"dup2");
+			log_errno(NULL);
 			close(last_fd);
 			return (CMD_FAILURE);
 		}
@@ -57,12 +56,11 @@ int	process_heredoc(t_redir *redir)
 	cur = redir;
 	while (cur)
 	{
-		if (cur->type == LESSLESS)
+		if (cur->type == REDIR_HEREDOC)
 		{
 			if (pipe(fd) == -1)
 			{
-				log_error("Error happened when pipe fd in process_heredoc",
-					"pipe");
+				log_errno("Error happened when pipe fd in process_heredoc");
 				return (CMD_FAILURE);
 			}
 			expect_end_input(fd[1], cur->filename);

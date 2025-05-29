@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 17:47:05 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/28 22:29:03 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/29 09:53:12 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,10 +68,11 @@ static char	*find_valid_path(char *cmd, char **envp)
 static int	execute_external_cmd_without_fork(t_cmd *cmd, char ***envp,
 	char *success_path)
 {
+	if (apply_redirections(cmd->redirs) == CMD_FAILURE)
+		exit(CMD_FAILURE);
 	if (execve(success_path, cmd->argv, *envp) == -1)
 	{
-		log_error("Error happened in execve during execute_single_command",
-			cmd->argv[0]);
+		log_errno(NULL);
 		exit(127);
 	}
 	return (127);
@@ -85,14 +86,14 @@ static int	execute_external_cmd(t_cmd *cmd, char ***envp,
 
 	pid = fork();
 	if (pid == -1)
-		return (log_error("Error happened in fork during"
-				"execute_single_command", "fork"), CMD_FAILURE);
+		return (log_errno(NULL), CMD_FAILURE);
 	if (pid == 0)
 	{
+		if (apply_redirections(cmd->redirs) == CMD_FAILURE)
+			exit(CMD_FAILURE);
 		if (execve(success_path, cmd->argv, *envp) == -1)
 		{
-			log_error("Error happened in execve during execute_single_command",
-				cmd->argv[0]);
+			log_errno(NULL);
 			exit(127);
 		}
 	}
@@ -107,27 +108,44 @@ int	execute_single_command(t_cmd *cmd, char ***envp,
 {
 	char	*success_path;
 	int		i;
+	bool	redirected;
+	int		stdin_bk;
+	int		stdout_bk;
 
 	if (!cmd || !cmd->argv || !cmd->argv[0])
 		return (*last_status);
 	if (is_builtin(cmd->argv[0]))
+	{
+		stdin_bk = -1;
+		stdout_bk = -1;
+		if (cmd->redirs)
+			redirected = save_original_std_inout(&stdin_bk, &stdout_bk);
+		if (apply_redirections(cmd->redirs) == CMD_FAILURE)
+		{
+			if (redirected)
+				restore_original_std_inout(stdin_bk, stdout_bk);
+			return (CMD_FAILURE);
+		}
+			
 		*last_status = execute_builtin(cmd, envp, last_status);
+		if (redirected)
+			restore_original_std_inout(stdin_bk, stdout_bk);
+	}
 	else
 	{
 		i = 0;
 		while (cmd->argv[i] && ft_strlen(cmd->argv[i]) == 0)
 			i++;
 		success_path = find_valid_path(cmd->argv[i], *envp);
-		if (!success_path) {
-			ft_printf(R "minishell: %s: command not found\n" RST, cmd->argv[0]);
-			perror("command not found");
-			return (127);
-		}
+		if (!success_path)
+			return (log_errno("command not found"), 127);
 		if (should_fork)
 			*last_status = execute_external_cmd(cmd, envp, success_path);
 		else
+		{
 			*last_status = execute_external_cmd_without_fork(cmd, envp,
-					success_path);
+				success_path);
+		}
 		if (success_path)
 			free(success_path);
 	}

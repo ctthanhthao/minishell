@@ -6,42 +6,25 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:32:50 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/28 22:43:56 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/29 09:59:42 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-static int	handle_file(int fd, int std_in_out, char *error)
-{
-	if (fd == -1)
-	{
-		log_error(NULL, error);
-		return (CMD_FAILURE);
-	}
-	if (dup2(fd, std_in_out) == -1)
-	{
-		close(fd);
-		log_error("Error duplicating file descriptor", error);
-		return (CMD_FAILURE);
-	}
-	close(fd);
-	return (CMD_SUCCESS);
-}
-
 static int	process_write(t_redir *re, int type)
 {
 	int	fd;
 
-	if (type == MORE)
+	if (type == REDIR_OUT)
 	{
 		fd = open(re->filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		return (handle_file(fd, STDOUT_FILENO, re->filename));
+		return (safe_dup2(fd, STDOUT_FILENO, re->filename));
 	}
-	if (type == MOREMORE)
+	if (type == REDIR_OUT_APPEND)
 	{
 		fd = open(re->filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		return (handle_file(fd, STDOUT_FILENO, re->filename));
+		return (safe_dup2(fd, STDOUT_FILENO, re->filename));
 	}
 	return (CMD_FAILURE);
 }
@@ -51,14 +34,14 @@ static int	process_read(t_redir *re, int type)
 	int	fd;
 	char	*file;
 
-	if (type == LESS)
+	if (type == REDIR_IN)
 	{
 		file = ft_strtrim(re->filename, "\"\'");
 		fd = open(file, O_RDONLY);
 		free(file);
-		return (handle_file(fd, STDIN_FILENO, re->filename));
+		return (safe_dup2(fd, STDIN_FILENO, re->filename));
 	}
-	if (type == LESSLESS)
+	if (type == REDIR_HEREDOC)
 		return (process_heredoc(re));
 	return (CMD_FAILURE);
 }
@@ -76,12 +59,12 @@ int	apply_redirections(t_redir *redir_list)
 	{
 		if (redir_list->filename == NULL)
 			return (CMD_FAILURE);
-		if (cur->type == MORE || cur->type == MOREMORE)
+		if (cur->type == REDIR_OUT || cur->type == REDIR_OUT_APPEND)
 			status = process_write(cur, cur->type);
-		else if (cur->type == LESS || cur->type == LESSLESS)
+		else if (cur->type == REDIR_IN || cur->type == REDIR_HEREDOC)
 		{
 			status = process_read(cur, cur->type);
-			while (cur->next && cur->next->type == LESSLESS)
+			while (cur->next && cur->next->type == REDIR_HEREDOC)
 				cur = cur->next;
 		}
 		if (status == CMD_FAILURE)

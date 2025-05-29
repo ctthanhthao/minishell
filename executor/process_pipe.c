@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 12:40:57 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/28 22:32:02 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/29 10:02:27 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ static void	execute_pipeline_child(t_cmd *cur, char ***env,
 	{
 //		ft_printf("wiring to sdgin\n");
 		if (safe_dup2(pid_data->prev_fd, STDIN_FILENO,
-				"dup2 error: bad source fd (-1)\n", "safe_dup2") == CMD_FAILURE)
+				"dup2 error: bad source fd (-1)\n") == CMD_FAILURE)
 		{
 			close(pid_data->pipe_fd[0]);
 			close(pid_data->pipe_fd[1]);
@@ -88,13 +88,11 @@ static void	execute_pipeline_child(t_cmd *cur, char ***env,
 	if (cur->next_type == CMD_PIPE)
 	{
 		if (safe_dup2(pid_data->pipe_fd[1], STDOUT_FILENO,
-				"dup2 error: bad source fd (-1)\n", "safe_dup2") == CMD_FAILURE)
+				"dup2 error: bad source fd (-1)\n") == CMD_FAILURE)
 			exit(CMD_FAILURE);
 	}
 	if (pid_data->pipe_fd[0] != -1)
 		close(pid_data->pipe_fd[0]);
-	if (apply_redirections(cur->redirs) == CMD_FAILURE)
-		exit(CMD_FAILURE);
 	*last_status = execute_single_command(cur, env, last_status, false);
 	exit(*last_status);
 }
@@ -104,8 +102,7 @@ static int	create_pipeline_if_needed(t_cmd *cur, t_pid_pipe_fd *pid_data)
 	if (cur->next && cur->next_type == CMD_PIPE)
 	{
 		if (pipe(pid_data->pipe_fd) == -1)
-			return (log_error("Pipe failed in process_pipe", "pipe"),
-				CMD_FAILURE);
+			return (log_errno("Pipe failed in process_pipe"), CMD_FAILURE);
 	}
 	else
 	{
@@ -120,8 +117,7 @@ static int	spawn_pipeline_process(t_pid_pipe_fd *pid_data, t_cmd *cur,
 {
 	pid_data->pid = fork();
 	if (pid_data->pid == -1)
-		return (log_error("Fork failed in process_pipe", "fork"),
-			CMD_FAILURE);
+		return (log_errno("Fork failed in process_pipe"), CMD_FAILURE);
 	if (pid_data->pid == 0)
 		execute_pipeline_child(cur, envp, pid_data, last_status);
 	else

@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 14:36:53 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/27 16:47:12 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/29 08:40:19 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,13 @@ t_token	identify_tok(char *str)
 	if (ft_strncmp(str, "||", 2) == 0)
 		return (PIPE);
 	else if (ft_strncmp(str, ">>", 2) == 0)
-		return (MORE);
+		return (REDIR_OUT);
 	else if (ft_strncmp(str, ">", 1) == 0)
-		return (MOREMORE);
+		return (REDIR_OUT_APPEND);
 	else if (ft_strncmp(str, "<<", 2) == 0)
-		return (LESS);
+		return (REDIR_IN);
 	else if (ft_strncmp(str, "<", 1) == 0)
-		return (LESSLESS);
+		return (REDIR_HEREDOC);
 	else if (ft_strncmp(str, "&&", 2) == 0)
 		return (AND);
 	else if (ft_strncmp(str, "|", 1) == 0)

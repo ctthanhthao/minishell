@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/28 22:00:51 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/29 10:02:05 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,10 @@
 # include <sys/wait.h>
 # include <sys/stat.h>
 # include <stdbool.h>
-#include <dirent.h>
-#include <fnmatch.h>
+# include <dirent.h>
+# include <fnmatch.h>
 # include <signal.h>
+# include <errno.h>
 //# include "../test/mem_debug.h"
 
 # define RST		"\033[0m" // Reset formatting
@@ -54,10 +55,10 @@ typedef enum e_token
 	CMD, //A command: ls, echo, cd
 	WORD, //A generic word arguement
 	PIPE, // |
-	MORE, // >
-	MOREMORE, // >>
-	LESS, // <
-	LESSLESS, // <<
+	REDIR_OUT, // >
+	REDIR_OUT_APPEND, // >>
+	REDIR_IN, // <
+	REDIR_HEREDOC, // <<
 	AND, // &&
 	OR // ||
 }   t_token;
@@ -164,8 +165,9 @@ int		ft_strcmp(const char *s1, const char *s2);
 char	**selection_sort(char **ar);
 char	**clone_arr(char **ar);
 void	log_error(const char *error, const char *function);
+void	log_errno(const char *msg);
 int		is_valid_identifier(const char *s);
 void	print_sorted_env(char **env);
-int		safe_dup2(int oldfd, int newfd, char *error, char *function);
+int		safe_dup2(int oldfd, int newfd, char *error);
 
 #endif

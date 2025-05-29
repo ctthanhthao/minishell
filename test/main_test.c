@@ -59,22 +59,22 @@ t_cmd *parse_input(char *line)
 
             if (*p == '>' && *(p + 1) == '>')
             {
-                new_redir->type = MOREMORE;
+                new_redir->type = REDIR_OUT_APPEND;
                 p += 2;
             }
             else if (*p == '<' && *(p + 1) == '<')
             {
-                new_redir->type = LESSLESS;
+                new_redir->type = REDIR_HEREDOC;
                 p += 2;
             }
             else if (*p == '>')
             {
-                new_redir->type = MORE;
+                new_redir->type = REDIR_OUT;
                 p++;
             }
             else
             {
-                new_redir->type = LESS;
+                new_redir->type = REDIR_IN;
                 p++;
             }
 

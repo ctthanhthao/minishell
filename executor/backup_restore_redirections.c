@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 21:59:13 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/28 22:00:02 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/29 09:51:04 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,13 @@ bool	save_original_std_inout(int *stdin_bk, int *stdout_bk)
 	*stdout_bk = dup(STDOUT_FILENO);
 	if (*stdout_bk == -1)
 	{
-		log_error("Error saving STDOUT_FILENO", "dup");
+		log_errno("Error saving STDOUT_FILENO");
 		return (false);
 	}
 	*stdin_bk = dup(STDIN_FILENO);
 	if (*stdin_bk == -1)
 	{
-		log_error("Error saving STDIN_FILENO", "dup");
+		log_errno("Error saving STDIN_FILENO");
 		return (false);
 	}
 	return (true);

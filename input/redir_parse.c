@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir_parse.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 10:16:48 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/27 10:57:34 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/05/29 08:40:19 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,13 @@ int	identify_red(char *token)
 	if (!token)
 		return (WORD);
 	if (ft_strncmp(token, ">>", 3) == 0)
-		return (MOREMORE);
+		return (REDIR_OUT_APPEND);
 	if (ft_strncmp(token, ">", 2) == 0)
-		return (MORE);
+		return (REDIR_OUT);
 	if (ft_strncmp(token, "<<", 3) == 0)
-		return (LESSLESS);
+		return (REDIR_HEREDOC);
 	if (ft_strncmp(token, "<", 2) == 0)
-		return (LESS);
+		return (REDIR_IN);
 	return (WORD);
 }
 
