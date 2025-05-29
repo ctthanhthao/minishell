@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:32:50 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/29 09:59:42 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/29 12:08:37 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@ static int	process_write(t_redir *re, int type)
 	if (type == REDIR_OUT)
 	{
 		fd = open(re->filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		return (safe_dup2(fd, STDOUT_FILENO, re->filename));
+		return (safe_dup2(fd, STDOUT_FILENO, NULL));
 	}
 	if (type == REDIR_OUT_APPEND)
 	{
 		fd = open(re->filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		return (safe_dup2(fd, STDOUT_FILENO, re->filename));
+		return (safe_dup2(fd, STDOUT_FILENO, NULL));
 	}
 	return (CMD_FAILURE);
 }
@@ -39,7 +39,7 @@ static int	process_read(t_redir *re, int type)
 		file = ft_strtrim(re->filename, "\"\'");
 		fd = open(file, O_RDONLY);
 		free(file);
-		return (safe_dup2(fd, STDIN_FILENO, re->filename));
+		return (safe_dup2(fd, STDIN_FILENO, NULL));
 	}
 	if (type == REDIR_HEREDOC)
 		return (process_heredoc(re));
