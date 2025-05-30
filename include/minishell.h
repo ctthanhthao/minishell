@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/29 12:51:20 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/29 17:20:21 by amarcz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,6 @@ typedef struct s_pid_pipe_fd
 	int		prev_fd;
 	int		pipe_fd[2];
 	int		child_count;
-	
 }	t_pid_pipe_fd;
 
 // ===============================
@@ -115,7 +114,11 @@ typedef struct s_pid_pipe_fd
 // ===============================
 t_cmd	*parse_input(char *input, int last_status, char **envp);
 int		handle_token(char **tokens, t_parse_state *s);
+int		wildcard_check(char **tokens);
+int		check_invalid_chars(const char *input);
+int		check_unclosed_quotes(const char *input);
 char	*complete_input(void);
+int		is_logical_op(char *token);
 void    print_cmds(t_cmd *cmd);
 char    **ft_tokenize(char *input);
 int		skip_whitespace(const char *input, int i);
@@ -123,6 +126,7 @@ void	token_ender(char **tokens, int tokeni);
 int     is_redirection(char *token);
 int    handle_redirection(t_cmd *cmd, char **tokens, int *i);
 int		validate_tokens(char **tokens);
+int		is_quoted(char *token);
 void    free_split(char **arr);
 char    **tokenize_line(const char *line);                            // optional internal
 t_cmd   *build_cmd_list(char **tokens, char **envp);                 // optional internal

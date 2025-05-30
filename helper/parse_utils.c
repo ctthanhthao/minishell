@@ -3,26 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   parse_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 12:42:11 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/28 11:11:12 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/30 11:34:21 by amarcz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	is_logical_op(char *token)
-{
-	return (ft_strcmp(token, "||") == 0
-		|| ft_strcmp(token, "|") == 0 || ft_strcmp(token, "&&") == 0);
-}
-
 static void	clean_up(char **tokens, t_cmd *head, t_cmd *curr, t_cmd *prev)
 {
 	free_split(tokens);
 	free_cmd(head);
-	if (curr && curr != prev) // not yet linked to head
+	if (curr && curr != prev)
 	{
 		if (curr->argv)
 			free(curr->argv);
@@ -77,16 +71,13 @@ int	handle_token(char **tokens, t_parse_state *s)
 {
 	char	**expanded;
 	int		j;
-	
+
 	if (!init_curr(&s->curr, &s->argv_i, &s->head, &s->prev))
 		return (clean_up(tokens, s->head, s->curr, s->prev), 0);
 	if (is_logical_op(tokens[s->i]))
-	{
-		token_checker(s->curr, tokens[s->i]);
-		token_init(&s->curr, &s->prev, &s->i, s->argv_i);
-		return (2);
-	}
-	if (is_redirection(tokens[s->i]))
+		return (token_checker(s->curr, tokens[s->i]),
+			token_init(&s->curr, &s->prev, &s->i, s->argv_i), 2);
+	if (is_redirection(tokens[s->i]) && !is_quoted(tokens[s->i]))
 	{
 		if (!handle_redirection(s->curr, tokens, &s->i))
 			return (clean_up(tokens, s->head, s->curr, s->prev), -1);

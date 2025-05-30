@@ -6,7 +6,7 @@
 /*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 15:09:11 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/27 10:59:06 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/05/29 10:44:43 by amarcz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int	validate_tokens(char **tokens)
 			if (!operator_check(tokens, i))
 				return (0);
 		}
-		else if (is_redirection(tokens[i]))
+		else if (is_redirection(tokens[i]) && !is_quoted(tokens[i]))
 		{
 			if (!tokens[i + 1] || is_operator(tokens[i + 1])
 				|| ft_is_redirection(tokens[i + 1]))

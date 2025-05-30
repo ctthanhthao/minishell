@@ -6,7 +6,7 @@
 /*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:50:42 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/27 11:49:38 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/05/30 12:37:37 by amarcz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,27 @@ static void	handle_operator(char *input, char **tokens, int *i, int *tokeni)
 
 static void	handle_word(char *input, char **tokens, int *i, int *tokeni)
 {
-	int	start;
+	char buffer[1024];
+	int buf_i;
+	char quote;
 
-	start = *i;
+	buf_i = 0;
 	while (input[*i] && !(input[*i] == ' ' || input[*i] == '\t'
 			|| is_special(input[*i])))
-		(*i)++;
-	tokens[(*tokeni)++] = ft_substr(input, start, *i - start);
+		{
+			if (input[*i] == '\'' || input[*i] == '\"')
+			{
+				quote = input[(*i)++];
+				while (input[*i] && input[*i] != quote)
+					buffer[buf_i++] = input[(*i)++];
+				if (input[*i] == quote)
+					(*i)++;
+			}
+			else
+				buffer[buf_i++] = input[(*i)++];
+		}
+		buffer[buf_i] = '\0';
+		tokens[(*tokeni)++] = ft_strdup(buffer);
 }
 
 char	**ft_tokenize(char *input)

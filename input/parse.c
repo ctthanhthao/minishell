@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 14:36:53 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/29 08:40:19 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/29 12:13:04 by amarcz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,165 +93,18 @@ t_cmd	*token_loop(char **tokens, int argv_i, int last_status, char **envp)
 	return (s.head);
 }
 
-int are_full_quotes(const char *s)
-{
-	int len;
-
-	len = ft_strlen(s);
-	if (len < 2)
-		return (0);
-	if ((s[0] == '\'' && s[len - 1] == '\'') || (s[0] == '"' && s[len - 1] == '"'))
-		return (1);
-	return (0);
-}
-
-int wildcard_check(char **tokens)
-{
-	int i;
-
-	i = 0;
-	while (tokens[i])
-	{
-		if (ft_strchr(tokens[i], '*'))
-		{
-			if (ft_strchr(tokens[i], '\'') || ft_strchr(tokens[i], '\"'))
-			{
-				if(!are_full_quotes(tokens[i]))
-				{
-					ft_printf(R "Dude, WHAT IS THIS?!! ");
-					ft_printf("You can't handle wildcards mixed with quotes like this: %s\n" RST, tokens[i]);
-					return (0);
-				}
-			}
-		}
-		i++;
-	}
-	return (1);
-}
-
-
-int check_unclosed_quotes(const char *input)
-{
-	int i;
-	int single;
-	int dquote;
-
-	i = 0;
-	single = 0;
-	dquote = 0;
-	while (input[i])
-	{
-		if (input[i] == '\'' && dquote % 2 == 0)
-			single++;
-		else if (input[i] == '\"' && single % 2 == 0)
-			dquote++;
-		i++;
-	}
-	if (single % 2 != 0 || dquote % 2 != 0)
-	{
-		if (single % 2 != 0)
-			return (ft_printf(R "Whoa, you messed up! You forgot to close a single quote, Dudio!\n" RST), 0);
-		else
-			return (ft_printf(R "Whoa! You forgot to close a double quote! Pay attention, Bro!\n" RST), 0);
-	}
-	return (1);
-}
-
-//Main parsing function:
 t_cmd	*parse_input(char *input, int last_status, char **envp)
 {
 	char	**tokens;
-	// int		i;
-	// int		j;
 	int		argv_i;
 	t_cmd	*head;
-	// t_cmd	*curr;
-	// t_cmd	*prev;
-	// char 	**expanded;
 
-	if (!check_unclosed_quotes(input))
+	if (!check_unclosed_quotes(input) || !check_invalid_chars(input))
 		return (NULL);
 	tokens = ft_tokenize(input);
 	if (!validate_tokens(tokens) || !tokens || !wildcard_check(tokens))
 		return (free_split(tokens), NULL);
 	argv_i = 0;
-	// curr = NULL;
-	// prev = NULL;
-	// while (tokens[i])
-	// {
-	// 	if (!curr)
-	// 	{
-	// 		curr = malloc(sizeof(t_cmd));
-	// 		if (!curr)
-	// 		{
-	// 			clean_up(tokens, head, curr, prev);
-	// 			return (NULL);
-	// 		}
-	// 		curr->argv = malloc(sizeof(char *) * 1024);
-	// 		if (!curr->argv)
-	// 		{
-	// 			clean_up(tokens, head, curr, prev);
-	// 			return (NULL);
-	// 		}
-	// 		curr->redirs = NULL;
-	// 		curr->next = NULL;
-	// 		curr->next_type = CMD_NONE;
-	// 		argv_i = 0;
-	// 		if (!head)
-	// 			head = curr;
-	// 		else
-	// 			prev->next = curr;
-	// 	}
-	// 	if (ft_strncmp(tokens[i], "||", 2) == 0)
-	// 	{
-	// 		if (curr)
-	// 			curr->next_type = CMD_OR_IF;
-	// 		curr->argv[argv_i] = NULL;
-	// 		i++;
-	// 		prev = curr;
-	// 		curr = NULL;
-	// 		continue ;
-	// 	}
-	// 	else if (ft_strncmp(tokens[i], "|", 1) == 0)
-	// 	{
-	// 		if (curr)
-	// 			curr->next_type = CMD_PIPE;
-	// 		curr->argv[argv_i] = NULL;
-	// 		i++;
-	// 		prev = curr;
-	// 		curr = NULL;
-	// 		continue ;
-	// 	}
-	// 	else if (ft_strncmp(tokens[i], "&&", 2) == 0)
-	// 	{
-	// 		if (curr)
-	// 			curr->next_type = CMD_AND_IF;
-	// 		curr->argv[argv_i] = NULL;
-	// 		i++;
-	// 		prev = curr;
-	// 		curr = NULL;
-	// 		continue ;
-	// 	}
-	// 	if (is_redirection(tokens[i]))
-	// 	{
-	// 		if (!handle_redirection(curr, tokens, &i))
-	// 		{
-	// 			clean_up(tokens, head, curr, prev);
-	// 			return (NULL);
-	// 		}
-	// 		continue ;
-	// 	}
-	// 	expanded = handle_expansion_if_any(tokens[i++], last_status, envp);
-	// 	if (expanded)
-	// 	{
-	// 		j = 0;
-	// 		while (expanded[j])
-	// 			curr->argv[argv_i++] = expanded[j++];
-	// 		free(expanded); // Free the wrapper, not the strings
-	// 	}
-	// }
-	// if (curr)
-	// 	curr->argv[argv_i] = NULL;
 	head = token_loop(tokens, argv_i, last_status, envp);
 	if (!head)
 		return (NULL);
