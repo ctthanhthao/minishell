@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_expansion.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 10:23:05 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/28 13:50:42 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/05/30 16:15:39 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,17 @@ static bool	contains_unquoted_star(char *str)
 	return (false);
 }
 
-char **handle_expansion_if_any(char *token, int last_status, char **envp, bool cmd_pos)
+static int	file_exists(const char *path)
+{
+	return (access(path, F_OK) == 0);
+}
+
+char **handle_expansion_if_any(char *token, int last_status, char **envp)
 {
 	char	*expanded;
 	char	**wildcards;
 	char 	**res;
+	char	*file_check;
 
 	expanded = expand_variables(token, last_status, envp);
 	if (!expanded)
@@ -48,11 +54,9 @@ char **handle_expansion_if_any(char *token, int last_status, char **envp, bool c
 		return (wildcards);
 	}
 	res = malloc(sizeof(char *) * 2);
-	if (!cmd_pos)
-	{
-		res[0] = ft_strtrim(expanded, "\"\'");
-		free(expanded);
-	}
+	file_check = strip_quotes(expanded);
+	if (file_exists(file_check))
+		res[0] = file_check;
 	else
 		res[0] = expanded;
 	res[1] = NULL;

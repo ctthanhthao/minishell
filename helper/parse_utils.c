@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 12:42:11 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/30 11:34:21 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/05/30 14:35:15 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int	handle_token(char **tokens, t_parse_state *s)
 {
 	char	**expanded;
 	int		j;
-
+	
 	if (!init_curr(&s->curr, &s->argv_i, &s->head, &s->prev))
 		return (clean_up(tokens, s->head, s->curr, s->prev), 0);
 	if (is_logical_op(tokens[s->i]))
@@ -83,12 +83,8 @@ int	handle_token(char **tokens, t_parse_state *s)
 			return (clean_up(tokens, s->head, s->curr, s->prev), -1);
 		return (2);
 	}
-	if (s->i == 0)
-		expanded = handle_expansion_if_any(tokens[s->i++], s->last_status,
-					s->envp, true);
-	else
-		expanded = handle_expansion_if_any(tokens[s->i++], s->last_status,
-					s->envp, false);
+	expanded = handle_expansion_if_any(tokens[s->i++], s->last_status,
+										   s->envp);
 	if (expanded)
 	{
 		j = 0;

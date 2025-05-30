@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir_parse.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 10:16:48 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/29 12:13:10 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/05/30 16:03:02 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	handle_redirection(t_cmd *cmd, char **tokens, int *i)
 	if (!new)
 		return (ft_printf("Memory allocation error, Dude!\n"), 0);
 	new->type = identify_red(tokens[*i]);
-	new->filename = ft_strdup(tokens[*i + 1]);
+	new->filename = strip_quotes(tokens[*i + 1]);
 	new->next = NULL;
 	if (!cmd->redirs)
 		cmd->redirs = new;

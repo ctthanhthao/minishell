@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 19:11:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/28 12:35:21 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/30 12:46:46 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,7 @@ char	**expand_wildcard(const char *pattern)
 		if (entry->d_name[0] == '.' && pattern[0] != '.')
 			continue ;
 		if (match_pattern(pattern, entry->d_name))
-		{
 			matches[i++] = ft_strdup(entry->d_name);
-//			ft_printf("entry->d_name %s\n", entry->d_name);
-		}
 	}
 	if (i == 0)
 		matches[i++] = ft_strdup(pattern);

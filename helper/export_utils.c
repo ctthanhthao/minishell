@@ -1,36 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   has_file_arguments.c                               :+:      :+:    :+:   */
+/*   export_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/29 12:50:14 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/30 14:08:17 by thchau           ###   ########.fr       */
+/*   Created: 2025/05/30 12:40:26 by thchau            #+#    #+#             */
+/*   Updated: 2025/05/30 16:00:33 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-static bool	is_existing_path(const char *path)
+char	*extract_key(const char *entry)
 {
-	struct stat	sb;
+	char	*eq;
 
-	return (path && stat(path, &sb) == 0);
+	eq = ft_strchr(entry, '=');
+	if (eq)
+		return (ft_substr(entry, 0, eq - entry));
+	else
+		return (ft_strdup(entry));
 }
 
-bool	has_file_arguments(t_cmd *cmd)
+char	*strip_quotes(const char *str)
 {
-	int		i;
-	char	cwd[1024];
-
-	getcwd(cwd, sizeof(cwd));
-	i = 1;
-	while (cmd->argv[i])
-	{
-		if (cmd->argv[i][0] != '-' && is_existing_path(cmd->argv[i]))
-			return (true);
-		i++;
-	}
-	return (false);
+    size_t len;
+	
+	len = ft_strlen(str);
+    if ((str[0] == '"' && str[len - 1] == '"') ||
+        (str[0] == '\'' && str[len - 1] == '\''))
+        return (ft_substr(str, 1, len - 2));
+    return ft_strdup(str);
 }

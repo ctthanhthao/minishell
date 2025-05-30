@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 17:47:05 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/29 12:51:53 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/30 14:41:50 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,9 @@ static int	execute_external_cmd_without_fork(t_cmd *cmd, char ***envp,
 	if (execve(success_path, cmd->argv, *envp) == -1)
 	{
 		log_errno(NULL);
-		exit(127);
+		exit(126);
 	}
-	return (127);
+	return (126);
 }
 
 static int	execute_external_cmd(t_cmd *cmd, char ***envp,
@@ -94,7 +94,7 @@ static int	execute_external_cmd(t_cmd *cmd, char ***envp,
 		if (execve(success_path, cmd->argv, *envp) == -1)
 		{
 			log_errno(NULL);
-			exit(127);
+			exit(126);
 		}
 	}
 	waitpid(pid, &status, 0);

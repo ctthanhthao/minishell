@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/29 17:20:21 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/05/30 16:00:50 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ void    free_split(char **arr);
 char    **tokenize_line(const char *line);                            // optional internal
 t_cmd   *build_cmd_list(char **tokens, char **envp);                 // optional internal
 t_redir *parse_redirections(char **tokens, int *i);  
-char	**handle_expansion_if_any(char *arg, int last_status, char **env, bool cmd_pos); 
+char	**handle_expansion_if_any(char *arg, int last_status, char **env); 
 char	*expand_variables(const char *arg, int last_status, char **env);
 char	*expand_one_var(char **p, int last_status, char **env);
 void	setup_signals(void);
@@ -169,10 +169,11 @@ void	free_cmd(t_cmd *cmd);
 int		ft_strcmp(const char *s1, const char *s2);
 char	**selection_sort(char **ar);
 char	**clone_arr(char **ar);
-void	log_error(const char *error, const char *function);
 void	log_errno(const char *msg);
 int		is_valid_identifier(const char *s);
 void	print_sorted_env(char **env);
 int		safe_dup2(int oldfd, int newfd, char *error);
+char	*extract_key(const char *entry);
+char	*strip_quotes(const char *str);
 
 #endif

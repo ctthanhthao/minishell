@@ -6,27 +6,28 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:26:01 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/29 09:49:26 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/30 16:01:13 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-static char	*extract_key(const char *entry)
+static void	build_key_value(const char *new_var, int key_len, char **key,
+	char **value)
 {
-	char	*eq;
+	const char	*tmp;
 
-	eq = ft_strchr(entry, '=');
-	if (eq)
-		return (ft_substr(entry, 0, eq - entry));
-	else
-		return (ft_strdup(entry));
+	tmp = new_var + key_len + 1;
+	*value = ft_strtrim(tmp, "\"\'");
+	*key = ft_substr(new_var, 0, key_len + 1);
 }
 
-static char	**add_env_var(char **envp, const char *new_var)
+static char	**add_env_var(char **envp, const char *new_var, int key_len)
 {
-	int		i;
-	char	**new_envp;
+	int			i;
+	char		**new_envp;
+	char		*key;
+	char		*value;
 
 	i = 0;
 	while (envp[i])
@@ -37,20 +38,30 @@ static char	**add_env_var(char **envp, const char *new_var)
 	i = -1;
 	while (envp[++i])
 		new_envp[i] = ft_strdup(envp[i]);
-	new_envp[i] = ft_strdup(new_var);
-	new_envp[i + 1] = NULL;
-	free_split(envp);
-	return (new_envp);
+	if (new_var[key_len] == '=')
+	{
+		build_key_value(new_var, key_len, &key, &value);
+		new_envp[i] = ft_strjoin_free(key, value);
+		free(value);
+	}
+	else
+		new_envp[i] = ft_strdup(new_var);
+	return (new_envp[i + 1] = NULL, free_split(envp), new_envp);
 }
 
 static bool	update_env(char **entry_env, const char *new_var, size_t key_len)
 {
+	char		*value;
+	char		*key;
+
 	if (!new_var[key_len])
 		return (true);
 	else if (new_var[key_len] == '=')
 	{
+		build_key_value(new_var, key_len, &key, &value);
 		free(*entry_env);
-		*entry_env = ft_strdup(new_var);
+		*entry_env = ft_strjoin_free(key, value);
+		free(value);
 		return (true);
 	}
 	else
@@ -82,13 +93,14 @@ static char	**update_or_add_env(char **envp, const char *new_var)
 		}
 	}
 	free(key);
-	return (add_env_var(envp, new_var));
+	return (add_env_var(envp, new_var, key_len));
 }
 
 int	export_builtin(t_cmd *cmd, char ***envp)
 {
 	int	i;
 	int	status;
+	char	*new_var;
 
 	status = CMD_SUCCESS;
 	if (!envp || !*envp)
@@ -98,14 +110,17 @@ int	export_builtin(t_cmd *cmd, char ***envp)
 	i = 1;
 	while (cmd->argv[i])
 	{
-		if (!is_valid_identifier(cmd->argv[i]))
+		new_var = strip_quotes(cmd->argv[i]);
+		if (!is_valid_identifier(new_var))
 		{
 			log_errno("not a valid identifier");
 			i++;
 			status = CMD_FAILURE;
+			free(new_var);
 			continue ;
 		}
-		*envp = update_or_add_env(*envp, cmd->argv[i]);
+		*envp = update_or_add_env(*envp, new_var);
+		free(new_var);
 		if (!*envp)
 			return (log_errno("memory allocation failed"), CMD_FAILURE);
 		i++;

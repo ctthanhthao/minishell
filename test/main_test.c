@@ -185,7 +185,7 @@ int	main(int argc, char **argv, char **envp)
 		stdout_bk = dup(STDOUT_FILENO);
 		if (stdout_bk == -1)
 		{
-			log_error("Error saving STDOUT_FILENO", "dup");
+			log_errno(NULL);
 			return (CMD_FAILURE);
 		}
 		if (apply_redirections(cmd->redirs) == CMD_FAILURE)
@@ -198,7 +198,7 @@ int	main(int argc, char **argv, char **envp)
 		// Restore the original STDOUT_FILENO
 		if (dup2(stdout_bk, STDOUT_FILENO) == -1)
 		{
-			log_error("Error restoring STDOUT_FILENO", "dup2");
+			log_errno(NULL);
 			free_cmd(cmd);
 			continue;
 		}

@@ -6,19 +6,11 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:38:06 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/29 10:01:49 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/30 12:46:25 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
-void	log_error(const char *error, const char *function)
-{
-	if (error)
-		ft_printf(R "%s\n" RST, error);
-	if (function)
-		perror(function);
-}
 
 void	log_errno(const char *msg)
 {
