@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 12:50:14 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/29 12:51:35 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/30 12:57:28 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ bool	has_file_arguments(t_cmd *cmd)
 	{
 		if (cmd->argv[i][0] != '-' && is_existing_path(cmd->argv[i]))
 			return (true);
+		i++;
 	}
 	return (false);
 }
