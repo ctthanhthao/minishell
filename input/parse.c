@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 14:36:53 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/29 12:13:04 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/05/31 20:21:33 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,17 +48,19 @@ t_redir	*add_token(t_redir *last, char *value)
 	return (new);
 }
 
-// static void	clean_up(char **tokens, t_cmd *head, t_cmd *curr, t_cmd *prev)
-// {
-// 	free_split(tokens);
-// 	free_cmd(head);
-// 	if (curr && curr != prev) // not yet linked to head
-// 	{
-// 		if (curr->argv)
-// 			free(curr->argv);
-// 		free(curr);
-// 	}
-// }
+static void	clean_up(char **tokens, t_parse_state *s)
+{
+	if (tokens)
+		free_split(tokens);
+	if (s->head)
+		free_cmd(s->head);
+	if (s->curr && s->curr != s->prev)
+	{
+		if (s->curr->argv)
+			free_split(s->curr->argv);
+		free(s->curr);	
+	}
+}
 
 void	initialize_state(t_parse_state *s, int argv_i,
 		int last_status, char **envp)
@@ -76,21 +78,27 @@ t_cmd	*token_loop(char **tokens, int argv_i, int last_status, char **envp)
 {
 	t_parse_state	s;
 	int				ret;
+	t_cmd			*result;
 
 	ret = 0;
 	initialize_state(&s, argv_i, last_status, envp);
 	while (tokens[s.i])
 	{
 		ret = handle_token(tokens, &s);
-		if (ret == -1)
-			return (free_split(tokens), free_cmd(s.head), NULL);
+		if (ret == -1 || ret == 0)
+			return (clean_up(tokens, &s), NULL);
 		if (ret == 2)
 			continue ;
 	}
 	if (s.curr)
 		s.curr->argv[s.argv_i] = NULL;
 	s.prev = s.curr;
-	return (s.head);
+	if (s.head)
+		result = clone_cmd(s.head);
+	else
+		result = NULL;
+	clean_up(NULL, &s);
+	return (result);
 }
 
 t_cmd	*parse_input(char *input, int last_status, char **envp)

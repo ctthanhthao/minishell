@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 17:47:05 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/30 14:41:50 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/31 21:18:56 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,10 @@ static char	*find_valid_path(char *cmd, char **envp)
 	return (free_split(paths), full_path);
 }
 
-static int	execute_external_cmd_without_fork(t_cmd *cmd, char ***envp,
-	char *success_path)
+static int	execute_external_cmd_without_fork(t_cmd *cmd, int last_status,
+	char ***envp, char *success_path)
 {
-	if (apply_redirections(cmd->redirs) == CMD_FAILURE)
+	if (apply_redirections(cmd->redirs, last_status, *envp) == CMD_FAILURE)
 		exit(CMD_FAILURE);
 	if (execve(success_path, cmd->argv, *envp) == -1)
 	{
@@ -78,7 +78,7 @@ static int	execute_external_cmd_without_fork(t_cmd *cmd, char ***envp,
 	return (126);
 }
 
-static int	execute_external_cmd(t_cmd *cmd, char ***envp,
+static int	execute_external_cmd(t_cmd *cmd, int last_status, char ***envp,
 	char *success_path)
 {
 	pid_t	pid;
@@ -89,7 +89,7 @@ static int	execute_external_cmd(t_cmd *cmd, char ***envp,
 		return (log_errno(NULL), CMD_FAILURE);
 	if (pid == 0)
 	{
-		if (apply_redirections(cmd->redirs) == CMD_FAILURE)
+		if (apply_redirections(cmd->redirs, last_status, *envp) == CMD_FAILURE)
 			exit(CMD_FAILURE);
 		if (execve(success_path, cmd->argv, *envp) == -1)
 		{
@@ -107,25 +107,23 @@ int	execute_single_command(t_cmd *cmd, char ***envp,
 	int *last_status, bool should_fork)
 {
 	char	*success_path;
-	int		i;
 
 	if (!cmd || !cmd->argv || !cmd->argv[0])
 		return (*last_status);
 	if (is_builtin(cmd->argv[0]))
-		*last_status = handle_builtin_with_redirection(cmd, envp, last_status);
+		*last_status = handle_builtin_with_redirection(cmd, envp, last_status,
+				execute_builtin);
 	else
 	{
-		i = 0;
-		while (cmd->argv[i] && ft_strlen(cmd->argv[i]) == 0)
-			i++;
-		success_path = find_valid_path(cmd->argv[i], *envp);
+		success_path = find_valid_path(cmd->argv[0], *envp);
 		if (!success_path)
 			return (log_errno("command not found"), 127);
 		if (should_fork)
-			*last_status = execute_external_cmd(cmd, envp, success_path);
-		else
-			*last_status = execute_external_cmd_without_fork(cmd, envp,
+			*last_status = execute_external_cmd(cmd, *last_status, envp,
 					success_path);
+		else
+			*last_status = execute_external_cmd_without_fork(cmd, *last_status,
+					envp, success_path);
 		if (success_path)
 			free(success_path);
 	}

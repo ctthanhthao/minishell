@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:38:06 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/30 12:46:25 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/31 21:23:07 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	log_errno(const char *msg)
 {
 	const char	*err;
-	
+
 	if (msg)
 	{
 		write(2, "minishell", 8);
@@ -44,19 +44,6 @@ int	ft_strcmp(const char *s1, const char *s2)
 		s2++;
 	}
 	return ((unsigned char)*s1 - (unsigned char)*s2);
-}
-
-int	is_valid_identifier(const char *s)
-{
-	if (!s || (!ft_isalpha(*s) && *s != '_'))
-		return (0);
-	while (*s && *s != '=')
-	{
-		if (!ft_isalnum(*s) && *s != '_')
-			return (0);
-		s++;
-	}
-	return (1);
 }
 
 void	print_sorted_env(char **env)

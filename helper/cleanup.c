@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:07:20 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/25 17:26:49 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/31 17:11:33 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,12 @@ void	free_cmd(t_cmd *cmd)
 	t_cmd	*next;
 	t_redir	*tmp_re;
 
-	i = 0;
 	while (cmd)
 	{
 		next = cmd->next;
 		if (cmd->argv)
 		{
+			i = 0;
 			while (cmd->argv[i])
 				free(cmd->argv[i++]);
 			free(cmd->argv);

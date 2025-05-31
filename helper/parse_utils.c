@@ -6,23 +6,11 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 12:42:11 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/30 14:35:15 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/31 21:21:44 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static void	clean_up(char **tokens, t_cmd *head, t_cmd *curr, t_cmd *prev)
-{
-	free_split(tokens);
-	free_cmd(head);
-	if (curr && curr != prev)
-	{
-		if (curr->argv)
-			free(curr->argv);
-		free(curr);
-	}
-}
 
 int	init_curr(t_cmd **curr, int *argv_i, t_cmd **head, t_cmd **prev)
 {
@@ -31,7 +19,7 @@ int	init_curr(t_cmd **curr, int *argv_i, t_cmd **head, t_cmd **prev)
 		*curr = malloc(sizeof(t_cmd));
 		if (!*curr)
 			return (0);
-		(*curr)->argv = malloc(sizeof(char *) * 1024);
+		(*curr)->argv = ft_calloc(1024, sizeof(char *));
 		if (!(*curr)->argv)
 			return (0);
 		(*curr)->redirs = NULL;
@@ -67,30 +55,47 @@ void	token_init(t_cmd **curr, t_cmd **prev, int *i, int argv_i)
 	*curr = NULL;
 }
 
-int	handle_token(char **tokens, t_parse_state *s)
+static int	handle_expansion(char **tokens, t_parse_state *s)
 {
 	char	**expanded;
 	int		j;
-	
+
+	expanded = handle_expansion_if_any(tokens[s->i++], s->last_status,
+			s->envp);
+	if (expanded)
+	{
+		j = 0;
+		while (expanded[j])
+		{
+			if (expanded[j][0] != '\0')
+			{
+				s->curr->argv[s->argv_i] = ft_strdup(expanded[j]);
+				if (!s->curr->argv[s->argv_i])
+				{
+					free_split(expanded);
+					return (-1);
+				}
+				s->argv_i++;
+			}
+			j++;
+		}
+		free_split(expanded);
+	}
+	return (1);
+}
+
+int	handle_token(char **tokens, t_parse_state *s)
+{
 	if (!init_curr(&s->curr, &s->argv_i, &s->head, &s->prev))
-		return (clean_up(tokens, s->head, s->curr, s->prev), 0);
+		return (0);
 	if (is_logical_op(tokens[s->i]))
 		return (token_checker(s->curr, tokens[s->i]),
 			token_init(&s->curr, &s->prev, &s->i, s->argv_i), 2);
 	if (is_redirection(tokens[s->i]) && !is_quoted(tokens[s->i]))
 	{
 		if (!handle_redirection(s->curr, tokens, &s->i))
-			return (clean_up(tokens, s->head, s->curr, s->prev), -1);
+			return (-1);
 		return (2);
 	}
-	expanded = handle_expansion_if_any(tokens[s->i++], s->last_status,
-										   s->envp);
-	if (expanded)
-	{
-		j = 0;
-		while (expanded[j] && expanded[j][0] != '\0')
-			s->curr->argv[s->argv_i++] = expanded[j++];
-		free(expanded);
-	}
-	return (1);
+	return (handle_expansion(tokens, s));
 }

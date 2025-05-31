@@ -6,13 +6,13 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:08:16 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/30 15:37:43 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/31 20:58:58 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-static char	*remove_quotes_if_need(char *arg)
+char	*remove_quotes_if_need(char *arg)
 {
 	bool	in_single;
 	bool	in_double;
@@ -22,7 +22,7 @@ static char	*remove_quotes_if_need(char *arg)
 	in_single = false;
 	in_double = false;
 	i = 0;
-	re = malloc((ft_strlen(arg) + 1) * sizeof(char));
+	re = ft_calloc((ft_strlen(arg) + 1), sizeof(char));
 	if (!re)
 		return (NULL);
 	while (*arg)
@@ -43,7 +43,6 @@ int	echo_builtin(t_cmd *cmd, int *status)
 {
 	int		i;
 	int		newline;
-	char	*str;
 
 	i = 1;
 	newline = 1;
@@ -54,11 +53,7 @@ int	echo_builtin(t_cmd *cmd, int *status)
 	}
 	while (cmd->argv[i])
 	{
-		str = remove_quotes_if_need(cmd->argv[i]);
-		if (!str)
-			return (log_errno(NULL), *status = 1, CMD_FAILURE);
-		ft_printf("%s", str);
-		free(str);
+		ft_printf("%s", cmd->argv[i]);
 		if (cmd->argv[i + 1])
 			ft_printf(" ");
 		i++;
@@ -67,4 +62,3 @@ int	echo_builtin(t_cmd *cmd, int *status)
 		ft_printf("\n");
 	return (*status = 0, CMD_SUCCESS);
 }
-

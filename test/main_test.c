@@ -188,7 +188,7 @@ int	main(int argc, char **argv, char **envp)
 			log_errno(NULL);
 			return (CMD_FAILURE);
 		}
-		if (apply_redirections(cmd->redirs) == CMD_FAILURE)
+		if (apply_redirections(cmd->redirs, last_exit_status, shell_envp) == CMD_FAILURE)
 		{
 			last_exit_status = 1;
 			free_cmd(cmd);

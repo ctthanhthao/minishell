@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 12:40:57 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/29 12:50:51 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/31 21:09:13 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static void	collect_pipeline_status(t_pid_pipe_fd *pid_data, int *last_status)
 static void	execute_pipeline_child(t_cmd *cur, char ***env,
 	t_pid_pipe_fd *pid_data, int *last_status)
 {
-	if (pid_data->prev_fd != -1 && !has_file_arguments(cur))
+	if (pid_data->prev_fd != -1)
 	{
 		if (safe_dup2(pid_data->prev_fd, STDIN_FILENO,
 				"dup2 error: bad source fd (-1)\n") == CMD_FAILURE)

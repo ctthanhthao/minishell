@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:26:01 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/30 16:01:13 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/31 20:57:47 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 static void	build_key_value(const char *new_var, int key_len, char **key,
 	char **value)
 {
-	const char	*tmp;
+	char	*tmp;
 
-	tmp = new_var + key_len + 1;
-	*value = ft_strtrim(tmp, "\"\'");
+	tmp = (char *)(new_var + key_len + 1);
+	*value = remove_quotes_if_need(tmp);
 	*key = ft_substr(new_var, 0, key_len + 1);
 }
 
@@ -98,8 +98,8 @@ static char	**update_or_add_env(char **envp, const char *new_var)
 
 int	export_builtin(t_cmd *cmd, char ***envp)
 {
-	int	i;
-	int	status;
+	int		i;
+	int		status;
 	char	*new_var;
 
 	status = CMD_SUCCESS;
@@ -107,15 +107,13 @@ int	export_builtin(t_cmd *cmd, char ***envp)
 		return (log_errno("env is null"), CMD_FAILURE);
 	if (!cmd->argv[1])
 		return (print_sorted_env(*envp), CMD_SUCCESS);
-	i = 1;
-	while (cmd->argv[i])
+	i = 0;
+	while (cmd->argv[++i])
 	{
 		new_var = strip_quotes(cmd->argv[i]);
-		if (!is_valid_identifier(new_var))
+		status = check_valid_identifier(new_var);
+		if (status == CMD_FAILURE)
 		{
-			log_errno("not a valid identifier");
-			i++;
-			status = CMD_FAILURE;
 			free(new_var);
 			continue ;
 		}
@@ -123,7 +121,6 @@ int	export_builtin(t_cmd *cmd, char ***envp)
 		free(new_var);
 		if (!*envp)
 			return (log_errno("memory allocation failed"), CMD_FAILURE);
-		i++;
 	}
 	return (status);
 }

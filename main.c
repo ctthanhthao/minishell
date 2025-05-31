@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:11:32 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/28 22:31:31 by thchau           ###   ########.fr       */
+/*   Updated: 2025/05/31 20:40:42 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,16 @@ int main (int argc, char **argv, char **envp)
         cmd = parse_input(input, last_status, shell_envp);
 		//free the memory allocated in readline
         free(input);
-		if (!cmd || !cmd->argv || !cmd->argv[0])
+		if (!cmd)
 		{
 			free_cmd(cmd);
 			continue;
 		}
-		last_status = execute_commands(cmd, &shell_envp, &last_status);
+		if (!cmd->argv && cmd->redirs)
+			last_status = handle_builtin_with_redirection(cmd, &shell_envp,
+							&last_status, NULL);
+		else
+			last_status = execute_commands(cmd, &shell_envp, &last_status);
 		//print_cmds(cmd); //Debug output
         free_cmd(cmd);
 	}
