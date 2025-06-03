@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:38:06 by amarcz            #+#    #+#             */
-/*   Updated: 2025/06/03 09:57:08 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/03 10:27:48 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,6 @@ int	safe_dup2(int oldfd, int newfd, char *error)
 
 int	return_failed_exit_code()
 {
-	log_errno(NULL);
 	if (errno == ENOENT)
 		exit(127);
 	else if (errno == EACCES || errno == ENOEXEC || errno == EISDIR)
