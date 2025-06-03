@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/31 22:02:29 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/03 09:51:25 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,9 +143,11 @@ char	**expand_wildcard(const char *pattern);
 int		execute_commands(t_cmd *cmd_list, char ***envp, int *last_status);
 int		is_builtin(const char *cmd);
 bool	has_file_arguments(t_cmd *cmd);
-int		handle_builtin_with_redirection(t_cmd *cmd, char ***envp, int *status);
+int		execute_builtin(t_cmd *cmd, char ***envp, int *status);
+int		handle_builtin_with_redirection(t_cmd *cmd, char ***envp, int *status,
+	int (*operation)(t_cmd*, char***, int*));
 int		process_pipe(t_cmd *cmd, char ***envp, int *last_status);
-int		apply_redirections(t_redir *redirs);
+int		apply_redirections(t_redir *redirs, int last_status, char **envp);
 bool	save_original_std_inout(int *stdin_bk, int *stdout_bk);
 void	restore_original_std_inout(int stdin_bk, int stdout_bk);
 int		process_heredoc(t_redir *redir);
@@ -169,11 +171,14 @@ void	free_cmd(t_cmd *cmd);
 int		ft_strcmp(const char *s1, const char *s2);
 char	**selection_sort(char **ar);
 char	**clone_arr(char **ar);
+t_cmd	*clone_cmd(t_cmd *cmd);
 void	log_errno(const char *msg);
-int		is_valid_identifier(const char *s);
+int		check_valid_identifier(const char *s);
 void	print_sorted_env(char **env);
 int		safe_dup2(int oldfd, int newfd, char *error);
 char	*extract_key(const char *entry);
 char	*strip_quotes(const char *str);
+int		return_failed_exit_code();
+char	*remove_quotes_if_need(char *arg);
 
 #endif
