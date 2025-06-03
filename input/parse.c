@@ -3,50 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 14:36:53 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/31 20:21:33 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/03 13:31:53 by amarcz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-//IDENTIFY TOKEN
-t_token	identify_tok(char *str)
-{
-	if (ft_strncmp(str, "||", 2) == 0)
-		return (PIPE);
-	else if (ft_strncmp(str, ">>", 2) == 0)
-		return (REDIR_OUT);
-	else if (ft_strncmp(str, ">", 1) == 0)
-		return (REDIR_OUT_APPEND);
-	else if (ft_strncmp(str, "<<", 2) == 0)
-		return (REDIR_IN);
-	else if (ft_strncmp(str, "<", 1) == 0)
-		return (REDIR_HEREDOC);
-	else if (ft_strncmp(str, "&&", 2) == 0)
-		return (AND);
-	else if (ft_strncmp(str, "|", 1) == 0)
-		return (OR);
-	return (WORD);
-}
+// //Add a new token node to the list
+// t_redir	*add_token(t_redir *last, char *value)
+// {
+// 	t_redir	*new;
 
-//Add a new token node to the list
-t_redir	*add_token(t_redir *last, char *value)
-{
-	t_redir	*new;
-
-	new = malloc(sizeof(t_redir));
-	if (!new)
-		return (NULL);
-	new->filename = ft_strdup(value);
-	new->type = identify_tok(value);
-	new->next = NULL;
-	if (last)
-		last->next = new;
-	return (new);
-}
+// 	new = malloc(sizeof(t_redir));
+// 	if (!new)
+// 		return (NULL);
+// 	new->filename = ft_strdup(value);
+// 	new->type = identify_tok(value);
+// 	new->next = NULL;
+// 	if (last)
+// 		last->next = new;
+// 	return (new);
+// }
 
 static void	clean_up(char **tokens, t_parse_state *s)
 {
@@ -58,7 +38,7 @@ static void	clean_up(char **tokens, t_parse_state *s)
 	{
 		if (s->curr->argv)
 			free_split(s->curr->argv);
-		free(s->curr);	
+		free(s->curr);
 	}
 }
 

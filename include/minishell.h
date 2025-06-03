@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/03 09:51:25 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/03 13:40:36 by amarcz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,7 @@ typedef struct s_pid_pipe_fd
 // PARSER INTERFACE - András
 // ===============================
 t_cmd	*parse_input(char *input, int last_status, char **envp);
+t_token	identify_tok(char *str);
 int		handle_token(char **tokens, t_parse_state *s);
 int		wildcard_check(char **tokens);
 int		check_invalid_chars(const char *input);
@@ -136,6 +137,7 @@ char	*expand_variables(const char *arg, int last_status, char **env);
 char	*expand_one_var(char **p, int last_status, char **env);
 void	setup_signals(void);
 char	**expand_wildcard(const char *pattern);
+int		is_special(char c);
 
 // ===============================
 // EXECUTOR INTERFACE - Thao

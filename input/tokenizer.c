@@ -6,42 +6,17 @@
 /*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:50:42 by amarcz            #+#    #+#             */
-/*   Updated: 2025/06/03 11:49:31 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/06/03 13:52:19 by amarcz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	is_special(char c)
-{
-	return (c == '>' || c == '<' || c == '&' || c == '|');
-}
-
-// static int	handle_quotes(char *input, char **tokens, int *i, int *tokeni)
-// {
-// 	int	start;
-// 	int	quote;
-	
-// 	// (void) tokeni;
-// 	// (void) tokens;
-// 	quote = input[*i];
-// 	start = (*i)++;
-// 	while (input[*i] && input[*i] != quote)
-// 		(*i)++;
-// 	if (!input[*i])
-// 		return (0);
-// 	(*i)++;
-// 	tokens[(*tokeni)++] = ft_substr(input, start, *i - start);
-// 	return (1);
-// }
-
 static int	handle_quotes(char *input, int *i)
 {
 	int	start;
 	int	quote;
-	
-	// (void) tokeni;
-	// (void) tokens;
+
 	quote = input[*i];
 	start = (*i)++;
 	while (input[*i] && input[*i] != quote)
@@ -49,7 +24,6 @@ static int	handle_quotes(char *input, int *i)
 	if (!input[*i])
 		return (0);
 	(*i)++;
-	// tokens[(*tokeni)++] = ft_substr(input, start, *i - start);
 	return (1);
 }
 
@@ -67,27 +41,48 @@ static void	handle_operator(char *input, char **tokens, int *i, int *tokeni)
 
 static void	handle_word(char *input, char **tokens, int *i, int *tokeni)
 {
-	char buffer[1024];
-	int buf_i;
-	char quote;
+	char	buffer[1024];
+	int		buf_i;
+	char	quote;
 
 	buf_i = 0;
 	while (input[*i] && !(input[*i] == ' ' || input[*i] == '\t'
 			|| is_special(input[*i])))
+	{
+		if (input[*i] == '\'' || input[*i] == '\"')
 		{
-			if (input[*i] == '\'' || input[*i] == '\"')
-			{
-				quote = input[(*i)++];
-				while (input[*i] && input[*i] != quote)
-					buffer[buf_i++] = input[(*i)++];
-				if (input[*i] == quote)
-					(*i)++;
-			}
-			else
+			quote = input[(*i)++];
+			buffer[buf_i++] = quote;
+			while (input[*i] && input[*i] != quote)
+				buffer[buf_i++] = input[(*i)++];
+			if (input[*i] == quote)
 				buffer[buf_i++] = input[(*i)++];
 		}
-		buffer[buf_i] = '\0';
-		tokens[(*tokeni)++] = ft_strdup(buffer);
+		else
+			buffer[buf_i++] = input[(*i)++];
+	}
+	buffer[buf_i] = '\0';
+	tokens[(*tokeni)++] = ft_strdup(buffer);
+}
+
+int	execute_tokens(char *input, int *i, char **tokens, int *tokeni)
+{
+	int	start;
+
+	start = 0;
+	if (input[*i] == '\'' || input[*i] == '\"')
+	{
+		start = *i;
+		if (!(handle_quotes(input, i)))
+			return (0);
+		*i = start;
+		handle_word(input, tokens, i, tokeni);
+	}
+	else if (is_special(input[*i]))
+		handle_operator(input, tokens, i, tokeni);
+	else
+		handle_word(input, tokens, i, tokeni);
+	return (1);
 }
 
 char	**ft_tokenize(char *input)
@@ -95,7 +90,6 @@ char	**ft_tokenize(char *input)
 	char	**tokens;
 	int		i;
 	int		tokeni;
-	int 	start;
 
 	tokeni = 0;
 	tokens = ft_calloc(1024, sizeof(char *));
@@ -107,22 +101,8 @@ char	**ft_tokenize(char *input)
 		i = skip_whitespace(input, i);
 		if (!input[i])
 			break ;
-		if (input[i] == '\'' || input[i] == '\"')
-		{
-			start = i;
-			if (!(handle_quotes(input, &i)))
-				return (free_split(tokens), TOKENIZE_ERROR);
-			i = start;
-			handle_word(input, tokens, &i, &tokeni);
-		}
-		else if (is_special(input[i]))
-			handle_operator(input, tokens, &i, &tokeni);
-		else
-			handle_word(input, tokens, &i, &tokeni);
+		if (!execute_tokens(input, &i, tokens, &tokeni))
+			return (free_split(tokens), TOKENIZE_ERROR);
 	}
-	//DEBUG DUDE!
-	// ft_printf("Tokens:\n");
-	// for (int j = 0; j < tokeni; j++)
-	// 	ft_printf("  [%d]: \"%s\"\n", j, tokens[j]);
 	return (token_ender(tokens, tokeni), tokens);
 }
