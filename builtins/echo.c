@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:08:16 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/31 20:58:58 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/03 11:49:03 by amarcz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ char	*remove_quotes_if_need(char *arg)
 	re = ft_calloc((ft_strlen(arg) + 1), sizeof(char));
 	if (!re)
 		return (NULL);
+	ft_printf("Remove quotes arg: \n");
+	ft_printf("%s \n", arg);
 	while (*arg)
 	{
 		if (*arg == '\'' && !in_double)
@@ -36,6 +38,8 @@ char	*remove_quotes_if_need(char *arg)
 		arg++;
 	}
 	re[i] = '\0';
+	ft_printf("Remove quotes arg after: \n");
+	ft_printf("%s \n", arg);
 	return (re);
 }
 
