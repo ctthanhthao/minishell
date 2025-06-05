@@ -6,7 +6,7 @@
 /*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 15:06:28 by amarcz            #+#    #+#             */
-/*   Updated: 2025/05/27 15:15:59 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/06/05 10:21:13 by amarcz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ int	check_unclosed_quotes(const char *input)
 			dquote++;
 		i++;
 	}
-	if (single % 2 != 0 || dquote % 2 != 0)
+	if ((single % 2 != 0 || single == 1) || (dquote % 2 != 0 || dquote == 1))
 	{
 		if (single % 2 != 0)
 			return (ft_printf(R "Whoa, you messed up! You forgot to "),

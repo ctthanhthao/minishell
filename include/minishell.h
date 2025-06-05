@@ -6,7 +6,7 @@
 /*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/03 13:40:36 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/06/05 15:16:30 by amarcz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,13 @@ typedef struct s_cmd
 	t_cmd_type		next_type;	// e.g. AND_IF, OR_IF, PIPE
 }	t_cmd;
 
+typedef struct s_bufinfo
+{
+	char	*buffer;
+	int		buf_i;
+	int		capacity;
+}	t_bufinfo;
+
 typedef	struct s_parse_state
 {
 	int			i;
@@ -138,6 +145,9 @@ char	*expand_one_var(char **p, int last_status, char **env);
 void	setup_signals(void);
 char	**expand_wildcard(const char *pattern);
 int		is_special(char c);
+int		token_memory_allc(int *capacity, int buf_i, char **buffer);
+int		grow_token_arr(char ***tokens, int *capacity, int used);
+int		wrd_handle_quote(const char *input, int *i, t_bufinfo *buf);
 
 // ===============================
 // EXECUTOR INTERFACE - Thao
