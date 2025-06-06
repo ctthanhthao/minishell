@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/06 11:29:41 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/06/06 15:33:48 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,8 @@ typedef enum e_token
 	REDIR_IN, // <
 	REDIR_HEREDOC, // <<
 	AND, // &&
-	OR
+	OR,
+	INVALID
 }	t_token;
 
 typedef enum e_cmd_status

@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 09:18:30 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/06 12:10:17 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/06 14:53:35 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,11 +74,11 @@ static void	print_ast_node(t_ast *node, const char *prefix, int is_last)
     }
     ft_printf(COLOR_RESET"\n");
 	prepare_prefix(prefix, is_last, new_prefix);
-	print_redirections(node, prefix);
 	if (node->left)
 		print_ast_node(node->left, new_prefix, !node->right);
 	if (node->right)
 		print_ast_node(node->right, new_prefix, 1);
+	print_redirections(node, new_prefix);
 }
 
 void print_ast(t_ast *root)

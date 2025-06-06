@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:50:42 by amarcz            #+#    #+#             */
-/*   Updated: 2025/06/05 15:16:15 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/06/06 14:04:30 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,9 @@
 
 static int	handle_quotes(char *input, int *i)
 {
-	int	start;
 	int	quote;
 
 	quote = input[*i];
-	start = (*i)++;
 	while (input[*i] && input[*i] != quote)
 		(*i)++;
 	if (!input[*i])
@@ -71,7 +69,7 @@ static void	handle_word(char *input, char **tokens, int *i, int *tokeni)
 	tokens[(*tokeni)++] = buf.buffer;
 }
 
-int	execute_tokens(char *input, int *i, char **tokens, int *tokeni)
+static int	execute_tokens(char *input, int *i, char **tokens, int *tokeni)
 {
 	int	start;
 

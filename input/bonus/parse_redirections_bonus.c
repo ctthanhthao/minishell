@@ -6,51 +6,67 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 19:12:09 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/06 10:56:07 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/06 15:35:06 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell_bonus.h"
 
+static t_redir *new_redirections(t_token type, char *filename)
+{
+	t_redir *new;
+
+	new = malloc(sizeof(t_redir));
+	if (!new)
+		return (NULL);
+	new->type = type;
+	new->filename = ft_strdup(filename);
+	new->next = NULL;
+	return (new);
+}
+
+static t_token	get_redir_type(char *token)
+{
+	t_token	type;
+	
+	if (ft_strcmp(token, ">") == 0)
+		type = REDIR_OUT;
+	else if (ft_strcmp(token, ">>") == 0)
+		type = REDIR_OUT_APPEND;
+	else if (ft_strcmp(token, "<") == 0)
+		type = REDIR_IN;
+	else if (ft_strcmp(token, "<<") == 0)
+		type = REDIR_HEREDOC;
+	else
+		type = INVALID;
+	return (type);
+}
+
 t_redir *parse_redirections_bonus(t_parser *p)
 {
-	t_redir *head = NULL;
-	t_redir **curr = &head;
+	t_redir	*head;
+	t_redir	**curr;
+	t_token	type;
+	t_redir	*new;
 
+	head = NULL;
+	curr = &head;
 	while (p->tokens[p->tokeni])
 	{
-		t_token type;
-
-		if (strcmp(p->tokens[p->tokeni], ">") == 0)
-			type = REDIR_OUT;
-		else if (strcmp(p->tokens[p->tokeni], ">>") == 0)
-			type = REDIR_OUT_APPEND;
-		else if (strcmp(p->tokens[p->tokeni], "<") == 0)
-			type = REDIR_IN;
-		else if (strcmp(p->tokens[p->tokeni], "<<") == 0)
-			type = REDIR_HEREDOC;
-		else
-			break;
-
+		type = get_redir_type(p->tokens[p->tokeni]);
+		if (type == INVALID)
+			break ;
 		p->tokeni++;
 		if (!p->tokens[p->tokeni])
 		{
 			log_errno("Syntax error: expected filename after redirection\n");
-			// Optional: free any redirs collected so far
-			return NULL;
+			return (free_redirs(head), NULL);
 		}
-
-		t_redir *new = malloc(sizeof(t_redir));
+		new = new_redirections(type, p->tokens[p->tokeni++]);
 		if (!new)
-			return NULL;
-
-		new->type = type;
-		new->filename = strdup(p->tokens[p->tokeni++]);
-		new->next = NULL;
-
+			return (free_redirs(head), NULL);
 		*curr = new;
 		curr = &new->next;
 	}
-
-	return head;
+	return (head);
 }

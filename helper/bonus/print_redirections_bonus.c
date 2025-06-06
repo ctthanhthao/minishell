@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 11:58:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/06 12:08:17 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/06 15:12:09 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ void	print_redirections(t_ast *node, const char *prefix)
 			type_str = "<<";
 		else
 			type_str = "?";
-		ft_printf("%s    └── redir: %s %s\n", prefix, type_str,
-			redir_list->filename);
+		ft_printf("%s    └── " COLOR_REDIR "redir: %s %s" COLOR_RESET "\n",
+			prefix, type_str, redir_list->filename);
 		redir_list = redir_list->next;
 	}
 }

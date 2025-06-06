@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 13:03:24 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/06 12:09:46 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/06 15:10:06 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # define COLOR_CMD     "\033[1;34m"
 # define COLOR_OP      "\033[1;33m"
 # define COLOR_GROUP   "\033[1;35m"
+# define COLOR_REDIR   "\033[0;32m"
 # define COLOR_RESET   "\033[0m"
 
 # define INITIAL_CAPACITY 32
