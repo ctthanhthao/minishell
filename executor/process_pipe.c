@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 12:40:57 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/31 21:09:13 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/05 20:53:00 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,13 @@ static void	execute_pipeline_child(t_cmd *cur, char ***env,
 	{
 		if (safe_dup2(pid_data->pipe_fd[1], STDOUT_FILENO,
 				"dup2 error: bad source fd (-1)\n") == CMD_FAILURE)
+		{
+			close(pid_data->pipe_fd[1]);
+			close(pid_data->pipe_fd[0]);
 			exit(CMD_FAILURE);
+		}
+		close(pid_data->pipe_fd[1]);
+		close(pid_data->pipe_fd[0]);
 	}
 	if (pid_data->pipe_fd[0] != -1)
 		close(pid_data->pipe_fd[0]);

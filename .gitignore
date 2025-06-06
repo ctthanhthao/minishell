@@ -6,5 +6,6 @@ libft.a
 libftprintf.a
 .vscode
 minishell
+minishell_bonus
 .gitignore
 .DS_Store
