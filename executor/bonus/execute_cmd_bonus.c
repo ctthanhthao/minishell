@@ -1,33 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signal.c                                           :+:      :+:    :+:   */
+/*   execute_cmd_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/26 11:06:17 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/06 20:54:40 by thchau           ###   ########.fr       */
+/*   Created: 2025/06/06 16:02:21 by thchau            #+#    #+#             */
+/*   Updated: 2025/06/08 08:25:24 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell_bonus.h"
 
-static void	sigint_handler(int sig)
+int	execute_cmd(t_cmd *cmd, int *last_status, char ***envp)
 {
-	(void)sig;
-	write(1, "\n", 1);
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_redisplay();
-}
-
-/** 
- * This function is called when the user presses 
- * Ctrl-C (SIGINT) and SIGQUIT (Ctrl-'\').
- */
-void	setup_signals(void)
-{
-	signal(SIGPIPE, SIG_IGN);
-	signal(SIGINT, sigint_handler);
-	signal(SIGQUIT, SIG_IGN);
+	if ((!cmd->argv || !*cmd->argv) && cmd->redirs)
+		return(handle_builtin_with_redirection(cmd, envp, last_status, NULL));
+	return (execute_single_command(cmd, envp, last_status, true));
 }

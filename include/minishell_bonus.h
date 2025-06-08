@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 13:03:24 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/06 15:10:06 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/08 14:27:12 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,16 @@ t_ast	*parse_input_bonus(char *input, int last_status, char **envp);
 t_ast 	*parse_expression(t_parser *p);
 t_redir *parse_redirections_bonus(t_parser *p);
 char	**ft_tokenize_bonus(char *input);
-
+int		handle_expansion_bonus(char ***argv_ptr, int *argc, int *capacity,
+	t_parser *p);
+char	**extent_argv_if_need(char **argv, int *capacity, int argc);
 // Executor
-
+int		execute_ast(t_ast *node, int *last_status, char ***envp);
+int		execute_cmd(t_cmd *cmd, int *last_status, char ***envp);
+int		execute_pipe(t_ast *left, t_ast *right, int *last_status, char ***envp);
+int		execute_group(t_ast *node, int *last_status, char ***envp);
 // Utils
-char	**safe_realloc(char **argv, int capacity);
+char	**safe_realloc(char **argv, int old_size, int new_size);
 t_ast	*new_ast_node(t_node_type type, t_ast *left, t_ast *right, t_cmd *cmd);
 int		check_unclosed_parenthesis (const char *input);
 void	free_redirs (t_redir *re);

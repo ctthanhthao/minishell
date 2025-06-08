@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 12:40:57 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/05 20:53:00 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/08 14:32:19 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,13 @@ static void	collect_pipeline_status(t_pid_pipe_fd *pid_data, int *last_status)
 static void	execute_pipeline_child(t_cmd *cur, char ***env,
 	t_pid_pipe_fd *pid_data, int *last_status)
 {
+	signal(SIGPIPE, SIG_IGN);
 	if (pid_data->prev_fd != -1)
 	{
 		if (safe_dup2(pid_data->prev_fd, STDIN_FILENO,
 				"dup2 error: bad source fd (-1)\n") == CMD_FAILURE)
 		{
-			close(pid_data->pipe_fd[0]);
-			close(pid_data->pipe_fd[1]);
+			safe_close(pid_data->pipe_fd);
 			exit (CMD_FAILURE);
 		}
 	}
@@ -55,17 +55,16 @@ static void	execute_pipeline_child(t_cmd *cur, char ***env,
 		if (safe_dup2(pid_data->pipe_fd[1], STDOUT_FILENO,
 				"dup2 error: bad source fd (-1)\n") == CMD_FAILURE)
 		{
-			close(pid_data->pipe_fd[1]);
-			close(pid_data->pipe_fd[0]);
+			safe_close(pid_data->pipe_fd);
+			close(pid_data->prev_fd);
 			exit(CMD_FAILURE);
 		}
-		close(pid_data->pipe_fd[1]);
-		close(pid_data->pipe_fd[0]);
+		safe_close(pid_data->pipe_fd);
+		close(pid_data->prev_fd);
 	}
 	if (pid_data->pipe_fd[0] != -1)
 		close(pid_data->pipe_fd[0]);
-	*last_status = execute_single_command(cur, env, last_status, false);
-	exit(*last_status);
+	exit(execute_single_command(cur, env, last_status, false));
 }
 
 static int	create_pipeline_if_needed(t_cmd *cur, t_pid_pipe_fd *pid_data)

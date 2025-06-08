@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 09:18:30 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/06 14:53:35 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/08 08:43:55 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,19 +44,22 @@ static const char	*node_color(t_node_type type)
 		return (COLOR_RESET);
 }
 
-static void	prepare_prefix(const char *prefix, int is_last, char *new_prefix)
+static char	*prepare_prefix(const char *prefix, int is_last, char *new_prefix)
 {
-	ft_strlcpy(new_prefix, (char *)prefix, 2048);
+	char	*full_prefix;
+	
+	full_prefix = ft_strjoin_free(new_prefix, (char *)prefix);
 	if (is_last)
-		ft_strlcat(new_prefix, "    ", 2048);
+		full_prefix = ft_strjoin_free(full_prefix, "    ");
 	else
-		ft_strlcat(new_prefix, "|   ", 2048);
+		full_prefix = ft_strjoin_free(full_prefix, "|   ");
+	return (full_prefix);
 }
 
 static void	print_ast_node(t_ast *node, const char *prefix, int is_last)
 {
 	int		i;
-	char	new_prefix[2048];
+	char	*new_prefix;
 
     if (!node)
 		return;
@@ -73,12 +76,14 @@ static void	print_ast_node(t_ast *node, const char *prefix, int is_last)
 			ft_printf("%s ", node->cmd->argv[i++]);
     }
     ft_printf(COLOR_RESET"\n");
-	prepare_prefix(prefix, is_last, new_prefix);
+	new_prefix = NULL;
+	new_prefix = prepare_prefix(prefix, is_last, new_prefix);
 	if (node->left)
 		print_ast_node(node->left, new_prefix, !node->right);
 	if (node->right)
 		print_ast_node(node->right, new_prefix, 1);
 	print_redirections(node, new_prefix);
+	free(new_prefix);
 }
 
 void print_ast(t_ast *root)

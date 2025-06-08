@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:38:06 by amarcz            #+#    #+#             */
-/*   Updated: 2025/06/05 15:17:16 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/06/07 17:26:11 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,23 +73,6 @@ void	print_sorted_env(char **env)
 			ft_printf("declare -x %s\n", copy[i]);
 	}
 	free_split(copy);
-}
-
-int	safe_dup2(int oldfd, int newfd, char *error)
-{
-	if (oldfd == -1)
-	{
-		log_errno(error);
-		return (CMD_FAILURE);
-	}
-	if (dup2(oldfd, newfd) == -1)
-	{
-		close(oldfd);
-		log_errno("Error duplicating file descriptor");
-		return (CMD_FAILURE);
-	}
-	close(oldfd);
-	return (CMD_SUCCESS);
 }
 
 int	return_failed_exit_code(void)

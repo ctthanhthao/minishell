@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:42:30 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/31 20:42:31 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/07 20:16:16 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,7 @@ int	execute_builtin(t_cmd *cmd, char ***envp, int *status)
 	if (!ft_strcmp(cmd->argv[0], "cd"))
 		*status = cd_builtin(cmd);
 	else if (!ft_strcmp(cmd->argv[0], "exit"))
-	{
-		*status = exit_builtin(cmd, envp);
 		return (CMD_EXIT);
-	}
 	else if (!ft_strcmp(cmd->argv[0], "export"))
 		*status = export_builtin(cmd, envp);
 	else if (!ft_strcmp(cmd->argv[0], "unset"))

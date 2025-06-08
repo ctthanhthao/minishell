@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/06 15:33:48 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/08 14:33:11 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@ int		check_invalid_chars(const char *input);
 int		check_unclosed_quotes(const char *input);
 char	*complete_input(void);
 int		is_logical_op(char *token);
-void	print_cmds(t_cmd *cmd);
+void	debug_cmd(t_cmd *cmd);
 char	**ft_tokenize(char *input);
 int		skip_whitespace(const char *input, int i);
 void	token_ender(char **tokens, int tokeni);
@@ -142,15 +142,13 @@ int		handle_redirection(t_cmd *cmd, char **tokens, int *i);
 int		validate_tokens(char **tokens);
 int		is_quoted(char *token);
 void	free_split(char **arr);
-char	**tokenize_line(const char *line);
-t_cmd	*build_cmd_list(char **tokens, char **envp);
-t_redir	*parse_redirections(char **tokens, int *i);
 char	**handle_expansion_if_any(char *arg, int last_status, char **env);
 char	*expand_variables(const char *arg, int last_status, char **env);
 char	*expand_one_var(char **p, int last_status, char **env);
 void	setup_signals(void);
 char	**expand_wildcard(const char *pattern);
 int		is_special(char c);
+int		ft_is_redirection(char *token);
 int		token_memory_allc(int *capacity, int buf_i, char **buffer);
 int		grow_token_arr(char ***tokens, int *capacity, int used);
 int		wrd_handle_quote(const char *input, int *i, t_bufinfo *buf);
@@ -168,7 +166,7 @@ int		process_pipe(t_cmd *cmd, char ***envp, int *last_status);
 int		apply_redirections(t_redir *redirs, int last_status, char **envp);
 bool	save_original_std_inout(int *stdin_bk, int *stdout_bk);
 void	restore_original_std_inout(int stdin_bk, int stdout_bk);
-int		process_heredoc(t_redir *redir);
+int		process_heredoc(t_redir *redir, int last_status, char **env);
 int		cd_builtin(t_cmd *cmd);
 int		pwd_builtin(void);
 int		export_builtin(t_cmd *cmd, char ***envp);
@@ -198,5 +196,6 @@ char	*extract_key(const char *entry);
 char	*strip_quotes(const char *str);
 int		return_failed_exit_code(void);
 char	*remove_quotes_if_need(char *arg);
+void	safe_close(int *fds);
 
 #endif

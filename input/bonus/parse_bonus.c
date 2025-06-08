@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 20:39:39 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/06 14:55:41 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/08 07:58:03 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ t_ast	*parse_input_bonus(char *input, int last_status, char **envp)
 	parser_data = init_parser_data(tokens, last_status, envp);
 	head = parse_expression(&parser_data);
 	if (!head)
-		return (NULL);
+		return (free_split(tokens), NULL);
 	free_split(tokens);
 	return (head);
 }

@@ -6,22 +6,24 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 19:37:50 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/06 11:12:49 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/08 14:36:19 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell_bonus.h"
 
-static char	**extent_argv_if_need(char **argv, int capacity, int argc)
+char	**extent_argv_if_need(char **argv, int *capacity, int argc)
 {
 	char	**new_argv;
-	
-	new_argv = NULL;
-	if (argc + 1 >= capacity)
+	int		new_capacity;
+
+	if (argc + 1 >= *capacity)
 	{
-		new_argv = safe_realloc(argv, capacity);
+		new_capacity = *capacity * 2;
+		new_argv = safe_realloc(argv, *capacity, new_capacity);
 		if (!new_argv)
 			return (NULL);
+		*capacity = new_capacity;
 		return (new_argv);
 	}
 	return (argv);
@@ -33,10 +35,10 @@ static t_cmd *parse_command(t_parser *p)
 	int		capacity;
 	int		argc;
 	
-	cmd = calloc(1, sizeof(t_cmd));
+	cmd = ft_calloc(1, sizeof(t_cmd));
 	if (!cmd)
 		return (NULL);
-	capacity = 4;
+	capacity = 10;
 	argc = 0;
 	cmd->argv = malloc(sizeof(char *) * capacity);
 	if (!cmd->argv)
@@ -44,12 +46,11 @@ static t_cmd *parse_command(t_parser *p)
 	while (p->tokens[p->tokeni] && !is_logical_op(p->tokens[p->tokeni])
 		&& ft_strcmp(p->tokens[p->tokeni], ")") != 0)
 	{
-		if (is_redirection(p->tokens[p->tokeni]))
+		if (ft_is_redirection(p->tokens[p->tokeni]))
 			break;
-		cmd->argv = extent_argv_if_need(cmd->argv, capacity, argc);
-		if (!cmd->argv)
-			return (free(cmd), NULL);
-		cmd->argv[argc++] = ft_strdup(p->tokens[p->tokeni++]);
+		if (handle_expansion_bonus(&cmd->argv, &argc, &capacity, p) == CMD_FAILURE)
+			return (NULL);
+		p->tokeni++;
 	}
 	cmd->argv[argc] = NULL;
 	return (cmd->redirs = parse_redirections_bonus(p), cmd);
@@ -62,6 +63,7 @@ static t_ast	*parse_group_or_command(t_parser *p)
 	t_ast	*group;
 	t_cmd	*cmd;
 	
+	node = NULL;
 	if (p->tokeni < p->token_count && ft_strcmp(p->tokens[p->tokeni], "(") == 0)
 	{
 		p->tokeni++;
@@ -70,14 +72,13 @@ static t_ast	*parse_group_or_command(t_parser *p)
 			p->tokeni++;
 		else
 			return (log_errno("Syntax error: expected ')'"), NULL);
-		redirs = parse_redirections_bonus(p); // implement this
+		redirs = parse_redirections_bonus(p);
 		node = new_ast_node(NODE_GROUP, group, NULL, NULL);
-		node->redirs = redirs;
-		return (node);
+		return (node->redirs = redirs, node);
 	}
 	else
 	{
-		cmd = parse_command(p); // parse_command must take t_parser * now
+		cmd = parse_command(p);
 		if (!cmd)
 			return (NULL);
 		return (new_ast_node(NODE_CMD, NULL, NULL, cmd));
@@ -123,10 +124,10 @@ t_ast *parse_expression(t_parser *p)
 		return (NULL);
 
 	while (p->tokeni < p->token_count &&
-		   (strcmp(p->tokens[p->tokeni], "&&") == 0
-		   || strcmp(p->tokens[p->tokeni], "||") == 0))
+		   (ft_strcmp(p->tokens[p->tokeni], "&&") == 0
+		   || ft_strcmp(p->tokens[p->tokeni], "||") == 0))
 	{
-		type = (strcmp(p->tokens[p->tokeni], "&&") == 0) ? NODE_AND : NODE_OR;
+		type = (ft_strcmp(p->tokens[p->tokeni], "&&") == 0) ? NODE_AND : NODE_OR;
 		p->tokeni++;
 		right = parse_pipeline(p);
 		if (!right)

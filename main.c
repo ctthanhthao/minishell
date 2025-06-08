@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:11:32 by amarcz            #+#    #+#             */
-/*   Updated: 2025/06/06 12:24:07 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/06/07 21:50:16 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,16 +27,15 @@ int	minishell_loop(char ***shell_envp, int *last_status)
 		cmd = parse_input(input, *last_status, *shell_envp);
 		free(input);
 		if (!cmd)
-		{
-			free_cmd(cmd);
 			continue ;
-		}
 		if (!cmd->argv && cmd->redirs)
 			*last_status = handle_builtin_with_redirection(cmd, shell_envp,
 					last_status, NULL);
 		else
 			*last_status = execute_commands(cmd, shell_envp, last_status);
 		free_cmd(cmd);
+		if (*last_status == CMD_EXIT)
+			break ;
 	}
 	return (0);
 }

@@ -6,15 +6,17 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 19:42:49 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/29 09:55:15 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/07 19:46:41 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-static void	expect_end_input(int fd_write, char *filename)
+static void	expect_end_input(int fd_write, char *filename, int last_status,
+	char **envp)
 {
 	char	*line;
+	char	*expand_line;
 
 	while (1)
 	{
@@ -24,7 +26,8 @@ static void	expect_end_input(int fd_write, char *filename)
 			free(line);
 			break ;
 		}
-		write(fd_write, line, ft_strlen(line));
+		expand_line = expand_variables(line, last_status, envp);
+		write(fd_write, expand_line, ft_strlen(expand_line));
 		write(fd_write, "\n", 1);
 		free(line);
 	}
@@ -46,7 +49,7 @@ static int	redirect_last_stdin(int last_fd)
 	return (CMD_SUCCESS);
 }
 
-int	process_heredoc(t_redir *redir)
+int	process_heredoc(t_redir *redir, int last_status, char **envp)
 {
 	int		fd[2];
 	int		last_fd;
@@ -63,7 +66,7 @@ int	process_heredoc(t_redir *redir)
 				log_errno("Error happened when pipe fd in process_heredoc");
 				return (CMD_FAILURE);
 			}
-			expect_end_input(fd[1], cur->filename);
+			expect_end_input(fd[1], cur->filename, last_status, envp);
 			if (last_fd != -1)
 				close(last_fd);
 			last_fd = fd[0];

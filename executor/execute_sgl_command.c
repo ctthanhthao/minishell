@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 17:47:05 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/03 10:05:35 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/08 08:30:01 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static char	*find_valid_path(char *cmd, char **envp)
 	path_env = NULL;
 	full_path = NULL;
 	if (ft_strchr(cmd, '/'))
-		return (strdup(cmd));
+		return (ft_strdup(cmd));
 	i = -1;
 	while (envp[++i])
 	{
@@ -69,7 +69,7 @@ static int	execute_external_cmd_without_fork(t_cmd *cmd, int last_status,
 	char ***envp, char *success_path)
 {
 	if (apply_redirections(cmd->redirs, last_status, *envp) == CMD_FAILURE)
-		exit(CMD_FAILURE);
+		return (CMD_FAILURE);
 	if (execve(success_path, cmd->argv, *envp) == -1)
 		return (return_failed_exit_code());
 	return (CMD_SUCCESS);

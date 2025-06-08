@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:32:50 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/31 21:07:30 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/08 11:25:09 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static int	process_read(t_redir *re, int type, int last_status, char **env)
 		return (safe_dup2(fd, STDIN_FILENO, NULL));
 	}
 	if (type == REDIR_HEREDOC)
-		return (process_heredoc(re));
+		return (process_heredoc(re, last_status, env));
 	return (CMD_FAILURE);
 }
 

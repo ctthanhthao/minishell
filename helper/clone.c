@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 20:10:16 by thchau            #+#    #+#             */
-/*   Updated: 2025/05/31 21:28:43 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/07 17:40:25 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,28 +68,13 @@ static char	*get_file_name(char *name)
 static t_redir	*clone_redirs(t_redir *redirs)
 {
 	t_redir	*new_redirs;
-	t_redir	*last;
-	t_redir	*new_node;
 
-	last = NULL;
-	new_redirs = NULL;
-	while (redirs)
-	{
-		new_node = malloc(sizeof(t_redir));
-		if (!new_node)
-			return (NULL);
-		new_node->type = redirs->type;
-		new_node->filename = get_file_name(redirs->filename);
-		if (redirs->filename && !new_node->filename)
-			return (free(new_node), NULL);
-		new_node->next = NULL;
-		if (last)
-			last->next = new_node;
-		else
-			new_redirs = new_node;
-		last = new_node;
-		redirs = redirs->next;
-	}
+	if (!redirs)
+		return (NULL);
+	new_redirs = malloc(sizeof(t_redir));
+	new_redirs->type = redirs->type;
+	new_redirs->filename = get_file_name(redirs->filename);
+	new_redirs->next = clone_redirs(redirs->next);
 	return (new_redirs);
 }
 
@@ -103,8 +88,17 @@ t_cmd	*clone_cmd(t_cmd *cmd)
 	if (!new_cmd)
 		return (NULL);
 	new_cmd->argv = clone_arr(cmd->argv);
+	if (cmd->argv && *cmd->argv && (!new_cmd->argv || !*new_cmd->argv))
+		return (free(new_cmd), NULL);
 	new_cmd->redirs = clone_redirs(cmd->redirs);
+	if (cmd->redirs && !new_cmd->redirs)
+	{
+		free_split(new_cmd->argv);
+		return (free(new_cmd), NULL);
+	}
 	new_cmd->next = clone_cmd(cmd->next);
+	if (cmd->next && !new_cmd->next)
+		return (free_cmd(new_cmd), NULL);
 	new_cmd->next_type = cmd->next_type;
 	return (new_cmd);
 }

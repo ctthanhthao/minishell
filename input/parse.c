@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amarcz <amarcz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 14:36:53 by amarcz            #+#    #+#             */
-/*   Updated: 2025/06/06 10:44:24 by amarcz           ###   ########.fr       */
+/*   Updated: 2025/06/07 17:41:30 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ t_cmd	*token_loop(char **tokens, int argv_i, int last_status, char **envp)
 	t_cmd			*result;
 
 	ret = 0;
+	result = NULL;
 	initialize_state(&s, argv_i, last_status, envp);
 	while (tokens[s.i])
 	{
@@ -75,8 +76,6 @@ t_cmd	*token_loop(char **tokens, int argv_i, int last_status, char **envp)
 	s.prev = s.curr;
 	if (s.head)
 		result = clone_cmd(s.head);
-	else
-		result = NULL;
 	clean_up(NULL, &s);
 	return (result);
 }
@@ -95,7 +94,7 @@ t_cmd	*parse_input(char *input, int last_status, char **envp)
 	argv_i = 0;
 	head = token_loop(tokens, argv_i, last_status, envp);
 	if (!head)
-		return (NULL);
+		return (free_split(tokens), NULL);
 	free_split(tokens);
 	return (head);
 }

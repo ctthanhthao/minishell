@@ -6,40 +6,37 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 20:17:14 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/05 19:08:56 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/06 19:02:14 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell_bonus.h"
 
-int	execute_ast(t_ast *node)
+int	execute_ast(t_ast *node, int *last_status, char ***envp)
 {
-	int left_status;
+	int	left_status;
 	
 	if (!node)
 		return (1);
 	if (node->type == NODE_CMD)
-		return (exec_cmd(node->cmd));
+		return (execute_cmd(node->cmd, last_status, envp));
 	else if (node->type == NODE_PIPE)
-		return (exec_pipe(node->left, node->right));
+		return (execute_pipe(node->left, node->right, last_status, envp));
 	else if (node->type == NODE_AND)
 	{
-		left_status = execute_ast(node->left);
-		if (execute_ast(node->left) == 0)
-			return execute_ast(node->right);
-		return left_status;
+		left_status = execute_ast(node->left, last_status, envp);
+		if (left_status == 0)
+			return (execute_ast(node->right, last_status, envp));
+		return (left_status);
 	}
 	else if (node->type == NODE_OR)
 	{
-		left_status = execute_ast(node->left);
+		left_status = execute_ast(node->left, last_status, envp);
 		if (left_status != 0)
-			return execute_ast(node->right);
-		return left_status;
+			return (execute_ast(node->right, last_status, envp));
+		return (left_status);
 	}
 	else if (node->type == NODE_GROUP)
-	{
-		// subshell or scoped execution
-		return exec_group(node->left);
-	}
-	return 1;
+		return (execute_group(node, last_status, envp));
+	return (1);
 }
