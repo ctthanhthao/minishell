@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 19:12:09 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/06 15:35:06 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/08 16:27:25 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,31 +42,30 @@ static t_token	get_redir_type(char *token)
 	return (type);
 }
 
-t_redir *parse_redirections_bonus(t_parser *p)
+void	parse_redirections_bonus(t_redir **re, t_parser *p)
 {
-	t_redir	*head;
 	t_redir	**curr;
 	t_token	type;
 	t_redir	*new;
 
-	head = NULL;
-	curr = &head;
+	curr = re;
+	while (curr && *curr)
+		curr = &(*curr)->next;
 	while (p->tokens[p->tokeni])
 	{
 		type = get_redir_type(p->tokens[p->tokeni]);
 		if (type == INVALID)
-			break ;
+			break;
 		p->tokeni++;
 		if (!p->tokens[p->tokeni])
 		{
 			log_errno("Syntax error: expected filename after redirection\n");
-			return (free_redirs(head), NULL);
+			return ;
 		}
 		new = new_redirections(type, p->tokens[p->tokeni++]);
 		if (!new)
-			return (free_redirs(head), NULL);
+			return ;
 		*curr = new;
 		curr = &new->next;
 	}
-	return (head);
 }

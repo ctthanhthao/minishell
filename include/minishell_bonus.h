@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 13:03:24 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/08 14:27:12 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/08 19:50:25 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 
 # define INITIAL_CAPACITY 32
 
+int g_last_status = 0;
 typedef enum e_node_type
 {
 	NODE_AND,
@@ -53,7 +54,7 @@ typedef struct s_parser
 // Parser
 t_ast	*parse_input_bonus(char *input, int last_status, char **envp);
 t_ast 	*parse_expression(t_parser *p);
-t_redir *parse_redirections_bonus(t_parser *p);
+void	parse_redirections_bonus(t_redir **re, t_parser *p);
 char	**ft_tokenize_bonus(char *input);
 int		handle_expansion_bonus(char ***argv_ptr, int *argc, int *capacity,
 	t_parser *p);
