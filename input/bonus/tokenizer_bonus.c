@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 19:28:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/06 14:04:39 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/09 07:56:42 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,7 @@ static void	handle_operator(char *input, char **tokens, int *i, int *tokeni)
 	int	start;
 
 	start = *i;
-	if ((is_special(input[*i]) || input[*i] == '(' || input[*i] == ')')
-		&& input[*i] == input[*i + 1])
+	if (is_special(input[*i]) && input[*i] == input[*i + 1])
 		*i += 2;
 	else
 		(*i)++;
