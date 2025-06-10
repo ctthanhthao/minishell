@@ -6,19 +6,19 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 20:45:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/05 20:46:08 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/10 12:50:50 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell_bonus.h"
 
-int	check_unclosed_parenthesis (const char *input)
+int	check_unclosed_parenthesis(const char *input)
 {
 	bool	in_single;
 	bool	in_double;
 	int		i;
 	int		brackets;
-	
+
 	in_single = false;
 	in_double = false;
 	i = 0;
@@ -37,6 +37,6 @@ int	check_unclosed_parenthesis (const char *input)
 	}
 	if (brackets != 0)
 		return (ft_printf(R "Whoa, you messed up! You forgot to "),
-				ft_printf("close all parenthesises, Dudio!\n" RST), 0);
+			ft_printf("close all parenthesises, Dudio!\n" RST), 0);
 	return (1);
 }

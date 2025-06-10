@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:42:30 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/07 20:16:16 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/09 19:42:21 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,12 @@ int	handle_builtin_with_redirection(t_cmd *cmd, char ***envp, int *status,
 	redirected = false;
 	if (cmd->redirs)
 		redirected = save_original_std_inout(&stdin_bk, &stdout_bk);
-	if (apply_redirections(cmd->redirs, *status, *envp) == CMD_FAILURE)
+	*status = apply_redirections(cmd->redirs, *status, *envp);
+	if (*status != CMD_SUCCESS)
 	{
 		if (redirected)
 			restore_original_std_inout(stdin_bk, stdout_bk);
-		return (CMD_FAILURE);
+		return (*status);
 	}
 	if (operation)
 		*status = operation(cmd, envp, status);

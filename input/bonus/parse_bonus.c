@@ -6,13 +6,13 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 20:39:39 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/08 07:58:03 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/10 13:07:14 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell_bonus.h"
 
-static t_parser init_parser_data(char **tokens, int last_status, char **envp)
+static t_parser	init_parser_data(char **tokens, int last_status, char **envp)
 {
 	t_parser	parser;
 	int			i;
@@ -40,10 +40,6 @@ t_ast	*parse_input_bonus(char *input, int last_status, char **envp)
 	tokens = ft_tokenize_bonus(input);
 	if (!validate_tokens(tokens) || !tokens || !wildcard_check(tokens))
 		return (free_split(tokens), NULL);
-	// for (int i = 0; tokens[i]; i++)
-	// {
-	// 	ft_printf("token[%i] : %s\n", i, tokens[i]);
-	// }
 	parser_data = init_parser_data(tokens, last_status, envp);
 	head = parse_expression(&parser_data);
 	if (!head)

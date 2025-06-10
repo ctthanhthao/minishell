@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 17:47:05 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/08 08:30:01 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/09 20:30:54 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,11 @@ static char	*find_valid_path(char *cmd, char **envp)
 static int	execute_external_cmd_without_fork(t_cmd *cmd, int last_status,
 	char ***envp, char *success_path)
 {
-	if (apply_redirections(cmd->redirs, last_status, *envp) == CMD_FAILURE)
-		return (CMD_FAILURE);
+	int	status;
+
+	status = apply_redirections(cmd->redirs, last_status, *envp);
+	if (status != CMD_SUCCESS)
+		return (status);
 	if (execve(success_path, cmd->argv, *envp) == -1)
 		return (return_failed_exit_code());
 	return (CMD_SUCCESS);
@@ -86,8 +89,9 @@ static int	execute_external_cmd(t_cmd *cmd, int last_status, char ***envp,
 		return (log_errno(NULL), CMD_FAILURE);
 	if (pid == 0)
 	{
-		if (apply_redirections(cmd->redirs, last_status, *envp) == CMD_FAILURE)
-			exit(CMD_FAILURE);
+		status = apply_redirections(cmd->redirs, last_status, *envp);
+		if (status != CMD_SUCCESS)
+			exit(status);
 		if (execve(success_path, cmd->argv, *envp) == -1)
 			exit(return_failed_exit_code());
 	}
@@ -121,5 +125,7 @@ int	execute_single_command(t_cmd *cmd, char ***envp,
 		if (success_path)
 			free(success_path);
 	}
+	if (*last_status == 130)
+		g_heredoc_interrupted = 1;
 	return (*last_status);
 }

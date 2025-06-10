@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:32:50 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/08 11:25:09 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/09 18:59:29 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ static int	process_read(t_redir *re, int type, int last_status, char **env)
 {
 	int		fd;
 	char	*files;
+	int		result;
 
 	if (type == REDIR_IN)
 	{
@@ -69,7 +70,12 @@ static int	process_read(t_redir *re, int type, int last_status, char **env)
 		return (safe_dup2(fd, STDIN_FILENO, NULL));
 	}
 	if (type == REDIR_HEREDOC)
-		return (process_heredoc(re, last_status, env));
+	{
+		signal(SIGINT, SIG_IGN);
+		result = process_heredoc(re, last_status, env);
+		signal(SIGINT, sigint_handler);
+		return (result);
+	}
 	return (CMD_FAILURE);
 }
 
@@ -94,7 +100,7 @@ int	apply_redirections(t_redir *redir_list, int last_status, char **env)
 			while (cur->next && cur->next->type == REDIR_HEREDOC)
 				cur = cur->next;
 		}
-		if (status == CMD_FAILURE)
+		if (status == !CMD_SUCCESS)
 			break ;
 		cur = cur->next;
 	}

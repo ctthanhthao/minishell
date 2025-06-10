@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/08 14:33:11 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/10 12:30:37 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@
 # define RESET		"\001\033[0m\002"
 
 //# define TOKENIZE_ERROR ((char **)-1)
-
+extern volatile sig_atomic_t g_heredoc_interrupted;
 // ===============================
 // ENUMS
 // ===============================
@@ -146,6 +146,8 @@ char	**handle_expansion_if_any(char *arg, int last_status, char **env);
 char	*expand_variables(const char *arg, int last_status, char **env);
 char	*expand_one_var(char **p, int last_status, char **env);
 void	setup_signals(void);
+void	sigint_handler(int sig);
+void	heredoc_sigint_handler(int sig);
 char	**expand_wildcard(const char *pattern);
 int		is_special(char c);
 int		ft_is_redirection(char *token);

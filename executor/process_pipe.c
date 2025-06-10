@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 12:40:57 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/08 14:32:19 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/09 21:23:51 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,11 @@ static void	collect_pipeline_status(t_pid_pipe_fd *pid_data, int *last_status)
 		if (i == pid_data->child_count - 1)
 		{
 			if (WIFEXITED(status))
+			{
 				*last_status = WEXITSTATUS(status);
+				if (*last_status == 130)
+					g_heredoc_interrupted = 1;
+			}
 			else if (WIFSIGNALED(status))
 				*last_status = 128 + WTERMSIG(status);
 			else

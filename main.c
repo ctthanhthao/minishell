@@ -6,11 +6,24 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:11:32 by amarcz            #+#    #+#             */
-/*   Updated: 2025/06/07 21:50:16 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/10 12:40:24 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/minishell.h"
+
+volatile sig_atomic_t	g_heredoc_interrupted = 0;
+
+static bool	should_continue(void)
+{
+	if (g_heredoc_interrupted == 1)
+	{
+		g_heredoc_interrupted = 0;
+		ft_printf("\n");
+		return (true);
+	}
+	return (false);
+}
 
 int	minishell_loop(char ***shell_envp, int *last_status)
 {
@@ -19,11 +32,11 @@ int	minishell_loop(char ***shell_envp, int *last_status)
 
 	while (1)
 	{
+		if (should_continue())
+			continue ;
 		input = complete_input();
 		if (!input)
 			break ;
-		if (*input)
-			add_history(input);
 		cmd = parse_input(input, *last_status, *shell_envp);
 		free(input);
 		if (!cmd)

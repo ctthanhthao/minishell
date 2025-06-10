@@ -6,15 +6,15 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 19:12:09 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/08 16:27:25 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/10 13:06:25 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell_bonus.h"
 
-static t_redir *new_redirections(t_token type, char *filename)
+static t_redir	*new_redirections(t_token type, char *filename)
 {
-	t_redir *new;
+	t_redir	*new;
 
 	new = malloc(sizeof(t_redir));
 	if (!new)
@@ -28,7 +28,7 @@ static t_redir *new_redirections(t_token type, char *filename)
 static t_token	get_redir_type(char *token)
 {
 	t_token	type;
-	
+
 	if (ft_strcmp(token, ">") == 0)
 		type = REDIR_OUT;
 	else if (ft_strcmp(token, ">>") == 0)
@@ -55,7 +55,7 @@ void	parse_redirections_bonus(t_redir **re, t_parser *p)
 	{
 		type = get_redir_type(p->tokens[p->tokeni]);
 		if (type == INVALID)
-			break;
+			break ;
 		p->tokeni++;
 		if (!p->tokens[p->tokeni])
 		{

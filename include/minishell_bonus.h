@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 13:03:24 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/09 07:51:25 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/09 20:09:39 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@
 
 # define INITIAL_CAPACITY 32
 
-//int g_last_status = 0;
 typedef enum e_node_type
 {
 	NODE_AND,

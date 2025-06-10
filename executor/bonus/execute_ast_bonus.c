@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 20:17:14 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/06 19:02:14 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/10 12:43:44 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	execute_ast(t_ast *node, int *last_status, char ***envp)
 {
 	int	left_status;
-	
+
 	if (!node)
 		return (1);
 	if (node->type == NODE_CMD)
@@ -25,14 +25,14 @@ int	execute_ast(t_ast *node, int *last_status, char ***envp)
 	else if (node->type == NODE_AND)
 	{
 		left_status = execute_ast(node->left, last_status, envp);
-		if (left_status == 0)
+		if (left_status == CMD_SUCCESS)
 			return (execute_ast(node->right, last_status, envp));
 		return (left_status);
 	}
 	else if (node->type == NODE_OR)
 	{
 		left_status = execute_ast(node->left, last_status, envp);
-		if (left_status != 0)
+		if (left_status != CMD_SUCCESS)
 			return (execute_ast(node->right, last_status, envp));
 		return (left_status);
 	}

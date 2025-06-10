@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 16:17:35 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/08 16:38:18 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/10 12:47:16 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static int	execute_child_with_redir(int *fds, int from_fd, int to_fd)
 {
 	if (safe_dup2(from_fd, to_fd,
-				"dup2 error: bad source fd (-1)\n") == CMD_FAILURE)
+			"dup2 error: bad source fd (-1)\n") == CMD_FAILURE)
 	{
 		close(fds[1]);
 		close(fds[0]);
@@ -29,7 +29,7 @@ static int	execute_child_with_redir(int *fds, int from_fd, int to_fd)
 static int	wait_then_get_exit_code(pid_t lpid, pid_t rpid)
 {
 	int	status;
-	
+
 	waitpid(lpid, NULL, 0);
 	waitpid(rpid, &status, 0);
 	if (WIFEXITED(status))
@@ -42,7 +42,7 @@ int	execute_pipe(t_ast *left, t_ast *right, int *last_status, char ***envp)
 	int		fds[2];
 	pid_t	lpid;
 	pid_t	rpid;
-	
+
 	if (pipe(fds) < 0)
 		return (log_errno(NULL), CMD_FAILURE);
 	lpid = fork();
