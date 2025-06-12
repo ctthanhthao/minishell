@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 12:40:57 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/09 21:23:51 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/12 18:29:58 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,11 @@ static int	create_pipeline_if_needed(t_cmd *cur, t_pid_pipe_fd *pid_data)
 static int	spawn_pipeline_process(t_pid_pipe_fd *pid_data, t_cmd *cur,
 	char ***envp, int *last_status)
 {
+	if (pid_data->child_count >= 99)
+	{
+		log_errno("The number of processes has exceeded 100.");
+		return (CMD_FAILURE);
+	}
 	pid_data->pid = fork();
 	if (pid_data->pid == -1)
 		return (log_errno("Fork failed in process_pipe"), CMD_FAILURE);
