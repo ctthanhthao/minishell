@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/10 12:30:37 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/12 12:51:24 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,6 +191,7 @@ char	**selection_sort(char **ar);
 char	**clone_arr(char **ar);
 t_cmd	*clone_cmd(t_cmd *cmd);
 void	log_errno(const char *msg);
+void	log_errno_more(const char *argv, const char *msg);
 int		check_valid_identifier(const char *s);
 void	print_sorted_env(char **env);
 int		safe_dup2(int oldfd, int newfd, char *error);

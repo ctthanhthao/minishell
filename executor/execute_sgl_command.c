@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 17:47:05 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/09 20:30:54 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/12 12:51:55 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ int	execute_single_command(t_cmd *cmd, char ***envp,
 	{
 		success_path = find_valid_path(cmd->argv[0], *envp);
 		if (!success_path)
-			return (log_errno("command not found"), 127);
+			return (log_errno_more(cmd->argv[0], "command not found"), 127);
 		if (should_fork)
 			*last_status = execute_external_cmd(cmd, *last_status, envp,
 					success_path);

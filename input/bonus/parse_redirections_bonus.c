@@ -6,24 +6,11 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 19:12:09 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/10 13:06:25 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/12 12:13:56 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell_bonus.h"
-
-static t_redir	*new_redirections(t_token type, char *filename)
-{
-	t_redir	*new;
-
-	new = malloc(sizeof(t_redir));
-	if (!new)
-		return (NULL);
-	new->type = type;
-	new->filename = ft_strdup(filename);
-	new->next = NULL;
-	return (new);
-}
 
 static t_token	get_redir_type(char *token)
 {

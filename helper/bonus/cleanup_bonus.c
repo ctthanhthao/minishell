@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 09:08:08 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/10 12:48:56 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/12 12:22:15 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,5 +36,6 @@ void	free_ast(t_ast *node)
 	free_ast(node->right);
 	if (node->cmd)
 		free_cmd(node->cmd);
+	free_redirs(node->redirs);
 	free(node);
 }

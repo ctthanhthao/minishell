@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 13:03:24 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/09 20:09:39 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/12 12:13:47 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ typedef struct s_parser
 // Parser
 t_ast	*parse_input_bonus(char *input, int last_status, char **envp);
 t_ast 	*parse_expression(t_parser *p);
+t_ast	*parse_group_or_command(t_parser *p);
 void	parse_redirections_bonus(t_redir **re, t_parser *p);
 char	**ft_tokenize_bonus(char *input);
 int		handle_expansion_bonus(char ***argv_ptr, int *argc, int *capacity,
@@ -66,6 +67,7 @@ int		execute_group(t_ast *node, int *last_status, char ***envp);
 // Utils
 char	**safe_realloc(char **argv, int old_size, int new_size);
 t_ast	*new_ast_node(t_node_type type, t_ast *left, t_ast *right, t_cmd *cmd);
+t_redir	*new_redirections(t_token type, char *filename);
 int		check_unclosed_parenthesis (const char *input);
 void	free_redirs (t_redir *re);
 void	free_ast(t_ast *node);

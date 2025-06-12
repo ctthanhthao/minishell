@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:38:06 by amarcz            #+#    #+#             */
-/*   Updated: 2025/06/08 14:40:04 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/12 12:14:20 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,3 +25,15 @@ t_ast *new_ast_node(t_node_type type, t_ast *left, t_ast *right, t_cmd *cmd)
 	return node;
 }
 
+t_redir	*new_redirections(t_token type, char *filename)
+{
+	t_redir	*new;
+
+	new = malloc(sizeof(t_redir));
+	if (!new)
+		return (NULL);
+	new->type = type;
+	new->filename = ft_strdup(filename);
+	new->next = NULL;
+	return (new);
+}
