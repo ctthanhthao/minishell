@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 11:58:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/06 15:12:09 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/12 17:08:29 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	print_redirections(t_ast *node, const char *prefix)
 {
 	const char	*type_str;
 	t_redir		*redir_list;
-	
+
 	redir_list = NULL;
 	if (node->type == NODE_CMD && node->cmd && node->cmd->redirs)
 		redir_list = node->cmd->redirs;

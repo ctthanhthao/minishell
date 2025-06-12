@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 13:03:24 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/12 12:13:47 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/12 16:59:01 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,34 +30,34 @@ typedef enum e_node_type
 	NODE_PIPE,
 	NODE_CMD,
 	NODE_GROUP
-} t_node_type;
+}	t_node_type;
 
 typedef struct s_ast
 {
 	t_node_type		type;
 	struct s_ast	*left;
 	struct s_ast	*right;
-	t_cmd			*cmd;    // only used if type == NODE_CMD
-	t_redir			*redirs; // attach redirections to group or pipeline
-} t_ast;
+	t_cmd			*cmd;	// only used if type == NODE_CMD
+	t_redir			*redirs;	// attach redirections to group or pipeline
+}	t_ast;
 
 typedef struct s_parser
 {
-	char **tokens;
-	int tokeni;
-	int token_count; // total number of tokens
-	char **envp;
-	int last_status;
-} t_parser;
+	char	**tokens;
+	int		tokeni;
+	int		token_count; // total number of tokens
+	char	**envp;
+	int		last_status;
+}	t_parser;
 
 // Parser
 t_ast	*parse_input_bonus(char *input, int last_status, char **envp);
-t_ast 	*parse_expression(t_parser *p);
+t_ast	*parse_expression(t_parser *p);
 t_ast	*parse_group_or_command(t_parser *p);
 void	parse_redirections_bonus(t_redir **re, t_parser *p);
 char	**ft_tokenize_bonus(char *input);
 int		handle_expansion_bonus(char ***argv_ptr, int *argc, int *capacity,
-	t_parser *p);
+			t_parser *p);
 char	**extent_argv_if_need(char **argv, int *capacity, int argc);
 // Executor
 int		execute_ast(t_ast *node, int *last_status, char ***envp);
@@ -68,10 +68,11 @@ int		execute_group(t_ast *node, int *last_status, char ***envp);
 char	**safe_realloc(char **argv, int old_size, int new_size);
 t_ast	*new_ast_node(t_node_type type, t_ast *left, t_ast *right, t_cmd *cmd);
 t_redir	*new_redirections(t_token type, char *filename);
-int		check_unclosed_parenthesis (const char *input);
-void	free_redirs (t_redir *re);
+int		check_unclosed_parenthesis(const char *input);
+void	free_redirs(t_redir *re);
 void	free_ast(t_ast *node);
 void	print_ast(t_ast *root);
 void	print_redirections(t_ast *node, const char *prefix);
+char	*node_type_str(t_node_type type);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/12 12:51:24 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/12 16:45:46 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@
 # define RESET		"\001\033[0m\002"
 
 //# define TOKENIZE_ERROR ((char **)-1)
-extern volatile sig_atomic_t g_heredoc_interrupted;
+extern volatile sig_atomic_t	g_heredoc_interrupted;
 // ===============================
 // ENUMS
 // ===============================
@@ -115,12 +115,6 @@ typedef struct s_pid_pipe_fd
 	int		pipe_fd[2];
 	int		child_count;
 }	t_pid_pipe_fd;
-
-// ===============================
-// INT
-// ===============================
-
-typedef int	(*t_builtin_op)(t_cmd*, char***, int*);
 
 // ===============================
 // PARSER INTERFACE - Andras

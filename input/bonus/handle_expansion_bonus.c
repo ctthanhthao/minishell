@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 18:44:11 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/10 13:09:48 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/12 16:39:55 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,8 @@ int	handle_expansion_bonus(char ***argv_ptr, int *argc, int *capacity,
 				if (!argv)
 					return (free_split(expanded), CMD_FAILURE);
 				argv[*argc] = ft_strdup(expanded[j]);
-				if (!argv[*argc])
+				if (!argv[(*argc)++])
 					return (free_split(expanded), CMD_FAILURE);
-				(*argc)++;
 			}
 		}
 		free_split(expanded);

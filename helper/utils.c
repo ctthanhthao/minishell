@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:38:06 by amarcz            #+#    #+#             */
-/*   Updated: 2025/06/12 12:51:02 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/12 16:54:07 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	log_errno_more(const char *argv, const char *msg)
 		if (argv)
 		{
 			write(2, argv, ft_strlen(argv));
-			write(2, ": ", 2);	
+			write(2, ": ", 2);
 		}
 		write(2, msg, ft_strlen(msg));
 	}
