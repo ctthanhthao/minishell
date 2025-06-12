@@ -7,7 +7,5 @@ libftprintf.a
 .vscode
 minishell
 minishell_bonus
-minishell_tester
-minishell_tester/*
 .gitignore
 .DS_Store
