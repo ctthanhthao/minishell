@@ -67,8 +67,8 @@ You can test the functionality of this shell with the following tester:
 and i add some tests for bonus here https://github.com/ctthanhthao/minishell/blob/bonus/minishell_tester/bonus_complex 
 
 ## 🚫 Limitations
-No interpretation of unclosed quotes or backslashes (\)
-No semicolon (;) support
+- No interpretation of unclosed quotes or backslashes (\)
+- No semicolon (;) support
 
 # 👥 Contributors
 - Andras Marcz
