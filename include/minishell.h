@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/13 14:37:37 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/16 22:58:34 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,6 @@ int		wrd_handle_quote(const char *input, int *i, t_bufinfo *buf);
 // ===============================
 int		execute_commands(t_cmd *cmd_list, char ***envp, int *last_status);
 int		is_builtin(const char *cmd);
-bool	has_file_arguments(t_cmd *cmd);
 int		execute_builtin(t_cmd *cmd, char ***envp, int *status);
 int		handle_builtin_with_redirection(t_cmd *cmd, char ***envp, int *status,
 			int (*operation)(t_cmd*, char***, int*));
@@ -195,6 +194,8 @@ int		return_failed_exit_code(void);
 char	*remove_quotes_if_need(char *arg);
 void	safe_close_fds(int *fds);
 void	safe_close_fd(int fd);
+char	**safe_alloc(int size);
+char	**safe_realloc(char **argv, int old_size, int new_size);
 char	*find_valid_path(char *cmd, char **envp, int *status);
 
 #endif

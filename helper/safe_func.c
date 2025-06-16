@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:26:00 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/13 13:48:57 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/16 18:36:20 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ char	**safe_realloc(char **argv, int old_size, int new_size)
 	if (!new_argv)
 		return (NULL);
 	i = 0;
-	while (i < old_size && argv[i])
+	while (i < old_size)
 	{
 		new_argv[i] = argv[i];
 		i++;
@@ -60,4 +60,21 @@ char	**safe_realloc(char **argv, int old_size, int new_size)
 	new_argv[i] = NULL;
 	free(argv);
 	return (new_argv);
+}
+
+char	**safe_alloc(int size)
+{
+	char	**ar;
+	int		i;
+
+	ar = malloc(sizeof(char *) * size);
+	if (!ar)
+		return (NULL);
+	i = 0;
+	while (i < size)
+	{
+		ar[i] = NULL;
+		i++;
+	}
+	return (ar);
 }

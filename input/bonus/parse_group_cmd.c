@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 11:24:38 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/12 12:46:56 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/16 20:26:54 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 static t_cmd	*new_cmd(int capacity)
 {
 	t_cmd	*cmd;
+	int		i;
 
 	cmd = ft_calloc(1, sizeof(t_cmd));
 	if (!cmd)
@@ -22,6 +23,12 @@ static t_cmd	*new_cmd(int capacity)
 	cmd->argv = malloc(sizeof(char *) * capacity);
 	if (!cmd->argv)
 		return (free(cmd), NULL);
+	i = 0;
+	while (i < capacity)
+	{
+		cmd->argv[i] = NULL;
+		i++;
+	}
 	cmd->redirs = NULL;
 	return (cmd);
 }
@@ -79,7 +86,7 @@ static t_ast	*parse_group(t_parser *p)
 		return (free_ast(group), log_errno("Syntax error: expected ')'"), NULL);
 	parse_redirections_bonus(&redirs, p);
 	if (p->tokeni < p->token_count && p->tokens[p->tokeni]
-		&& !is_logical_op(p->tokens[p->tokeni]))
+		&& !is_logical_op_bonus(p->tokens[p->tokeni]))
 	{
 		er_msg = create_err_msg(p->tokens[p->tokeni]);
 		free_ast(group);
