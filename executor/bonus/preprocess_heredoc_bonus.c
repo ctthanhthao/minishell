@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 06:26:31 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/18 08:31:38 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/18 10:33:11 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,15 +47,15 @@ int	preprocess_heredocs_bonus(t_ast *node, int last_status, char **envp)
 	status = CMD_SUCCESS;
 	if (node->type == NODE_CMD && node->cmd && node->cmd->redirs)
 	{
-		ft_printf("process heredoc for cmd %s\n", node->cmd->argv[0]);
+//		ft_printf("process heredoc for cmd %s\n", node->cmd->argv[0]);
 		status = process_heredoc(node->cmd, last_status, envp);
-		ft_printf("cmd->heredoc_id %i\n", node->cmd->heredoc_fd);
+//		ft_printf("cmd->heredoc_id %i\n", node->cmd->heredoc_fd);
 	}
 	else if (node->type == NODE_GROUP && node->redirs)
 	{
-		ft_printf("process heredoc for group ....\n");
+//		ft_printf("process heredoc for group ....\n");
 		status = process_heredoc_in_group(node, last_status, envp);
-		ft_printf("group->heredoc_id %i\n", node->heredoc_fd);
+//		ft_printf("group->heredoc_id %i\n", node->heredoc_fd);
 	}
 		
 	if (preprocess_heredocs_bonus(node->left, last_status, envp) != CMD_SUCCESS)
