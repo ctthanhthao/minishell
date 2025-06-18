@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   apply_redirections.c                               :+:      :+:    :+:   */
+/*   apply_redirections_bonus.c                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/15 11:32:50 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/18 08:28:29 by thchau           ###   ########.fr       */
+/*   Created: 2025/06/17 08:53:25 by thchau            #+#    #+#             */
+/*   Updated: 2025/06/18 08:30:45 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell_bonus.h"
 
 static char	*apply_expansion_if_need(char *file_name, int last_status,
 	char **env)
@@ -62,14 +62,14 @@ static int	process_write(t_redir *re, int type, int last_status, char **env)
 	return (CMD_FAILURE);
 }
 
-static int	process_read(t_cmd *cmd, int type, int last_status, char **env)
+static int	process_read(t_ast *node, int type, int last_status, char **env)
 {
 	int		fd;
 	char	*files;
 
 	if (type == REDIR_IN)
 	{
-		files = apply_expansion_if_need(cmd->redirs->filename, last_status, env);
+		files = apply_expansion_if_need(node->redirs->filename, last_status, env);
 		if (!files)
 			return (CMD_FAILURE);
 		fd = open(files, O_RDONLY);
@@ -77,31 +77,30 @@ static int	process_read(t_cmd *cmd, int type, int last_status, char **env)
 	}
 	if (type == REDIR_HEREDOC)
 	{
-		if (cmd->heredoc_fd >= 0)
+		if (node->heredoc_fd >= 0)
 		{
-			if (dup2(cmd->heredoc_fd, STDIN_FILENO) == -1)
+			if (dup2(node->heredoc_fd, STDIN_FILENO) == -1)
 			{
-				safe_close_fd(cmd->heredoc_fd);
-				return (cmd->heredoc_fd = -1, log_errno(NULL), CMD_FAILURE);	
+				safe_close_fd(node->heredoc_fd);
+				return (node->heredoc_fd = -1, log_errno(NULL), CMD_FAILURE);	
 			}
-			ft_printf("Redirected stdin from heredoc FD %d\n", cmd->heredoc_fd);
-			safe_close_fd(cmd->heredoc_fd);
-			cmd->heredoc_fd = -1;
+			safe_close_fd(node->heredoc_fd);
+			node->heredoc_fd = -1;
 		}
 		return (CMD_SUCCESS);
 	}
 	return (CMD_FAILURE);
 }
 
-int	apply_redirections(t_cmd *cmd, int last_status, char **env)
+int	apply_redirections_bonus(t_ast *node, int last_status, char **env)
 {
 	t_redir	*cur;
 	int		status;
 
 	status = CMD_SUCCESS;
-	if (cmd && !cmd->redirs)
+	if (node->redirs == NULL)
 		return (status);
-	cur = cmd->redirs;
+	cur = node->redirs;
 	while (cur)
 	{
 		if (cur->filename == NULL)
@@ -110,11 +109,11 @@ int	apply_redirections(t_cmd *cmd, int last_status, char **env)
 			status = process_write(cur, cur->type, last_status, env);
 		else if (cur->type == REDIR_IN || cur->type == REDIR_HEREDOC)
 		{
-			status = process_read(cmd, cur->type, last_status, env);
+			status = process_read(node, cur->type, last_status, env);
 			while (cur->next && cur->next->type == REDIR_HEREDOC)
 				cur = cur->next;
 		}
-		if (status != CMD_SUCCESS)
+		if (status == !CMD_SUCCESS)
 			break ;
 		cur = cur->next;
 	}

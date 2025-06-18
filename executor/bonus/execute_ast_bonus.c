@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 20:17:14 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/12 12:10:28 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/18 08:39:48 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@ int	execute_ast(t_ast *node, int *last_status, char ***envp)
 
 	if (!node)
 		return (CMD_SUCCESS);
+	left_status = preprocess_heredocs_bonus(node, *last_status, *envp);
+	if (left_status != CMD_SUCCESS)
+		return (left_status);
 	if (node->type == NODE_CMD)
 		return (execute_cmd(node->cmd, last_status, envp));
 	else if (node->type == NODE_PIPE)

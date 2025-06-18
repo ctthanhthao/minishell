@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:26:00 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/16 18:36:20 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/18 08:32:30 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ int	safe_dup2(int oldfd, int newfd, char *error)
 		log_errno("Error duplicating file descriptor");
 		return (CMD_FAILURE);
 	}
-	close(oldfd);
+	if (oldfd != newfd)
+		close(oldfd);
 	return (CMD_SUCCESS);
 }
 

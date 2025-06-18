@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 11:24:38 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/16 20:26:54 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/17 08:30:33 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ static t_cmd	*new_cmd(int capacity)
 		i++;
 	}
 	cmd->redirs = NULL;
+	cmd->heredoc_fd = -1;
 	return (cmd);
 }
 

@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 13:03:24 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/16 22:58:10 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/17 08:57:08 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ typedef struct s_ast
 	struct s_ast	*right;
 	t_cmd			*cmd;	// only used if type == NODE_CMD
 	t_redir			*redirs;	// attach redirections to group or pipeline
+	int				heredoc_fd;
 }	t_ast;
 
 typedef struct s_parser
@@ -64,6 +65,8 @@ int		execute_ast(t_ast *node, int *last_status, char ***envp);
 int		execute_cmd(t_cmd *cmd, int *last_status, char ***envp);
 int		execute_pipe(t_ast *left, t_ast *right, int *last_status, char ***envp);
 int		execute_group(t_ast *node, int *last_status, char ***envp);
+int		preprocess_heredocs_bonus(t_ast *node, int last_status, char **envp);
+int		apply_redirections_bonus(t_ast *node, int last_status, char **env);
 // Utils
 t_ast	*new_ast_node(t_node_type type, t_ast *left, t_ast *right, t_cmd *cmd);
 t_redir	*new_redirections(t_token type, char *filename);

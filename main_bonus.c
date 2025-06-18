@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:11:32 by amarcz            #+#    #+#             */
-/*   Updated: 2025/06/10 12:15:41 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/17 07:33:02 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ static int	minishell_loop(char ***shell_envp, int *last_status)
 		if (g_heredoc_interrupted == 1)
 		{
 			g_heredoc_interrupted = 0;
+			*last_status = 130;
 			ft_printf("\n");
 			continue ;
 		}

@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:38:06 by amarcz            #+#    #+#             */
-/*   Updated: 2025/06/12 17:02:24 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/17 08:29:14 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ t_ast	*new_ast_node(t_node_type type, t_ast *left, t_ast *right, t_cmd *cmd)
 	node->right = right;
 	node->cmd = cmd;
 	node->redirs = NULL;
+	node->heredoc_fd = -1;
 	return (node);
 }
 

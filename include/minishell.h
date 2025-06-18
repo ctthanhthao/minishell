@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/16 22:58:34 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/18 08:42:50 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ typedef struct s_cmd
 {
 	char			**argv;	// arguments passed to execve or builtin
 	t_redir			*redirs;	// list of redirections
+	int				heredoc_fd;
 	struct s_cmd	*next;	// next command in pipeline
 	t_cmd_type		next_type;	// e.g. AND_IF, OR_IF, PIPE
 }	t_cmd;
@@ -158,10 +159,11 @@ int		execute_builtin(t_cmd *cmd, char ***envp, int *status);
 int		handle_builtin_with_redirection(t_cmd *cmd, char ***envp, int *status,
 			int (*operation)(t_cmd*, char***, int*));
 int		process_pipe(t_cmd *cmd, char ***envp, int *last_status);
-int		apply_redirections(t_redir *redirs, int last_status, char **envp);
+int		apply_redirections(t_cmd *cmd, int last_status, char **envp);
 bool	save_original_std_inout(int *stdin_bk, int *stdout_bk);
 void	restore_original_std_inout(int stdin_bk, int stdout_bk);
-int		process_heredoc(t_redir *redir, int last_status, char **env);
+int		process_heredoc(t_cmd *cmd, int last_status, char **env);
+int		process_single_heredoc(t_redir *redir, int last_status, char **envp);
 int		cd_builtin(t_cmd *cmd);
 int		pwd_builtin(void);
 int		export_builtin(t_cmd *cmd, char ***envp);

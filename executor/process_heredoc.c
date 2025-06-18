@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 19:42:49 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/13 13:50:54 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/18 08:36:40 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,21 +38,8 @@ static void	expect_end_input(int fd_write, char *delimiter, int last_status,
 		write(fd_write, heredoc_buffer, ft_strlen(heredoc_buffer));
 	free(heredoc_buffer);
 	safe_close_fd(fd_write);
-}
-
-static int	redirect_last_stdin(int last_fd)
-{
-	if (last_fd != -1)
-	{
-		if (dup2(last_fd, STDIN_FILENO) == -1)
-		{
-			log_errno(NULL);
-			safe_close_fd(last_fd);
-			return (CMD_FAILURE);
-		}
-		safe_close_fd(last_fd);
-	}
-	return (CMD_SUCCESS);
+	if (g_heredoc_interrupted == 1)
+		exit(130);
 }
 
 static int	do_heredoc(t_redir *redir, int last_status, char **envp,
@@ -78,13 +65,13 @@ static int	do_heredoc(t_redir *redir, int last_status, char **envp,
 		|| (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT))
 	{
 		if (WEXITSTATUS(status) == 130)
-			return (130);
+			return (safe_close_fd(fds[0]), 130);
 		return (safe_close_fd(fds[0]), CMD_FAILURE);
 	}
 	return (CMD_SUCCESS);
 }
 
-static int	process_single_heredoc(t_redir *redir, int last_status, char **envp)
+int	process_single_heredoc(t_redir *redir, int last_status, char **envp)
 {
 	int	fd[2];
 	int	status;
@@ -103,15 +90,14 @@ static int	process_single_heredoc(t_redir *redir, int last_status, char **envp)
 	return (fd[0]);
 }
 
-int	process_heredoc(t_redir *redir, int last_status, char **envp)
+int	process_heredoc(t_cmd *cmd, int last_status, char **envp)
 {
-	int		last_fd;
 	int		cur_fd;
 	t_redir	*cur;
 
 	g_heredoc_interrupted = 0;
-	cur = redir;
-	last_fd = -1;
+	cur = cmd->redirs;
+	signal(SIGINT, SIG_IGN);
 	while (cur)
 	{
 		if (cur->type == REDIR_HEREDOC)
@@ -119,13 +105,15 @@ int	process_heredoc(t_redir *redir, int last_status, char **envp)
 			cur_fd = process_single_heredoc(cur, last_status, envp);
 			if (cur_fd == -1)
 			{
-				safe_close_fd(last_fd);
+				safe_close_fd(cmd->heredoc_fd);
 				return (CMD_FAILURE);
 			}
-			safe_close_fd(last_fd);
-			last_fd = cur_fd;
+			if (cmd->heredoc_fd != -1)
+    			safe_close_fd(cmd->heredoc_fd);
+			cmd->heredoc_fd = cur_fd;
 		}
 		cur = cur->next;
 	}
-	return (redirect_last_stdin(last_fd));
+	signal(SIGINT, sigint_handler);
+	return (CMD_SUCCESS);
 }
