@@ -6,24 +6,27 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:26:00 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/18 08:32:30 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/22 22:35:05 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void	safe_close_fds(int *fds)
+void	safe_close_fds(int fds[])
 {
 	if (!fds)
 		return ;
-	safe_close_fd(fds[0]);
-	safe_close_fd(fds[1]);
+	safe_close_fd(&fds[0]);
+	safe_close_fd(&fds[1]);
 }
 
-void	safe_close_fd(int fd)
+void	safe_close_fd(int *fd)
 {
-	if (fd >= 0)
-		close(fd);
+	if (fd && *fd >= 0)
+	{
+		close(*fd);
+		*fd = -1;
+	}
 }
 
 int	safe_dup2(int oldfd, int newfd, char *error)
@@ -35,12 +38,12 @@ int	safe_dup2(int oldfd, int newfd, char *error)
 	}
 	if (dup2(oldfd, newfd) == -1)
 	{
-		close(oldfd);
+		safe_close_fd(&oldfd);
 		log_errno("Error duplicating file descriptor");
 		return (CMD_FAILURE);
 	}
 	if (oldfd != newfd)
-		close(oldfd);
+		safe_close_fd(&oldfd);
 	return (CMD_SUCCESS);
 }
 

@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 08:53:25 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/18 08:30:45 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/22 12:55:01 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,24 +75,10 @@ static int	process_read(t_ast *node, int type, int last_status, char **env)
 		fd = open(files, O_RDONLY);
 		return (free(files), safe_dup2(fd, STDIN_FILENO, NULL));
 	}
-	if (type == REDIR_HEREDOC)
-	{
-		if (node->heredoc_fd >= 0)
-		{
-			if (dup2(node->heredoc_fd, STDIN_FILENO) == -1)
-			{
-				safe_close_fd(node->heredoc_fd);
-				return (node->heredoc_fd = -1, log_errno(NULL), CMD_FAILURE);	
-			}
-			safe_close_fd(node->heredoc_fd);
-			node->heredoc_fd = -1;
-		}
-		return (CMD_SUCCESS);
-	}
 	return (CMD_FAILURE);
 }
 
-int	apply_redirections_bonus(t_ast *node, int last_status, char **env)
+int	apply_group_redirections(t_ast *node, int last_status, char **env)
 {
 	t_redir	*cur;
 	int		status;
@@ -107,11 +93,9 @@ int	apply_redirections_bonus(t_ast *node, int last_status, char **env)
 			return (CMD_FAILURE);
 		if (cur->type == REDIR_OUT || cur->type == REDIR_OUT_APPEND)
 			status = process_write(cur, cur->type, last_status, env);
-		else if (cur->type == REDIR_IN || cur->type == REDIR_HEREDOC)
+		else if (cur->type == REDIR_IN)
 		{
 			status = process_read(node, cur->type, last_status, env);
-			while (cur->next && cur->next->type == REDIR_HEREDOC)
-				cur = cur->next;
 		}
 		if (status == !CMD_SUCCESS)
 			break ;

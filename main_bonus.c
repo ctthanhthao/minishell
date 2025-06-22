@@ -6,13 +6,25 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:11:32 by amarcz            #+#    #+#             */
-/*   Updated: 2025/06/17 07:33:02 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/22 22:29:50 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/minishell_bonus.h"
 
 volatile sig_atomic_t	g_heredoc_interrupted = 0;
+
+static bool	should_continue(int *last_status)
+{
+	if (g_heredoc_interrupted == 1)
+	{
+		g_heredoc_interrupted = 0;
+		ft_printf("\n");
+		*last_status = 130;
+		return (true);
+	}
+	return (false);
+}
 
 static char	*read_input(void)
 {
@@ -31,6 +43,22 @@ static char	*read_input(void)
 	return (input);
 }
 
+static int	execute_ast_with_redirections(t_ast *root, int *last_status,
+	char ***shell_envp)
+{
+	*last_status = preprocess_heredocs_bonus(root, *last_status, *shell_envp);
+	if (*last_status != CMD_SUCCESS)
+		return (*last_status);
+	if (root->type == NODE_CMD && root->cmd && !root->cmd->argv)
+	{
+		*last_status = handle_builtin_with_redirection(root->cmd, shell_envp,
+					last_status, NULL);
+	}
+	else
+		*last_status = execute_ast(root, *last_status, shell_envp);
+	return (*last_status);
+}
+
 static int	minishell_loop(char ***shell_envp, int *last_status)
 {
 	char	*input;
@@ -38,13 +66,8 @@ static int	minishell_loop(char ***shell_envp, int *last_status)
 
 	while (1)
 	{
-		if (g_heredoc_interrupted == 1)
-		{
-			g_heredoc_interrupted = 0;
-			*last_status = 130;
-			ft_printf("\n");
+		if (should_continue(last_status))
 			continue ;
-		}
 		input = read_input();
 		if (!input)
 			break ;
@@ -52,7 +75,7 @@ static int	minishell_loop(char ***shell_envp, int *last_status)
 		free(input);
 		if (!root)
 			continue ;
-		*last_status = execute_ast(root, last_status, shell_envp);
+		*last_status = execute_ast_with_redirections(root, last_status, shell_envp);
 		free_ast(root);
 		if (*last_status == CMD_EXIT)
 			break ;

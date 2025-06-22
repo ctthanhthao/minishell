@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:38:06 by amarcz            #+#    #+#             */
-/*   Updated: 2025/06/17 08:29:14 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/22 19:12:59 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ t_ast	*new_ast_node(t_node_type type, t_ast *left, t_ast *right, t_cmd *cmd)
 	node->right = right;
 	node->cmd = cmd;
 	node->redirs = NULL;
-	node->heredoc_fd = -1;
 	return (node);
 }
 
@@ -55,4 +54,16 @@ char	*node_type_str(t_node_type type)
 		return ("GROUP - ()");
 	else
 		return ("UNKNOWN");
+}
+
+void read_from_fd(int fd)
+{
+	char buffer[1024];
+	ssize_t bytes;
+	if (fd == -1)
+		return ;
+//	ft_printf("[DEBUG] [%i] start read_from_fd %i - ", getpid(), fd);
+	while ((bytes = read(fd, buffer, sizeof(buffer))) > 0)
+		write(STDOUT_FILENO, buffer, bytes);
+//	ft_printf("- done read_from_fd %i\n", fd);
 }

@@ -11,6 +11,7 @@ if [[ $1 == "bonus" ]]; then
 		"extras"
 		"bonus_complex"
 		"wildcards"
+		"unsupported_and_error_cases"
 	)
 elif [[ $1 ]]; then
 	test_lists=(

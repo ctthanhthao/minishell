@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 11:24:38 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/17 08:30:33 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/22 22:36:56 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ static t_cmd	*parse_command(t_parser *p)
 	{
 		if (ft_is_redirection(p->tokens[p->tokeni]))
 		{
-			parse_redirections_bonus(&cmd->redirs, p);
+			if (parse_redirections_bonus(&cmd->redirs, p) == CMD_FAILURE)
+				return (free(cmd), NULL);
 			continue ;
 		}
 		if (handle_expansion_bonus(&cmd->argv, &argc, &capacity, p)
@@ -63,7 +64,7 @@ static char	*create_err_msg(char *token)
 {
 	char	*er_msg;
 
-	er_msg = ft_strdup("Syntax error near token '");
+	er_msg = ft_strdup("syntax error near unexpected token '");
 	er_msg = ft_strjoin_free(er_msg, token);
 	er_msg = ft_strjoin_free(er_msg, "'");
 	return (er_msg);
@@ -84,8 +85,16 @@ static t_ast	*parse_group(t_parser *p)
 		== 0)
 		p->tokeni++;
 	else
-		return (free_ast(group), log_errno("Syntax error: expected ')'"), NULL);
-	parse_redirections_bonus(&redirs, p);
+	{
+		if (group)
+		{
+			free_ast(group);
+			log_errno("Syntax error: expected ')'");
+		}
+		return (NULL);
+	}
+	if (parse_redirections_bonus(&redirs, p) == CMD_FAILURE)
+		return (free_redirs(redirs), free_ast(group), NULL);
 	if (p->tokeni < p->token_count && p->tokens[p->tokeni]
 		&& !is_logical_op_bonus(p->tokens[p->tokeni]))
 	{
@@ -101,10 +110,19 @@ t_ast	*parse_group_or_command(t_parser *p)
 {
 	t_ast	*group;
 	t_cmd	*cmd;
+	bool	prev_in_group;
 
 	if (p->tokeni < p->token_count && ft_strcmp(p->tokens[p->tokeni], "(") == 0)
 	{
+		prev_in_group = p->in_group;
+		if (prev_in_group)
+		{
+			log_errno("Syntax error: nested groups not supported");
+			return (NULL);
+		}
+		p->in_group = true;
 		group = parse_group(p);
+		p->in_group = prev_in_group;
 		return (group);
 	}
 	else

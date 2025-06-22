@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:32:50 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/18 08:28:29 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/22 22:06:57 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,14 +62,14 @@ static int	process_write(t_redir *re, int type, int last_status, char **env)
 	return (CMD_FAILURE);
 }
 
-static int	process_read(t_cmd *cmd, int type, int last_status, char **env)
+static int	process_read(t_cmd *cmd, t_redir *re, int type, int last_status, char **env)
 {
 	int		fd;
 	char	*files;
 
 	if (type == REDIR_IN)
 	{
-		files = apply_expansion_if_need(cmd->redirs->filename, last_status, env);
+		files = apply_expansion_if_need(re->filename, last_status, env);
 		if (!files)
 			return (CMD_FAILURE);
 		fd = open(files, O_RDONLY);
@@ -81,11 +81,10 @@ static int	process_read(t_cmd *cmd, int type, int last_status, char **env)
 		{
 			if (dup2(cmd->heredoc_fd, STDIN_FILENO) == -1)
 			{
-				safe_close_fd(cmd->heredoc_fd);
+				safe_close_fd(&cmd->heredoc_fd);
 				return (cmd->heredoc_fd = -1, log_errno(NULL), CMD_FAILURE);	
 			}
-			ft_printf("Redirected stdin from heredoc FD %d\n", cmd->heredoc_fd);
-			safe_close_fd(cmd->heredoc_fd);
+			safe_close_fd(&cmd->heredoc_fd);
 			cmd->heredoc_fd = -1;
 		}
 		return (CMD_SUCCESS);
@@ -110,7 +109,7 @@ int	apply_redirections(t_cmd *cmd, int last_status, char **env)
 			status = process_write(cur, cur->type, last_status, env);
 		else if (cur->type == REDIR_IN || cur->type == REDIR_HEREDOC)
 		{
-			status = process_read(cmd, cur->type, last_status, env);
+			status = process_read(cmd, cur, cur->type, last_status, env);
 			while (cur->next && cur->next->type == REDIR_HEREDOC)
 				cur = cur->next;
 		}

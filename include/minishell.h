@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:35:36 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/18 08:42:50 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/22 13:51:09 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,7 +164,7 @@ bool	save_original_std_inout(int *stdin_bk, int *stdout_bk);
 void	restore_original_std_inout(int stdin_bk, int stdout_bk);
 int		process_heredoc(t_cmd *cmd, int last_status, char **env);
 int		process_single_heredoc(t_redir *redir, int last_status, char **envp);
-int		cd_builtin(t_cmd *cmd);
+int		cd_builtin(t_cmd *cmd, char ***envp);
 int		pwd_builtin(void);
 int		export_builtin(t_cmd *cmd, char ***envp);
 int		echo_builtin(t_cmd *cmd, int *status);
@@ -194,10 +194,10 @@ char	*extract_key(const char *entry);
 char	*strip_quotes(const char *str);
 int		return_failed_exit_code(void);
 char	*remove_quotes_if_need(char *arg);
-void	safe_close_fds(int *fds);
-void	safe_close_fd(int fd);
+void	safe_close_fds(int fds[]);
+void	safe_close_fd(int *fd);
 char	**safe_alloc(int size);
 char	**safe_realloc(char **argv, int old_size, int new_size);
 char	*find_valid_path(char *cmd, char **envp, int *status);
-
+void 	read_from_fd(int fd);
 #endif

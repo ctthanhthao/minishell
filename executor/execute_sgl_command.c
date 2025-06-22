@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 17:47:05 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/18 08:35:20 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/22 22:30:37 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static int	execute_external_cmd(t_cmd *cmd, int last_status, char ***envp,
 		if (execve(success_path, cmd->argv, *envp) == -1)
 			exit(return_failed_exit_code());
 	}
-	safe_close_fd(cmd->heredoc_fd);
+	safe_close_fd(&cmd->heredoc_fd);
 	cmd->heredoc_fd = -1;
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
@@ -75,6 +75,7 @@ int	execute_single_command(t_cmd *cmd, char ***envp,
 		if (path)
 			free(path);
 	}
+	safe_close_fd(&cmd->heredoc_fd);
 	if (*last_status == 130)
 		g_heredoc_interrupted = 1;
 	return (*last_status);

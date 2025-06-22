@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 12:40:57 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/18 08:38:01 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/22 22:31:22 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,13 +60,13 @@ static void	execute_pipeline_child(t_cmd *cur, char ***env,
 				"dup2 error: bad source fd (-1)\n") == CMD_FAILURE)
 		{
 			safe_close_fds(pid_data->pipe_fd);
-			safe_close_fd(pid_data->prev_fd);
+			safe_close_fd(&pid_data->prev_fd);
 			exit(CMD_FAILURE);
 		}
 		safe_close_fds(pid_data->pipe_fd);
-		safe_close_fd(pid_data->prev_fd);
+		safe_close_fd(&pid_data->prev_fd);
 	}
-	safe_close_fd(pid_data->pipe_fd[0]);
+	safe_close_fd(&pid_data->pipe_fd[0]);
 	exit(execute_single_command(cur, env, last_status, false));
 }
 
@@ -102,10 +102,9 @@ static int	spawn_pipeline_process(t_pid_pipe_fd *pid_data, t_cmd *cur,
 	else
 	{
 		pid_data->pids[pid_data->child_count++] = pid_data->pid;
-		safe_close_fd(pid_data->prev_fd);
-		safe_close_fd(pid_data->pipe_fd[1]);
-		safe_close_fd(cur->heredoc_fd);
-		cur->heredoc_fd = -1;
+		safe_close_fd(&pid_data->prev_fd);
+		safe_close_fd(&pid_data->pipe_fd[1]);
+		safe_close_fd(&cur->heredoc_fd);
 		pid_data->prev_fd = pid_data->pipe_fd[0];
 	}
 	return (CMD_SUCCESS);
@@ -132,7 +131,7 @@ int	process_pipe(t_cmd *cmd, char ***envp, int *last_status)
 			break ;
 	}
 	collect_pipeline_status(&pid_data, last_status);
-	safe_close_fd(pid_data.prev_fd);
+	safe_close_fd(&pid_data.prev_fd);
 	safe_close_fds(pid_data.pipe_fd);
 	return (*last_status);
 }
