@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:32:50 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/22 22:06:57 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/22 22:48:41 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,16 @@ static int	process_write(t_redir *re, int type, int last_status, char **env)
 	{
 		fd = open(files, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		free(files);
+		if (fd < 0)
+			return (log_errno(NULL), CMD_FAILURE);
 		return (safe_dup2(fd, STDOUT_FILENO, NULL));
 	}
 	if (type == REDIR_OUT_APPEND)
 	{
 		fd = open(files, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		free(files);
+		if (fd < 0)
+			return (log_errno(NULL), CMD_FAILURE);
 		return (safe_dup2(fd, STDOUT_FILENO, NULL));
 	}
 	return (CMD_FAILURE);
@@ -73,7 +77,8 @@ static int	process_read(t_cmd *cmd, t_redir *re, int type, int last_status, char
 		if (!files)
 			return (CMD_FAILURE);
 		fd = open(files, O_RDONLY);
-		return (free(files), safe_dup2(fd, STDIN_FILENO, NULL));
+		free(files);
+		return (safe_dup2(fd, STDIN_FILENO, NULL));
 	}
 	if (type == REDIR_HEREDOC)
 	{
