@@ -12,6 +12,11 @@ ls *.md && cat *.md
 cat data.csv | (grep -i "error" || grep -i "warning") | sort | uniq > filtered.txt
 (curl -s https://primary.com/data || curl -s https://backup.com/data) | jq '.' > output.json
 ls | grep txt | wc -l && (echo success || echo failed)
-cat file.txt | grep error | cut -d: -f2 | sort | uniq -c && (echo "Processed" || echo "Failed")
+cat data.csv | grep error | cut -d: -f2 | sort | uniq -c && (echo "Processed" || echo "Failed")
 (ls | grep txt && echo ok) > group_output.txt
 cat data.csv | (grep -i "error" || grep -i "warning") | sort | uniq > testa.txt 
+(ls *.md) | grep md > out.txt
+cat <  out.txt | cat < combined.txt | cat < data.csv | grep war | wc -l
+cat *.md | wc -l && (echo counted lines in c files)
+ls | (grep supp && echo done) > result.log
+(ls -1 | grep '\.txt$' | sort | wc -l) && (echo "C files counted successfully")
