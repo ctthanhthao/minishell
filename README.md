@@ -34,6 +34,14 @@ A simplified Unix shell written in C. This project is part of the 42 curriculum 
 
 - `&&`, `||` and parentheses for priority
 - Wildcard `*` expansion (current working directory)
+  
+### ❌ Not Supported
+- Nested groups (e.g., `(cmd1 && (cmd2 || cmd3))`)
+- Heredoc inside groups (e.g., `(cat << EOF)` is not supported)
+- Subshells (no separate environment for grouped commands)
+- Brace expansion (e.g., `file_{a,b}.txt`)
+- Nested globbing (e.g., `dir*/**/*.c`)
+- Other stuffs which are not mentioned in subject
 
 ## 🛠️ Installation & Usage
 

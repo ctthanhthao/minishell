@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:11:32 by amarcz            #+#    #+#             */
-/*   Updated: 2025/06/22 22:29:50 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/23 09:07:11 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,10 @@ static int	minishell_loop(char ***shell_envp, int *last_status)
 		root = parse_input_bonus(input, *last_status, *shell_envp);
 		free(input);
 		if (!root)
-			continue ;
+		{
+			*last_status = 2;
+			continue ;	
+		}
 		*last_status = execute_ast_with_redirections(root, last_status, shell_envp);
 		free_ast(root);
 		if (*last_status == CMD_EXIT)

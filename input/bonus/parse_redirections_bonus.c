@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 19:12:09 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/22 22:37:32 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/23 07:57:33 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,15 @@ static t_token	get_redir_type(char *token)
 
 static bool	contains_heredoc(t_parser *p)
 {
-	if (p->in_group && ft_strcmp(p->tokens[p->tokeni], "<<") == 0)
+	if (p->is_group_node && ft_strcmp(p->tokens[p->tokeni], "<<") == 0)
 	{
-		log_errno("Syntax error: heredoc '<<' not allowed "
-			"on group or inside group");
+		log_errno("Syntax error: heredoc '<<' not allowed on group");
 		return (true);
 	}
 	return (false);
 }
 
-int	parse_redirections_bonus(t_redir **re, t_parser *p)
+int parse_redirections_bonus(t_redir **re, t_parser *p)
 {
 	t_redir	**curr;
 	t_token	type;

@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 20:39:39 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/22 22:36:42 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/23 07:50:46 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ static t_parser	init_parser_data(char **tokens, int last_status, char **envp)
 	parser.last_status = last_status;
 	parser.envp = envp;
 	parser.in_group = false;
+	parser.is_group_node = false;
 	return (parser);
 }
 

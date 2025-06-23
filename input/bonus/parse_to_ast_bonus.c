@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 19:37:50 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/22 13:00:58 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/23 08:48:09 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ t_ast	*parse_expression(t_parser *p)
 		p->tokeni++;
 		right = parse_pipeline(p);
 		if (!right)
-			return (left);
+			return (free_ast(left), NULL);
 		left = new_ast_node(type, left, right, NULL);
 	}
 	return (left);

@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 11:06:17 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/17 13:26:50 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/23 07:34:20 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,8 @@ void	heredoc_sigint_handler(int sig)
 	(void)sig;
     g_heredoc_interrupted = 1;
 	write(1, "Press enter to exit.", 20);
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_redisplay();
+	write(STDOUT_FILENO, "\n", 1);
+	close(STDIN_FILENO);
 }
 
 void	sigint_handler(int sig)

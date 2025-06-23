@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 13:03:24 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/22 12:58:33 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/23 07:48:58 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ typedef struct s_parser
 	char	**envp;
 	int		last_status;
 	bool	in_group;
+	bool	is_group_node;
 }	t_parser;
 
 // Parser

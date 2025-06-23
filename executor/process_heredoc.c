@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 19:42:49 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/22 22:30:55 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/23 07:31:48 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static int	do_heredoc(t_redir *redir, int last_status, char **envp,
 		|| (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT))
 	{
 		if (WEXITSTATUS(status) == 130)
-			return (safe_close_fd(&fds[0]), 130);
+			return (safe_close_fd(&fds[0]), write(STDOUT_FILENO, "\n", 1), 130);
 		return (safe_close_fd(&fds[0]), CMD_FAILURE);
 	}
 	return (CMD_SUCCESS);
@@ -97,7 +97,6 @@ int	process_heredoc(t_cmd *cmd, int last_status, char **envp)
 
 	g_heredoc_interrupted = 0;
 	cur = cmd->redirs;
-	signal(SIGINT, SIG_IGN);
 	while (cur)
 	{
 		if (cur->type == REDIR_HEREDOC)
@@ -120,5 +119,6 @@ int	process_heredoc(t_cmd *cmd, int last_status, char **envp)
 		cur = cur->next;
 	}
 	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, SIG_IGN);
 	return (CMD_SUCCESS);
 }
