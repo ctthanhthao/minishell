@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 17:12:27 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/22 12:55:42 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/23 09:51:03 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	execute_group(t_ast *node, int last_status, char ***envp)
 {
-	int	status = 0;
+	int		status;
 	int		stdin_bk;
 	int		stdout_bk;
 	bool	redirected;

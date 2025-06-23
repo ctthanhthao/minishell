@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:14:40 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/21 20:12:03 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/23 09:39:03 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 
 int	update_pwd_env(char ***envp)
 {
-    char	*cwd;
-    char	*new_pwd;
-    int		i;
+	char	*cwd;
+	char	*new_pwd;
+	int		i;
 
-    cwd = getcwd(NULL, 0);
+	cwd = getcwd(NULL, 0);
 	if (cwd == NULL)
 	{
 		log_errno(NULL);
@@ -38,8 +38,7 @@ int	update_pwd_env(char ***envp)
 			return (CMD_SUCCESS);
 		}
 	}
-    
-    return (free(new_pwd), CMD_FAILURE);
+	return (free(new_pwd), CMD_FAILURE);
 }
 
 int	cd_builtin(t_cmd *cmd, char ***envp)

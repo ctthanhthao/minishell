@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 12:40:57 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/22 22:31:22 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/23 10:31:33 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /**
  * Collect status of last command.
  */
-static void	collect_pipeline_status(t_pid_pipe_fd *pid_data, int *last_status)
+void	collect_pipeline_status(t_pid_pipe_fd *pid_data, int *last_status)
 {
 	int	i;
 	int	status;

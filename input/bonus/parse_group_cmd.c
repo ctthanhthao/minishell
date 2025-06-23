@@ -6,33 +6,11 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 11:24:38 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/23 08:45:09 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/23 11:09:06 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell_bonus.h"
-
-static t_cmd	*new_cmd(int capacity)
-{
-	t_cmd	*cmd;
-	int		i;
-
-	cmd = ft_calloc(1, sizeof(t_cmd));
-	if (!cmd)
-		return (NULL);
-	cmd->argv = malloc(sizeof(char *) * capacity);
-	if (!cmd->argv)
-		return (free(cmd), NULL);
-	i = 0;
-	while (i < capacity)
-	{
-		cmd->argv[i] = NULL;
-		i++;
-	}
-	cmd->redirs = NULL;
-	cmd->heredoc_fd = -1;
-	return (cmd);
-}
 
 static t_cmd	*parse_command(t_parser *p)
 {
@@ -70,6 +48,25 @@ static char	*create_err_msg(char *token)
 	return (er_msg);
 }
 
+static int	validate_group_redirs_and_syntax(t_parser *p, t_redir **redirs)
+{
+	char	*er_msg;
+
+	p->is_group_node = true;
+	if (parse_redirections_bonus(redirs, p) == CMD_FAILURE)
+		return (CMD_FAILURE);
+	p->is_group_node = false;
+	if (p->tokeni < p->token_count && p->tokens[p->tokeni]
+		&& !is_logical_op_bonus(p->tokens[p->tokeni]))
+	{
+		er_msg = create_err_msg(p->tokens[p->tokeni]);
+		log_errno(er_msg);
+		free(er_msg);
+		return (CMD_FAILURE);
+	}
+	return (CMD_SUCCESS);
+}
+
 static t_ast	*parse_group(t_parser *p)
 {
 	t_redir	*redirs;
@@ -92,17 +89,8 @@ static t_ast	*parse_group(t_parser *p)
 		p->tokeni++;
 	else
 		return (log_errno("Syntax error: expected ')'"), NULL);
-	p->is_group_node = true;
-	if (parse_redirections_bonus(&redirs, p) == CMD_FAILURE)
+	if (validate_group_redirs_and_syntax(p, &redirs) == CMD_FAILURE)
 		return (free_redirs(redirs), free_ast(group), NULL);
-	p->is_group_node = false;
-	if (p->tokeni < p->token_count && p->tokens[p->tokeni]
-		&& !is_logical_op_bonus(p->tokens[p->tokeni]))
-	{
-		er_msg = create_err_msg(p->tokens[p->tokeni]);
-		free_ast(group);
-		return (free_redirs(redirs), log_errno(er_msg), free(er_msg), NULL);
-	}
 	node = new_ast_node(NODE_GROUP, group, NULL, NULL);
 	return (node->redirs = redirs, node);
 }

@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 19:42:49 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/23 07:31:48 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/23 09:50:18 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,12 +103,9 @@ int	process_heredoc(t_cmd *cmd, int last_status, char **envp)
 		{
 			cur_fd = process_single_heredoc(cur, last_status, envp);
 			if (cur_fd == -1)
-			{
-				safe_close_fd(&cmd->heredoc_fd);
-				return (CMD_FAILURE);
-			}
+				return (safe_close_fd(&cmd->heredoc_fd), CMD_FAILURE);
 			if (cmd->heredoc_fd != -1)
-    			safe_close_fd(&cmd->heredoc_fd);
+				safe_close_fd(&cmd->heredoc_fd);
 			cmd->heredoc_fd = cur_fd;
 		}
 		else if (cur->type == REDIR_IN)
@@ -119,6 +116,5 @@ int	process_heredoc(t_cmd *cmd, int last_status, char **envp)
 		cur = cur->next;
 	}
 	signal(SIGINT, sigint_handler);
-	signal(SIGQUIT, SIG_IGN);
-	return (CMD_SUCCESS);
+	return (signal(SIGQUIT, SIG_IGN), CMD_SUCCESS);
 }

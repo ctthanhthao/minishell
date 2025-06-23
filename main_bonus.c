@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:11:32 by amarcz            #+#    #+#             */
-/*   Updated: 2025/06/23 09:07:11 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/23 09:36:47 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static int	execute_ast_with_redirections(t_ast *root, int *last_status,
 	if (root->type == NODE_CMD && root->cmd && !root->cmd->argv)
 	{
 		*last_status = handle_builtin_with_redirection(root->cmd, shell_envp,
-					last_status, NULL);
+				last_status, NULL);
 	}
 	else
 		*last_status = execute_ast(root, *last_status, shell_envp);
@@ -76,9 +76,10 @@ static int	minishell_loop(char ***shell_envp, int *last_status)
 		if (!root)
 		{
 			*last_status = 2;
-			continue ;	
+			continue ;
 		}
-		*last_status = execute_ast_with_redirections(root, last_status, shell_envp);
+		*last_status = execute_ast_with_redirections(root, last_status,
+				shell_envp);
 		free_ast(root);
 		if (*last_status == CMD_EXIT)
 			break ;

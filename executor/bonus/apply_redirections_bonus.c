@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 08:53:25 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/22 12:55:01 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/23 09:52:50 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,8 @@ static int	process_read(t_ast *node, int type, int last_status, char **env)
 
 	if (type == REDIR_IN)
 	{
-		files = apply_expansion_if_need(node->redirs->filename, last_status, env);
+		files = apply_expansion_if_need(node->redirs->filename,
+				last_status, env);
 		if (!files)
 			return (CMD_FAILURE);
 		fd = open(files, O_RDONLY);

@@ -6,13 +6,13 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 16:02:21 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/19 09:44:27 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/23 09:59:08 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell_bonus.h"
 
-int	execute_cmd(t_cmd *cmd, int last_status, char ***envp)
+int	execute_cmd(t_cmd *cmd, int last_status, char ***envp, bool should_fork)
 {
 	int	status;
 
@@ -23,7 +23,7 @@ int	execute_cmd(t_cmd *cmd, int last_status, char ***envp)
 			g_heredoc_interrupted = 1;
 		return (status);
 	}
-	status = execute_single_command(cmd, envp, &last_status, true);
+	status = execute_single_command(cmd, envp, &last_status, should_fork);
 	if (status == 130)
 		g_heredoc_interrupted = 1;
 	return (status);

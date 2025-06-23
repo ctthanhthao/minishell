@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 19:12:09 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/23 07:57:33 by thchau           ###   ########.fr       */
+/*   Updated: 2025/06/23 09:12:21 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static bool	contains_heredoc(t_parser *p)
 	return (false);
 }
 
-int parse_redirections_bonus(t_redir **re, t_parser *p)
+int	parse_redirections_bonus(t_redir **re, t_parser *p)
 {
 	t_redir	**curr;
 	t_token	type;
@@ -57,10 +57,7 @@ int parse_redirections_bonus(t_redir **re, t_parser *p)
 			break ;
 		p->tokeni++;
 		if (!p->tokens[p->tokeni])
-		{
-			log_errno("Syntax error: expected filename after redirection\n");
-			return (CMD_FAILURE);
-		}
+			return (log_errno("error: expected file name\n"), CMD_FAILURE);
 		new = new_redirections(type, p->tokens[p->tokeni++]);
 		if (!new)
 			return (CMD_FAILURE);
