@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 16:17:35 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/23 11:13:41 by thchau           ###   ########.fr       */
+/*   Updated: 2025/07/02 10:37:07 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,8 @@ static void	init_pipe_data(t_pid_pipe_fd *pipe_data, int last_status,
 	pipe_data->envp = envp;
 }
 
-static void	update_parent_pipe_fds(t_pid_pipe_fd *pipe_data, pid_t pid, t_ast *cur)
+static void	update_parent_pipe_fds(t_pid_pipe_fd *pipe_data, pid_t pid,
+	t_ast *cur)
 {
 	if (cur->right)
 		safe_close_fd(&pipe_data->pipe_fd[1]);

@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:32:50 by thchau            #+#    #+#             */
-/*   Updated: 2025/06/23 11:05:39 by thchau           ###   ########.fr       */
+/*   Updated: 2025/07/02 10:37:18 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,13 +109,13 @@ int	apply_redirections(t_cmd *cmd, int last_status, char **env)
 		else if (cur->type == REDIR_IN || cur->type == REDIR_HEREDOC)
 		{
 			status = process_read(cmd, cur, last_status, env);
-			while (cur->next && cur->next->type == REDIR_HEREDOC)
+			while (cur->type == REDIR_HEREDOC && cur->next
+				&& cur->next->type == REDIR_HEREDOC)
 				cur = cur->next;
 		}
 		if (status != CMD_SUCCESS)
 			break ;
 		cur = cur->next;
 	}
-	safe_close_fd(&cmd->heredoc_fd);
-	return (status);
+	return (safe_close_fd(&cmd->heredoc_fd), status);
 }
