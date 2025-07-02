@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:32:50 by thchau            #+#    #+#             */
-/*   Updated: 2025/07/02 10:37:18 by thchau           ###   ########.fr       */
+/*   Updated: 2025/07/02 13:06:50 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,18 +50,16 @@ static int	process_write(t_redir *re, int type, int last_status, char **env)
 	if (type == REDIR_OUT)
 	{
 		fd = open(files, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		free(files);
 		if (fd < 0)
-			return (log_errno(NULL), CMD_FAILURE);
-		return (safe_dup2(fd, STDOUT_FILENO, NULL));
+			return (log_errno_more(files, NULL), free(files), CMD_FAILURE);
+		return (free(files), safe_dup2(fd, STDOUT_FILENO, NULL));
 	}
 	if (type == REDIR_OUT_APPEND)
 	{
 		fd = open(files, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		free(files);
 		if (fd < 0)
-			return (log_errno(NULL), CMD_FAILURE);
-		return (safe_dup2(fd, STDOUT_FILENO, NULL));
+			return (log_errno_more(files, NULL), free(files), CMD_FAILURE);
+		return (free(files), safe_dup2(fd, STDOUT_FILENO, NULL));
 	}
 	return (CMD_FAILURE);
 }
@@ -77,6 +75,8 @@ static int	process_read(t_cmd *cmd, t_redir *re, int last_status, char **env)
 		if (!files)
 			return (CMD_FAILURE);
 		fd = open(files, O_RDONLY);
+		if (fd < 0)
+			return (log_errno_more(files, NULL), free(files), CMD_FAILURE);
 		return (free(files), safe_dup2(fd, STDIN_FILENO, NULL));
 	}
 	if (cmd->heredoc_fd >= 0)
@@ -109,13 +109,13 @@ int	apply_redirections(t_cmd *cmd, int last_status, char **env)
 		else if (cur->type == REDIR_IN || cur->type == REDIR_HEREDOC)
 		{
 			status = process_read(cmd, cur, last_status, env);
-			while (cur->type == REDIR_HEREDOC && cur->next
-				&& cur->next->type == REDIR_HEREDOC)
+			while (cur->next && cur->next->type == REDIR_HEREDOC)
 				cur = cur->next;
 		}
 		if (status != CMD_SUCCESS)
 			break ;
 		cur = cur->next;
 	}
-	return (safe_close_fd(&cmd->heredoc_fd), status);
+	safe_close_fd(&cmd->heredoc_fd);
+	return (status);
 }
