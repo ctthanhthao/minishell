@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:11:32 by amarcz            #+#    #+#             */
-/*   Updated: 2025/06/23 09:36:47 by thchau           ###   ########.fr       */
+/*   Updated: 2025/07/03 18:37:56 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,6 @@ static int	minishell_loop(char ***shell_envp, int *last_status)
 		*last_status = execute_ast_with_redirections(root, last_status,
 				shell_envp);
 		free_ast(root);
-		if (*last_status == CMD_EXIT)
-			break ;
 	}
 	return (0);
 }
