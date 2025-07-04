@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 15:09:11 by amarcz            #+#    #+#             */
-/*   Updated: 2025/07/04 15:41:05 by thchau           ###   ########.fr       */
+/*   Updated: 2025/07/04 16:00:28 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,8 @@ int	validate_tokens(char **tokens)
 		return (1);
 	if (!base_error(&tokens[0]))
 		return (0);
-	ft_printf("validate_tokens started....\n");
 	while (tokens[i])
 	{
-		ft_printf("token[%i] %s\n", i, tokens[i]);
 		if (is_operator(tokens[i]))
 		{
 			if (!operator_check(tokens, i))
