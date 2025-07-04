@@ -6,7 +6,7 @@
 /*   By: thchau <thchau@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 16:17:35 by thchau            #+#    #+#             */
-/*   Updated: 2025/07/02 10:37:07 by thchau           ###   ########.fr       */
+/*   Updated: 2025/07/03 21:02:49 by thchau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static void	execute_child_pipeline(t_pid_pipe_fd *pipe_data, t_ast *cur,
 	if (left->type == NODE_PIPE)
 		exit(execute_pipe(left, pipe_data->last_status, pipe_data->envp));
 	else if (left->type == NODE_CMD)
-		exit(execute_cmd(left->cmd, pipe_data->last_status, pipe_data->envp,
+		exit(execute_cmd(left, pipe_data->last_status, pipe_data->envp,
 				false));
 	else if (left->type == NODE_GROUP)
 		exit(execute_group(left, pipe_data->last_status, pipe_data->envp));
